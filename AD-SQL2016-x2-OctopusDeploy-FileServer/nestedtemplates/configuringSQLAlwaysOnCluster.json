@@ -29,13 +29,7 @@
     "sqlServerServiceAccountUserName": {
       "type": "string"
     },
-    "sharePointSetupUserAccountUserName": {
-      "type": "string"
-    },
     "sqlServerServiceAccountPassword": {
-      "type": "securestring"
-    },
-    "sharePointSetupUserAccountPassword": {
       "type": "securestring"
     },
     "configureClusterModulesURL": {
@@ -129,19 +123,14 @@
             "sqlServiceCreds": {
               "userName": "[parameters('sqlServerServiceAccountUserName')]",
               "password": "privateSettingsRef:SqlServerServiceAccountPassword"
-            },
-            "sharePointSetupUserAccountcreds": {
-              "userName": "[parameters('sharePointSetupUserAccountUserName')]",
-              "password": "privateSettingsRef:SharePointSetupUserAccountPassword"
             }
           }
         },
         "protectedSettings": {
           "items": {
             "adminPassword": "[parameters('adminPassword')]",
-            "sqlServerServiceAccountPassword": "[parameters('sqlServerServiceAccountPassword')]",
-            "sharePointSetupUserAccountPassword": "[parameters('sharePointSetupUserAccountPassword')]"
-          }
+            "sqlServerServiceAccountPassword": "[parameters('sqlServerServiceAccountPassword')]"
+           }
         }
       }
     },
@@ -187,19 +176,14 @@
             "sqlServiceCreds": {
               "userName": "[parameters('sqlServerServiceAccountUserName')]",
               "password": "privateSettingsRef:sqlServerServiceAccountPassword"
-            },
-            "sharePointSetupUserAccountcreds": {
-              "userName": "[parameters('sharePointSetupUserAccountUserName')]",
-              "password": "privateSettingsRef:sharePointSetupUserAccountPassword"
             }
           }
         },
         "protectedSettings": {
           "items": {
             "adminPassword": "[parameters('adminPassword')]",
-            "sqlServerServiceAccountPassword": "[parameters('sqlServerServiceAccountPassword')]",
-            "sharePointSetupUserAccountPassword": "[parameters('sharePointSetupUserAccountPassword')]"
-          }
+            "sqlServerServiceAccountPassword": "[parameters('sqlServerServiceAccountPassword')]"
+            }
         }
       }
     }

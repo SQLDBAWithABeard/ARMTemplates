@@ -198,7 +198,6 @@
     ],
     "outputs": {
       "location": "[location()]",
-      "sharepointFarmName": "[basics('sharePointFarmName')]",
       "storageAccountNamePrefix": "[steps('infrastructureConfig').storageAccounts.prefix]",
       "storageAccountType": "[steps('infrastructureConfig').storageAccounts.type]",
       "adminUsername": "[steps('infrastructureConfig').adminUsername]",
