@@ -37,7 +37,7 @@
       "metadata": {
         "description": "The location of resources, such as templates and DSC modules, that the template depends on"
       },
-      "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/active-directory-new-domain"
+      "defaultValue": "https://raw.githubusercontent.com/SQLDBAWithABeard/ARMTemplates/tree/master/AD%20-%20SQL2016%20x2%20-%20Octopus%20Deploy%20-%20File%20Server"
     },
     "_artifactsLocationSasToken": {
       "type": "securestring",
