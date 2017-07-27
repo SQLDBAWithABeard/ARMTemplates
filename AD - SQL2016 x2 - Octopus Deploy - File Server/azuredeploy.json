@@ -14,23 +14,31 @@
         "description": "The password for the administrator account of the new VM and domain"
       }
     },
-        "ADvmName": {
-          "type": "string",
-          "metadata": {
-            "description": "The name of the DC"
-          }
-        },
+    "ADvmName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the DC"
+      }
+    },
+    "ADvmsize": {
+      "type": "string",
+      "metadata": {
+        "description": "The VM Size of the DC"
+      }
+    },
     "domainName": {
       "type": "string",
       "metadata": {
         "description": "The FQDN of the Active Directory Domain to be created"
-      }
+      },
+      "defaultValue": "TheBeard"
     },
     "dnsPrefix": {
       "type": "string",
       "metadata": {
-        "description": "The DNS prefix for the public IP address used by the Load Balancer"
-      }
+        "description": "The DNS prefix for the public IP address used by the Load Balancer - needs to be small letters and numbers"
+      },
+      "defaultValue": "dlmdemo01"
     },
     "_artifactsLocation": {
       "type": "string",
@@ -207,7 +215,7 @@
       ],
       "properties": {
         "hardwareProfile": {
-          "vmSize": "Standard_D2_v2"
+          "vmSize": "[parameters('AdvmSize')]"
         },
         "availabilitySet": {
           "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('adAvailabilitySetName'))]"
