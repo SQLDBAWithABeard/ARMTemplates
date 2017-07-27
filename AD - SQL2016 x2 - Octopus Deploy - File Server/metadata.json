@@ -1,7 +1,0 @@
-{
-  "itemDisplayName": "Azure VM with a new AD Forest",
-  "description": "This is the new template",
-  "summary": "This is the new template that creates an Azure VM with AD",
-  "githubUsername": "sqldbawithabeard",
-  "dateUpdated": "2017-07-27"
-}
