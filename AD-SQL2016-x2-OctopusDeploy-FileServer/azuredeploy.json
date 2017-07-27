@@ -175,7 +175,7 @@
       },
       "defaultValue": "10.0.2.0/24"
     },
-    "spAppSubnet": {
+    "ClientSubnet": {
       "type": "string",
       "metadata": {
         "group": "SharePoint Server settings",
@@ -297,7 +297,7 @@
       "staticSubnetName": "staticSubnet",
       "sqlSubnetName": "sqlSubnet",
       "FileServerSubnetName": "FileServerSubnet",
-      "spAppSubnetName": "spAppSubnet"
+      "ClientSubnetName": "ClientSubnet"
     },
     "RDPNAT": "RDP",
     "ClientNAT": "ClientNAT",
@@ -309,7 +309,7 @@
         "sqlAvailabilitySetName": "sqlAvailabilitySet",
         "adAvailabilitySetName": "adAvailabilitySet",
         "FileServerAvailabilitySetName": "FileServerAvailabilitySet",
-        "spAppAvailabilitySetName": "spAppAvailabilitySet"
+        "ClientAvailabilitySetName": "ClientAvailabilitySet"
       },
       "noOfSqlVMs": 2,
       "noOfspRoleVMs": 2,
@@ -319,7 +319,7 @@
       "sqlVMName": "sql-",
       "sqlwVMName": "sql-w",
       "FileServerVMName": "sps-web-",
-      "spappVMName": "sps-app-",
+      "ClientVMName": "sps-app-",
       "windowsImagePublisher": "MicrosoftWindowsServer",
       "windowsImageOffer": "WindowsServer",
       "windowsImageSKU": "2012-R2-Datacenter",
@@ -348,7 +348,7 @@
     "staticSubnetRef": "[concat(variables('VnetID'),'/subnets/',variables('subnetNames').staticSubnetName)]",
     "sqlSubnetRef": "[concat(variables('VnetID'),'/subnets/',variables('subnetNames').sqlSubnetName)]",
     "FileServerSubnetRef": "[concat(variables('VnetID'),'/subnets/',variables('subnetNames').FileServerSubnetName)]",
-    "spAppSubnetRef": "[concat(variables('VnetID'),'/subnets/',variables('subnetNames').spAppSubnetName)]",
+    "ClientSubnetRef": "[concat(variables('VnetID'),'/subnets/',variables('subnetNames').ClientSubnetName)]",
     "FileServerResourceIdexisting": "[resourceId(parameters('FileServerIPRGName'),concat('Microsoft.Network','/','publicIPAddresses'),parameters('FileServerIPAddressName'))]",
     "FileServerResourceIdnew": "[resourceId(concat('Microsoft.Network','/','publicIPAddresses'),parameters('FileServerIPAddressName'))]",
     "sharepointCAfqdn": "[concat(variables('ClientDNSPrefix'),'.',toLower(trim(replace(parameters('location'),' ' ,''))),'.cloudapp.azure.com')]",
@@ -363,7 +363,7 @@
       "adAvailabilitySetName": "[resourceId('Microsoft.Compute/availabilitySets',variables('vmSettings').availabilitySets.adAvailabilitySetName)]",
       "sqlAvailabilitySetName": "[resourceId('Microsoft.Compute/availabilitySets',variables('vmSettings').availabilitySets.sqlAvailabilitySetName)]",
       "FileServerAvailabilitySetName": "[resourceId('Microsoft.Compute/availabilitySets',variables('vmSettings').availabilitySets.FileServerAvailabilitySetName)]",
-      "spAppAvailabilitySetName": "[resourceId('Microsoft.Compute/availabilitySets',variables('vmSettings').availabilitySets.spAppAvailabilitySetName)]"
+      "ClientAvailabilitySetName": "[resourceId('Microsoft.Compute/availabilitySets',variables('vmSettings').availabilitySets.ClientAvailabilitySetName)]"
     },
     "derivedIds": {
       "adIPConfigID": "[concat(variables('ids').adNicId,'/ipConfigurations/ipconfig1')]",
@@ -400,9 +400,9 @@
         }
       },
       {
-        "name": "[variables('subnetNames').spAppSubnetName]",
+        "name": "[variables('subnetNames').ClientSubnetName]",
         "properties": {
-          "addressPrefix": "[parameters('spAppSubnet')]"
+          "addressPrefix": "[parameters('ClientSubnet')]"
         }
       }
     ]
@@ -547,8 +547,8 @@
           "FileServerAvailabilitySetName": {
             "value": "[variables('vmSettings').availabilitySets.FileServerAvailabilitySetName]"
           },
-          "spAppAvailabilitySetName": {
-            "value": "[variables('vmSettings').availabilitySets.spAppAvailabilitySetName]"
+          "ClientAvailabilitySetName": {
+            "value": "[variables('vmSettings').availabilitySets.ClientAvailabilitySetName]"
           }
         }
       }
@@ -729,11 +729,11 @@
           "FileServerBEAddressPoolID": {
             "value": "[variables('derivedIds').FileServerBEAddressPoolID]"
           },
-          "spappVMName": {
-            "value": "[variables('vmSettings').spappVMName]"
+          "ClientVMName": {
+            "value": "[variables('vmSettings').ClientVMName]"
           },
-          "spAppSubnetRef": {
-            "value": "[variables('spAppSubnetRef')]"
+          "ClientSubnetRef": {
+            "value": "[variables('ClientSubnetRef')]"
           },
           "ClientBEAddressPoolID": {
             "value": "[variables('derivedIds').ClientBEAddressPoolID]"
@@ -1187,8 +1187,8 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "spappVMName": {
-            "value": "[variables('vmSettings').spappVMName]"
+          "ClientVMName": {
+            "value": "[variables('vmSettings').ClientVMName]"
           },
           "FileServerVMName": {
             "value": "[variables('vmSettings').FileServerVMName]"
@@ -1202,8 +1202,8 @@
           "FileServerAvailabilitySet": {
             "value": "[variables('ids').FileServerAvailabilitySetName]"
           },
-          "spAppAvailabilitySet": {
-            "value": "[variables('ids').spAppAvailabilitySetName]"
+          "ClientAvailabilitySet": {
+            "value": "[variables('ids').ClientAvailabilitySetName]"
           },
           "adminUsername": {
             "value": "[parameters('adminUsername')]"
@@ -1256,8 +1256,8 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "spappVMName": {
-            "value": "[variables('vmSettings').spappVMName]"
+          "ClientVMName": {
+            "value": "[variables('vmSettings').ClientVMName]"
           },
           "sqlVMName": {
             "value": "[variables('vmSettings').sqlVMName]"
