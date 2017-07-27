@@ -86,7 +86,7 @@
         "group": "Active Directory settings",
         "description": "The FQDN of the AD Domain created "
       },
-      "defaultValue": "sphafarm.local"
+      "defaultValue": "TheBeard.local"
     },
     "adVMSize": {
       "type": "string",
@@ -350,8 +350,6 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "Microsoft.Resources/deployments/SettingUpClientPublicIP",
-        "Microsoft.Resources/deployments/SettingUpFileServerPublicIP",
         "Microsoft.Resources/deployments/SettingUpRdp",
         "Microsoft.Resources/deployments/CreatingVirtualNetwork"
       ],
