@@ -23,33 +23,7 @@
     "spCAlbFEConfigID": {
       "type": "string"
     },
-    "spWebLBName": {
-      "type": "string"
-    },
-    "spWebLBFE": {
-      "type": "string"
-    },
-    "spWebResourceId": {
-      "type": "string"
-    },
-    "spWebLBBE": {
-      "type": "string"
-    },
-    "spWebLB": {
-      "type": "string"
-    },
-    "spWebLBFEConfigID": {
-      "type": "string"
-    },
-    "spWebBEAddressPoolID": {
-      "type": "string"
-    },
-    "spWebProbeID": {
-      "type": "string"
-    },
-    "spWebProbe": {
-      "type": "string"
-    },
+
     "sqlLBName": {
       "type": "string"
     },
@@ -108,61 +82,6 @@
               "frontendPort": 80,
               "backendPort": 80,
               "enableFloatingIP": false
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "2015-06-15",
-      "name": "[parameters('spWebLBName')]",
-      "type": "Microsoft.Network/loadBalancers",
-      "location": "[parameters('location')]",
-      "properties": {
-        "frontendIPConfigurations": [
-          {
-            "name": "[parameters('spWebLBFE')]",
-            "properties": {
-              "publicIPAddress": {
-                "id": "[parameters('spWebResourceId')]"
-              }
-            }
-          }
-        ],
-        "backendAddressPools": [
-          {
-            "name": "[parameters('spWebLBBE')]"
-          }
-        ],
-        "loadBalancingRules": [
-          {
-            "name": "[parameters('spWebLB')]",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[parameters('spWebLBFEConfigID')]"
-              },
-              "backendAddressPool": {
-                "id": "[parameters('spWebBEAddressPoolID')]"
-              },
-              "probe": {
-                "id": "[parameters('spWebProbeID')]"
-              },
-              "protocol": "Tcp",
-              "frontendPort": 80,
-              "backendPort": 80,
-              "enableFloatingIP": false
-            }
-          }
-        ],
-        "probes": [
-          {
-            "name": "[parameters('spWebProbe')]",
-            "properties": {
-              "protocol": "Http",
-              "port": 8088,
-              "intervalInSeconds": 15,
-              "numberOfProbes": 5,
-              "requestPath": "/iisstart.htm"
             }
           }
         ]

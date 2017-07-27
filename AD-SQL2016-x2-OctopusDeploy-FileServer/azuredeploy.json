@@ -2,14 +2,6 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "sharepointFarmName": {
-      "type": "string",
-      "metadata": {
-        "group": "basics",
-        "description": "The name of the SharePoint farm"
-      },
-      "defaultValue": "spfarm"
-    },
     "location": {
       "type": "string",
       "metadata": {
@@ -36,7 +28,7 @@
       "type": "string",
       "metadata": {
         "group": "Infrastructure settings",
-        "description": "The prefix of the new storage account created to store the VM disks. Different storage accounts will be created for AD, SQL, and SharePoint VMs."
+        "description": "The prefix of the new storage account created to store the VM disks. Different storage accounts will be created for AD, SQL"
       }
     },
     "storageAccountType": {
@@ -49,7 +41,7 @@
     },
     "virtualNetworkName": {
       "type": "string",
-      "defaultValue": "spfarmhaVNET",
+      "defaultValue": "DLMDemoVNET",
       "metadata": {
         "group": "Infrastructure settings",
         "description": "Name of virtual network to be created"
@@ -87,7 +79,7 @@
         "artifactsLocationSasToken": ""
       },
       "defaultValue": ""
-    },    
+    },
     "domainName": {
       "type": "string",
       "metadata": {
@@ -159,172 +151,49 @@
       },
       "defaultValue": "10.0.1.0/24"
     },
-    "FileServerSubnet": {
-      "type": "string",
-      "metadata": {
-        "group": "SharePoint Server settings",
-        "description": "The address range of the SP Web subnet created in the new VNET"
-      },
-      "defaultValue": "10.0.2.0/24"
-    },
-    "ClientSubnet": {
-      "type": "string",
-      "metadata": {
-        "group": "SharePoint Server settings",
-        "description": "The address range of the SP App subnet created in the new VNET"
-      },
-      "defaultValue": "10.0.3.0/24"
-    },
-    "FileServerIPRGName": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "group": "SharePoint Server settings",
-        "description": "Resource Group containing existing SP Web IP address"
-      }
-    },
-    "FileServerIPNewOrExisting": {
-      "type": "string",
-      "defaultValue": "new",
-      "allowedValues": [
-        "new",
-        "existing"
-      ],
-      "metadata": {
-        "group": "SharePoint Server settings",
-        "description": "Indicates whether the Sharepoint farm's IP is new or existing"
-      }
-    },
-    "FileServerIPAddressName": {
-      "type": "string",
-      "metadata": {
-        "group": "SharePoint Server settings",
-        "description": "The new or existing - depending on value of FileServerIPNewOrExisting parameter - IP address name for SP Web "
-      }
-    },
     "dnsPrefix": {
       "type": "string",
       "metadata": {
-        "group": "SharePoint Server settings",
-        "description": "The DNS Prefix for the Public IP Address for the Sharepoint Web Application"
+        "group": "Server settings",
+        "description": "The DNS Prefix for the Public IP Address"
       }
-    },
-    "spVMSize": {
-      "type": "string",
-      "metadata": {
-        "group": "SharePoint Server settings",
-        "description": "The size of the SP VMs Created"
-      },
-      "defaultValue": "Standard_DS2"
-    },
-    "sharePointSetupUserAccountUserName": {
-      "type": "string",
-      "metadata": {
-        "group": "SharePoint Server settings",
-        "description": "The Sharepoint Setup account name"
-      },
-      "defaultValue": "sp_setup"
-    },
-    "sharePointSetupUserAccountPassword": {
-      "type": "securestring",
-      "metadata": {
-        "group": "SharePoint Server settings",
-        "description": "The Sharepoint Setup account password"
-      }
-    },
-    "sharePointFarmAccountUserName": {
-      "type": "string",
-      "metadata": {
-        "group": "SharePoint Server settings",
-        "description": "The Sharepoint Farm account name"
-      },
-      "defaultValue": "sp_farm"
-    },
-    "sharePointFarmAccountPassword": {
-      "type": "securestring",
-      "metadata": {
-        "group": "SharePoint Server settings",
-        "description": "The Sharepoint Farm account password"
-      }
-    },
-    "sharePointFarmPassphrasePassword": {
-      "type": "securestring",
-      "metadata": {
-        "group": "SharePoint Server settings",
-        "description": "The Sharepoint Farm Passphrase"
-      }
-    },
-    "spSiteTemplateName": {
-      "type": "string",
-      "metadata": {
-        "group": "SharePoint Server settings",
-        "description": "The Sharepoint Content Site Template Name"
-      },
-      "defaultValue": "STS#0"
     }
   },
   "variables": {
-    "ClientDNSPrefix": "[concat(parameters('dnsPrefix'),'admin')]",
-    "ClientIPAddressName": "[concat(parameters('FileServerIPAddressName'),'admin')]",
-    "configDatabaseName": "SP_Config",
-    "administrationContentDatabaseName": "SP_AdminContent",
-    "contentDatabaseName": "spfarm_Content",
     "lbSettings": {
       "rdpLBFE": "rdpLBFE",
       "sqlLBFE": "sqlLBFE",
-      "FileServerLBFE": "FileServerLBFE",
-      "ClientLBFE": "ClientLBFE",
       "adLBBE": "adLBBE",
       "sqlLBBE": "sqlLBBE",
-      "FileServerLBBE": "FileServerLBBE",
-      "ClientLBBE": "ClientLBBE",
-      "FileServerLB": "FileServer",
-      "ClientLB": "ClientLB",
       "sqlLBName": "sqlLoadBalancer",
-      "rdpLBName": "rdpLoadBalancer",
-      "FileServerLBName": "FileServerLoadBalancer",
-      "ClientLBName": "ClientLoadBalancer"
+      "rdpLBName": "rdpLoadBalancer"
     },
     "subnetNames": {
       "staticSubnetName": "staticSubnet",
-      "sqlSubnetName": "sqlSubnet",
-      "FileServerSubnetName": "FileServerSubnet",
-      "ClientSubnetName": "ClientSubnet"
+      "sqlSubnetName": "sqlSubnet"
     },
     "RDPNAT": "RDP",
-    "ClientNAT": "ClientNAT",
     "SQLAOProbe": "SQLAlwaysOnEndPointProbe",
-    "FileServerProbe": "FileServerProbe",
     "rdpIPAddressName": "rdpIP",
     "vmSettings": {
       "availabilitySets": {
         "sqlAvailabilitySetName": "sqlAvailabilitySet",
-        "adAvailabilitySetName": "adAvailabilitySet",
-        "FileServerAvailabilitySetName": "FileServerAvailabilitySet",
-        "ClientAvailabilitySetName": "ClientAvailabilitySet"
+        "adAvailabilitySetName": "adAvailabilitySet"
       },
-      "noOfSqlVMs": 2,
-      "noOfspRoleVMs": 2,
+      "noOfSqlVMs": 3,
       "vmContainerName": "vhds",
       "adPDCVMName": "ad-pdc",
       "sqlVMName": "sql-",
       "sqlwVMName": "sql-w",
-      "FileServerVMName": "sps-web-",
-      "ClientVMName": "sps-app-",
       "windowsImagePublisher": "MicrosoftWindowsServer",
       "windowsImageOffer": "WindowsServer",
       "windowsImageSKU": "2012-R2-Datacenter",
       "sqlImagePublisher": "MicrosoftSQLServer",
-      "sqlImageOffer": "SQL2014SP1-WS2012R2",
-      "sqlImageSKU": "Enterprise",
-      "spImagePublisher": "MicrosoftSharePoint",
-      "spImageOffer": "MicrosoftSharePointServer",
-      "spImageSKU": "2016",
+      "sqlImageOffer": "SQL2016SP1-WS2016",
+          "sqlImageSKU": "Enterprise",
       "rdpPort": 3389,
-      "spCentralAdminPort": 80,
       "windowsDiskSize": 128,
-      "sqlDiskSize": 1000,
-      "spDiskSize": 128
+      "sqlDiskSize": 1000
     },
     "prefix": "[tolower(trim(subString(concat(parameters('dnsPrefix'),'           '),0,10)))]",
     "sqlAOEPName": "[concat(variables('prefix'),'-hadr')]",
@@ -337,38 +206,21 @@
     "VnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
     "staticSubnetRef": "[concat(variables('VnetID'),'/subnets/',variables('subnetNames').staticSubnetName)]",
     "sqlSubnetRef": "[concat(variables('VnetID'),'/subnets/',variables('subnetNames').sqlSubnetName)]",
-    "FileServerSubnetRef": "[concat(variables('VnetID'),'/subnets/',variables('subnetNames').FileServerSubnetName)]",
-    "ClientSubnetRef": "[concat(variables('VnetID'),'/subnets/',variables('subnetNames').ClientSubnetName)]",
-    "FileServerResourceIdexisting": "[resourceId(parameters('FileServerIPRGName'),concat('Microsoft.Network','/','publicIPAddresses'),parameters('FileServerIPAddressName'))]",
-    "FileServerResourceIdnew": "[resourceId(concat('Microsoft.Network','/','publicIPAddresses'),parameters('FileServerIPAddressName'))]",
-    "sharepointCAfqdn": "[concat(variables('ClientDNSPrefix'),'.',toLower(trim(replace(parameters('location'),' ' ,''))),'.cloudapp.azure.com')]",
-    "FileServerfqdn": "[concat(parameters('dnsPrefix'),'.',toLower(trim(replace(parameters('location'),' ' ,''))),'.cloudapp.azure.com')]",
     "ids": {
       "adNicId": "[resourceId('Microsoft.Network/networkInterfaces',variables('adPdcNicName'))]",
       "rdplbID": "[resourceId('Microsoft.Network/loadBalancers',variables('lbSettings').rdpLBName)]",
-      "FileServerlbID": "[resourceId('Microsoft.Network/loadBalancers',variables('lbSettings').FileServerLBName)]",
       "sqllbID": "[resourceId('Microsoft.Network/loadBalancers',variables('lbSettings').sqlLBName)]",
-      "ClientlbID": "[resourceId('Microsoft.Network/loadBalancers',variables('lbSettings').ClientLBName)]",
-      "ClientResourceId": "[resourceId('Microsoft.Network/publicIPAddresses',variables('ClientIPAddressName'))]",
       "adAvailabilitySetName": "[resourceId('Microsoft.Compute/availabilitySets',variables('vmSettings').availabilitySets.adAvailabilitySetName)]",
-      "sqlAvailabilitySetName": "[resourceId('Microsoft.Compute/availabilitySets',variables('vmSettings').availabilitySets.sqlAvailabilitySetName)]",
-      "FileServerAvailabilitySetName": "[resourceId('Microsoft.Compute/availabilitySets',variables('vmSettings').availabilitySets.FileServerAvailabilitySetName)]",
-      "ClientAvailabilitySetName": "[resourceId('Microsoft.Compute/availabilitySets',variables('vmSettings').availabilitySets.ClientAvailabilitySetName)]"
+      "sqlAvailabilitySetName": "[resourceId('Microsoft.Compute/availabilitySets',variables('vmSettings').availabilitySets.sqlAvailabilitySetName)]"
     },
     "derivedIds": {
       "adIPConfigID": "[concat(variables('ids').adNicId,'/ipConfigurations/ipconfig1')]",
       "rdplbFEConfigID": "[concat(variables('ids').rdplbID,'/frontendIPConfigurations/',variables('lbSettings').rdpLBFE)]",
-      "FileServerLBFEConfigID": "[concat(variables('ids').FileServerlbID,'/frontendIPConfigurations/',variables('lbSettings').FileServerLBFE)]",
       "adRDPNATRuleID": "[concat(variables('ids').rdplbID,'/inboundNatRules/',variables('RDPNAT'))]",
       "adBEAddressPoolID": "[concat(variables('ids').rdplbID,'/backendAddressPools/',variables('lbSettings').adLBBE)]",
-      "FileServerProbeID": "[concat(variables('ids').FileServerlbID,'/probes/',variables('FileServerProbe'))]",
-      "FileServerBEAddressPoolID": "[concat(variables('ids').FileServerlbID,'/backendAddressPools/',variables('lbSettings').FileServerLBBE)]",
       "sqlBEAddressPoolID": "[concat(variables('ids').sqllbID,'/backendAddressPools/',variables('lbSettings').sqlLBBE)]",
       "sqllbFEConfigID": "[concat(variables('ids').sqllbID,'/frontendIPConfigurations/',variables('lbSettings').sqlLBFE)]",
-      "sqllbProbeID": "[concat(variables('ids').sqllbID,'/probes/',variables('SQLAOProbe'))]",
-      "ClientBEAddressPoolID": "[concat(variables('ids').ClientlbID,'/backendAddressPools/',variables('lbSettings').ClientLBBE)]",
-      "ClientlbFEConfigID": "[concat(variables('ids').ClientlbID,'/frontendIPConfigurations/',variables('lbSettings').ClientLBFE)]",
-      "ClientNATRuleID": "[concat(variables('ids').ClientlbID,'/inboundNatRules/',variables('ClientNAT'))]"
+      "sqllbProbeID": "[concat(variables('ids').sqllbID,'/probes/',variables('SQLAOProbe'))]"
     },
     "subnets": [
       {
@@ -381,18 +233,6 @@
         "name": "[variables('subnetNames').sqlSubnetName]",
         "properties": {
           "addressPrefix": "[parameters('sqlSubnet')]"
-        }
-      },
-      {
-        "name": "[variables('subnetNames').FileServerSubnetName]",
-        "properties": {
-          "addressPrefix": "[parameters('FileServerSubnet')]"
-        }
-      },
-      {
-        "name": "[variables('subnetNames').ClientSubnetName]",
-        "properties": {
-          "addressPrefix": "[parameters('ClientSubnet')]"
         }
       }
     ]
@@ -457,64 +297,6 @@
       }
     },
     {
-      "name": "SettingUpFileServerPublicIP",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'),'/','nestedtemplates','/','publicip-',parameters('FileServerIPNewOrExisting'),'.json', parameters('_artifactsLocationSasToken'))]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "publicIPAddressName": {
-            "value": "[parameters('FileServerIPAddressName')]"
-          },
-          "publicIPAddressType": {
-            "value": "dynamic"
-          },
-          "dnsPrefix": {
-            "value": "[parameters('dnsPrefix')]"
-          },
-          "publicIpRGName": {
-            "value": "[parameters('FileServerIPRGName')]"
-          }
-        }
-      }
-    },
-    {
-      "name": "SettingUpClientPublicIP",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'),'/','nestedtemplates','/','publicip-new.json', parameters('_artifactsLocationSasToken'))]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "publicIPAddressName": {
-            "value": "[variables('ClientIPAddressName')]"
-          },
-          "publicIPAddressType": {
-            "value": "dynamic"
-          },
-          "dnsPrefix": {
-            "value": "[variables('ClientDNSPrefix')]"
-          },
-          "publicIpRGName": {
-            "value": "[resourceGroup().name]"
-          }
-        }
-      }
-    },
-    {
       "name": "CreatingAvailabilitySets",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
@@ -533,12 +315,6 @@
           },
           "sqlAvailabilitySetName": {
             "value": "[variables('vmSettings').availabilitySets.sqlAvailabilitySetName]"
-          },
-          "FileServerAvailabilitySetName": {
-            "value": "[variables('vmSettings').availabilitySets.FileServerAvailabilitySetName]"
-          },
-          "ClientAvailabilitySetName": {
-            "value": "[variables('vmSettings').availabilitySets.ClientAvailabilitySetName]"
           }
         }
       }
@@ -588,51 +364,6 @@
         "parameters": {
           "location": {
             "value": "[parameters('location')]"
-          },
-          "ClientLBName": {
-            "value": "[variables('lbSettings').ClientLBName]"
-          },
-          "ClientLBFE": {
-            "value": "[variables('lbSettings').ClientLBFE]"
-          },
-          "ClientResourceId": {
-            "value": "[variables('ids').ClientResourceId]"
-          },
-          "ClientLBBE": {
-            "value": "[variables('lbSettings').ClientLBBE]"
-          },
-          "ClientNAT": {
-            "value": "[variables('ClientNAT')]"
-          },
-          "ClientlbFEConfigID": {
-            "value": "[variables('derivedIds').ClientlbFEConfigID]"
-          },
-          "FileServerLBName": {
-            "value": "[variables('lbSettings').FileServerLBName]"
-          },
-          "FileServerLBFE": {
-            "value": "[variables('lbSettings').FileServerLBFE]"
-          },
-          "FileServerResourceId": {
-            "value": "[variables(concat('FileServerResourceId',parameters('FileServerIPNewOrExisting')))]"
-          },
-          "FileServerLBBE": {
-            "value": "[variables('lbSettings').FileServerLBBE]"
-          },
-          "FileServerLB": {
-            "value": "[variables('lbSettings').FileServerLB]"
-          },
-          "FileServerLBFEConfigID": {
-            "value": "[variables('derivedIds').FileServerLBFEConfigID]"
-          },
-          "FileServerBEAddressPoolID": {
-            "value": "[variables('derivedIds').FileServerBEAddressPoolID]"
-          },
-          "FileServerProbeID": {
-            "value": "[variables('derivedIds').FileServerProbeID]"
-          },
-          "FileServerProbe": {
-            "value": "[variables('FileServerProbe')]"
           },
           "sqlLBName": {
             "value": "[variables('lbSettings').sqlLBName]"
@@ -703,27 +434,6 @@
           },
           "sqlBEAddressPoolID": {
             "value": "[variables('derivedIds').sqlBEAddressPoolID]"
-          },
-          "FileServerVMName": {
-            "value": "[variables('vmSettings').FileServerVMName]"
-          },
-          "FileServerSubnetRef": {
-            "value": "[variables('FileServerSubnetRef')]"
-          },
-          "FileServerBEAddressPoolID": {
-            "value": "[variables('derivedIds').FileServerBEAddressPoolID]"
-          },
-          "ClientVMName": {
-            "value": "[variables('vmSettings').ClientVMName]"
-          },
-          "ClientSubnetRef": {
-            "value": "[variables('ClientSubnetRef')]"
-          },
-          "ClientBEAddressPoolID": {
-            "value": "[variables('derivedIds').ClientBEAddressPoolID]"
-          },
-          "ClientNATRuleID": {
-            "value": "[variables('derivedIds').ClientNATRuleID]"
           },
           "sqlwNicName": {
             "value": "[variables('sqlwNicName')]"
@@ -802,122 +512,6 @@
       "apiVersion": "2015-01-01",
       "dependsOn": [
         "Microsoft.Resources/deployments/ProvisioningPrimaryADDomainController"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), '/', 'nestedtemplates', '/','vnet-with-dns-server.json', parameters('_artifactsLocationSasToken'))]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "virtualNetworkName": {
-            "value": "[parameters('virtualNetworkName')]"
-          },
-          "virtualNetworkAddressRange": {
-            "value": "[parameters('virtualNetworkAddressRange')]"
-          },
-          "subnets": {
-            "value": "[variables('subnets')]"
-          },
-          "DNSServerAddress": {
-            "value": [
-              "[parameters('adPdcNicIPAddress')]"
-            ]
-          }
-        }
-      }
-    },
-    {
-      "name": "ProvisioningBackupADDomainController",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn": [
-        "Microsoft.Resources/deployments/CreatingStorageAccounts",
-        "Microsoft.Resources/deployments/CreatingNetworkInterfaces",
-        "Microsoft.Resources/deployments/CreatingAvailabilitySets"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'),'/','nestedtemplates','/','provisioningBackupDomainController.json', parameters('_artifactsLocationSasToken'))]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "storageAccountNamePrefix": {
-            "value": "[parameters('storageAccountNamePrefix')]"
-          },
-          "availabilitySet": {
-            "value": "[variables('ids').adAvailabilitySetName]"
-          },
-          "adVMSize": {
-            "value": "[parameters('adVMSize')]"
-          },
-          "adminUsername": {
-            "value": "[parameters('adminUsername')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "windowsImagePublisher": {
-            "value": "[variables('vmSettings').windowsImagePublisher]"
-          },
-          "windowsImageOffer": {
-            "value": "[variables('vmSettings').windowsImageOffer]"
-          },
-          "windowsImageSKU": {
-            "value": "[variables('vmSettings').windowsImageSKU]"
-          },
-          "vmContainerName": {
-            "value": "[variables('vmSettings').vmContainerName]"
-          },
-          "DNSServer": {
-            "value": "[parameters('adPdcNicIPAddress')]"
-          }
-        }
-      }
-    },
-    {
-      "name": "ConfiguringBackupADDomainController",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn": [
-        "Microsoft.Resources/deployments/ProvisioningBackupADDomainController",
-        "Microsoft.Resources/deployments/UpdatingDNStoPrimaryADVM"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'),'/','nestedtemplates','/','configuringBackupDomainController.json', parameters('_artifactsLocationSasToken'))]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "adminUsername": {
-            "value": "[parameters('adminUsername')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "domainName": {
-            "value": "[parameters('domainName')]"
-          }
-        }
-      }
-    },
-    {
-      "name": "UpdatingDNSwithBackupADVM",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn": [
-        "Microsoft.Resources/deployments/ConfiguringBackupADDomainController"
       ],
       "properties": {
         "mode": "Incremental",
@@ -1048,7 +642,6 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "Microsoft.Resources/deployments/UpdatingDNSwithBackupADVM",
         "Microsoft.Resources/deployments/ProvisioningSQLVirtualMachines"
       ],
       "properties": {
@@ -1085,14 +678,8 @@
           "sqlServerServiceAccountUserName": {
             "value": "[parameters('sqlServerServiceAccountUserName')]"
           },
-          "sharePointSetupUserAccountUserName": {
-            "value": "[parameters('sharePointSetupUserAccountUserName')]"
-          },
           "sqlServerServiceAccountPassword": {
             "value": "[parameters('sqlServerServiceAccountPassword')]"
-          },
-          "sharePointSetupUserAccountPassword": {
-            "value": "[parameters('sharePointSetupUserAccountPassword')]"
           },
           "configureClusterModulesURL": {
             "value": "[concat(parameters('_artifactsLocation'),'/','dscv2','/','ConfigureFailoverCluster.ps1.zip', parameters('_artifactsLocationSasToken'))]"
@@ -1132,176 +719,9 @@
           }
         }
       }
-    },
-    {
-      "name": "CreatingSharepointVirtualMachines",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn": [
-        "Microsoft.Resources/deployments/CreatingStorageAccounts",
-        "Microsoft.Resources/deployments/CreatingNetworkInterfaces",
-        "Microsoft.Resources/deployments/CreatingAvailabilitySets"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'),'/','nestedtemplates','/','provisioningSharepointVMs.json', parameters('_artifactsLocationSasToken'))]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "ClientVMName": {
-            "value": "[variables('vmSettings').ClientVMName]"
-          },
-          "FileServerVMName": {
-            "value": "[variables('vmSettings').FileServerVMName]"
-          },
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "spVMSize": {
-            "value": "[parameters('spVMSize')]"
-          },
-          "FileServerAvailabilitySet": {
-            "value": "[variables('ids').FileServerAvailabilitySetName]"
-          },
-          "ClientAvailabilitySet": {
-            "value": "[variables('ids').ClientAvailabilitySetName]"
-          },
-          "adminUsername": {
-            "value": "[parameters('adminUsername')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "spImagePublisher": {
-            "value": "[variables('vmSettings').spImagePublisher]"
-          },
-          "spImageOffer": {
-            "value": "[variables('vmSettings').spImageOffer]"
-          },
-          "spImageSKU": {
-            "value": "[variables('vmSettings').spImageSKU]"
-          },
-          "vmContainerName": {
-            "value": "[variables('vmSettings').vmContainerName]"
-          },
-          "storageAccountNamePrefix": {
-            "value": "[parameters('storageAccountNamePrefix')]"
-          },
-          "spPreparationModulesURL": {
-            "value": "[concat(parameters('_artifactsLocation'),'/','dscv2','/','PrepareSharePointServerHA.ps1.zip', parameters('_artifactsLocationSasToken'))]"
-          },
-          "spPreparationFunction": {
-            "value": "PrepareSharePointServerHA.ps1\\PrepareSharePointServerHA"
-          },
-          "domainName": {
-            "value": "[parameters('domainName')]"
-          },
-          "DNSServer": {
-            "value": "[parameters('adPdcNicIPAddress')]"
-          }
-        }
-      }
-    },
-    {
-      "name": "ConfiguringSharepoint",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn": [
-        "Microsoft.Resources/deployments/ConfiguringSQLAlwaysOnCluster",
-        "Microsoft.Resources/deployments/CreatingSharepointVirtualMachines"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'),'/','nestedtemplates','/','configuringSharePoint.json', parameters('_artifactsLocationSasToken'))]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "ClientVMName": {
-            "value": "[variables('vmSettings').ClientVMName]"
-          },
-          "sqlVMName": {
-            "value": "[variables('vmSettings').sqlVMName]"
-          },
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "spConfigurationModulesURL": {
-            "value": "[concat(parameters('_artifactsLocation'),'/','dscv2','/','ConfigureSharePointServerHA.ps1.zip', parameters('_artifactsLocationSasToken'))]"
-          },
-          "spConfigurationFunction": {
-            "value": "ConfigureSharePointServerHA.ps1\\ConfigureSharePointServerHA"
-          },
-          "domainName": {
-            "value": "[parameters('domainName')]"
-          },
-          "adminUserName": {
-            "value": "[parameters('adminUserName')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "sharePointSetupUserAccountUserName": {
-            "value": "[parameters('sharePointSetupUserAccountUserName')]"
-          },
-          "sharePointFarmAccountUserName": {
-            "value": "[parameters('sharePointFarmAccountUserName')]"
-          },
-          "sqlServerServiceAccountUserName": {
-            "value": "[parameters('sqlServerServiceAccountUserName')]"
-          },
-          "sqlAOAGName": {
-            "value": "[variables('sqlAOAGName')]"
-          },
-          "administrationContentDatabaseName": {
-            "value": "[variables('administrationContentDatabaseName')]"
-          },
-          "configDatabaseName": {
-            "value": "[variables('configDatabaseName')]"
-          },
-          "contentDatabaseName": {
-            "value": "[variables('contentDatabaseName')]"
-          },
-          "sharepointCAfqdn": {
-            "value": "[variables('sharepointCAfqdn')]"
-          },
-          "sharePointSetupUserAccountPassword": {
-            "value": "[parameters('sharePointSetupUserAccountPassword')]"
-          },
-          "sharePointFarmAccountPassword": {
-            "value": "[parameters('sharePointFarmAccountPassword')]"
-          },
-          "sharePointFarmPassphrasePassword": {
-            "value": "[parameters('sharePointFarmPassphrasePassword')]"
-          },
-          "sqlServerServiceAccountPassword": {
-            "value": "[parameters('sqlServerServiceAccountPassword')]"
-          },
-          "FileServerVMName": {
-            "value": "[variables('vmSettings').FileServerVMName]"
-          },
-          "sharepointFarmName": {
-            "value": "[parameters('sharepointFarmName')]"
-          },
-          "FileServerfqdn": {
-            "value": "[variables('FileServerfqdn')]"
-          },
-          "spSiteTemplateName": {
-            "value": "[parameters('spSiteTemplateName')]"
-          }
-        }
-      }
     }
   ],
   "outputs": {
-    "fqdn": {
-      "value": "[variables('FileServerfqdn')]",
-      "type": "string"
-    },
-    "cafqdn": {
-      "value": "[variables('sharepointCAfqdn')]",
-      "type": "string"
-    }
+
   }
 }
