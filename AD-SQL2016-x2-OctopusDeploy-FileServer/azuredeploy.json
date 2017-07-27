@@ -352,7 +352,7 @@
     "spWebResourceIdexisting": "[resourceId(parameters('spWebIPRGName'),concat('Microsoft.Network','/','publicIPAddresses'),parameters('spWebIPAddressName'))]",
     "spWebResourceIdnew": "[resourceId(concat('Microsoft.Network','/','publicIPAddresses'),parameters('spWebIPAddressName'))]",
     "sharepointCAfqdn": "[concat(variables('spCADNSPrefix'),'.',toLower(trim(replace(parameters('location'),' ' ,''))),'.cloudapp.azure.com')]",
-    "sharepointWebfqdn": "[concat(parameters('dnsPrefix'),'.',toLower(trim(replace(parameters('location'),' ' ,''))),'.cloudapp.azure.com')]",
+    "FileServerfqdn": "[concat(parameters('dnsPrefix'),'.',toLower(trim(replace(parameters('location'),' ' ,''))),'.cloudapp.azure.com')]",
     "ids": {
       "adNicId": "[resourceId('Microsoft.Network/networkInterfaces',variables('adPdcNicName'))]",
       "rdplbID": "[resourceId('Microsoft.Network/loadBalancers',variables('lbSettings').rdpLBName)]",
@@ -467,7 +467,7 @@
       }
     },
     {
-      "name": "SettingUpSharepointWebPublicIP",
+      "name": "SettingUpFileServerPublicIP",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "properties": {
@@ -585,7 +585,7 @@
       "apiVersion": "2015-01-01",
       "dependsOn": [
         "Microsoft.Resources/deployments/SettingUpSharepointCentralAdminPublicIP",
-        "Microsoft.Resources/deployments/SettingUpSharepointWebPublicIP",
+        "Microsoft.Resources/deployments/SettingUpFileServerPublicIP",
         "Microsoft.Resources/deployments/SettingUpRdp",
         "Microsoft.Resources/deployments/CreatingVirtualNetwork"
       ],
@@ -1322,8 +1322,8 @@
           "sharepointFarmName": {
             "value": "[parameters('sharepointFarmName')]"
           },
-          "sharepointWebfqdn": {
-            "value": "[variables('sharepointWebfqdn')]"
+          "FileServerfqdn": {
+            "value": "[variables('FileServerfqdn')]"
           },
           "spSiteTemplateName": {
             "value": "[parameters('spSiteTemplateName')]"
@@ -1334,7 +1334,7 @@
   ],
   "outputs": {
     "fqdn": {
-      "value": "[variables('sharepointWebfqdn')]",
+      "value": "[variables('FileServerfqdn')]",
       "type": "string"
     },
     "cafqdn": {
