@@ -112,14 +112,6 @@
       },
       "defaultValue": "10.0.0.4"
     },
-    "adBdcNicIPAddress": {
-      "type": "string",
-      "metadata": {
-        "group": "Active Directory settings",
-        "description": "The IP address of the new AD VM"
-      },
-      "defaultValue": "10.0.0.5"
-    },
     "sqlVMSize": {
       "type": "string",
       "metadata": {
@@ -315,7 +307,6 @@
       "noOfspRoleVMs": 2,
       "vmContainerName": "vhds",
       "adPDCVMName": "ad-pdc",
-      "adBDCVMName": "ad-bdc",
       "sqlVMName": "sql-",
       "sqlwVMName": "sql-w",
       "FileServerVMName": "sps-web-",
@@ -342,7 +333,6 @@
     "sharePath": "[concat(variables('prefix'),'-fsw')]",
     "clusterName": "[concat(variables('prefix'),'-fc')]",
     "adPdcNicName": "[concat(variables('vmSettings').adPDCVMName,'-nic')]",
-    "adBdcNicName": "[concat(variables('vmSettings').adBDCVMName,'-nic')]",
     "sqlwNicName": "[concat(variables('vmSettings').sqlwVMName,'-nic')]",
     "VnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
     "staticSubnetRef": "[concat(variables('VnetID'),'/subnets/',variables('subnetNames').staticSubnetName)]",
@@ -705,12 +695,6 @@
           "adRDPNATRuleID": {
             "value": "[variables('derivedIds').adRDPNATRuleID]"
           },
-          "adBdcNicName": {
-            "value": "[variables('adBdcNicName')]"
-          },
-          "adBdcNicIPAddress": {
-            "value": "[parameters('adBdcNicIPAddress')]"
-          },
           "sqlVMName": {
             "value": "[variables('vmSettings').sqlVMName]"
           },
@@ -862,9 +846,6 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "adBDCVMName": {
-            "value": "[variables('vmSettings').adBDCVMName]"
-          },
           "location": {
             "value": "[parameters('location')]"
           },
@@ -895,17 +876,8 @@
           "vmContainerName": {
             "value": "[variables('vmSettings').vmContainerName]"
           },
-          "adBdcNicName": {
-            "value": "[variables('adBdcNicName')]"
-          },
           "DNSServer": {
             "value": "[parameters('adPdcNicIPAddress')]"
-          },
-          "adBDCPreparationFunction": {
-            "value": "PrepareADBDC.ps1\\PrepareADBDC"
-          },
-          "adBDCPreparationModulesURL": {
-            "value": "[concat(parameters('_artifactsLocation'),'/','dscv2','/','PrepareADBDC.ps1.zip', parameters('_artifactsLocationSasToken'))]"
           }
         }
       }
@@ -925,9 +897,6 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "adBDCVMName": {
-            "value": "[variables('vmSettings').adBDCVMName]"
-          },
           "location": {
             "value": "[parameters('location')]"
           },
@@ -939,12 +908,6 @@
           },
           "domainName": {
             "value": "[parameters('domainName')]"
-          },
-          "adBDCConfigurationFunction": {
-            "value": "ConfigureADBDC.ps1\\ConfigureADBDC"
-          },
-          "adBDCConfigurationModulesURL": {
-            "value": "[concat(parameters('_artifactsLocation'),'/','dscv2','/','ConfigureADBDC.ps1.zip', parameters('_artifactsLocationSasToken'))]"
           }
         }
       }
@@ -977,8 +940,7 @@
           },
           "DNSServerAddress": {
             "value": [
-              "[parameters('adPdcNicIPAddress')]",
-              "[parameters('adBdcNicIPAddress')]"
+              "[parameters('adPdcNicIPAddress')]"
             ]
           }
         }
