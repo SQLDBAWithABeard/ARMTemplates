@@ -5,25 +5,6 @@
     "location": {
       "type": "string"
     },
-    "spCALBName": {
-      "type": "string"
-    },
-    "spCALBFE": {
-      "type": "string"
-    },
-    "spCAResourceId": {
-      "type": "string"
-    },
-    "spCALBBE": {
-      "type": "string"
-    },
-    "spCANAT": {
-      "type": "string"
-    },
-    "spCAlbFEConfigID": {
-      "type": "string"
-    },
-
     "sqlLBName": {
       "type": "string"
     },
@@ -50,43 +31,6 @@
     }
   },
   "resources": [
-    {
-      "apiVersion": "2015-06-15",
-      "name": "[parameters('spCALBName')]",
-      "type": "Microsoft.Network/loadBalancers",
-      "location": "[parameters('location')]",
-      "properties": {
-        "frontendIPConfigurations": [
-          {
-            "name": "[parameters('spCALBFE')]",
-            "properties": {
-              "publicIPAddress": {
-                "id": "[parameters('spCAResourceId')]"
-              }
-            }
-          }
-        ],
-        "backendAddressPools": [
-          {
-            "name": "[parameters('spCALBBE')]"
-          }
-        ],
-        "inboundNatRules": [
-          {
-            "name": "[parameters('spCANAT')]",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[parameters('spCAlbFEConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 80,
-              "backendPort": 80,
-              "enableFloatingIP": false
-            }
-          }
-        ]
-      }
-    },
     {
       "apiVersion": "2015-06-15",
       "name": "[parameters('sqlLBName')]",
