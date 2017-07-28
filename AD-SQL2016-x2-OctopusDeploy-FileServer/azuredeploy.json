@@ -668,7 +668,7 @@
             "value": "[concat(parameters('_artifactsLocation'),'/','dscv2','/','ConfAO.ps1.zip', parameters('_artifactsLocationSasToken'))]"
           },
           "sqlAOConfigurationFunction": {
-            "value": "ConfAO.ps1\\ConfigureAlwaysOnSqlServer"
+            "value": "ConfigureAlwaysOnSqlServer.ps1\\ConfigureAlwaysOnSqlServer"
           },
           "sqlAOEPName": {
             "value": "[variables('sqlAOEPName')]"
