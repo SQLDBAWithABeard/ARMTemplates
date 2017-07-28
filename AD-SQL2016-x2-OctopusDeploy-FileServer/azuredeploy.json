@@ -665,10 +665,10 @@
             "value": "[parameters('domainName')]"
           },
           "sqlAOConfigurationModulesURL": {
-            "value": "[concat(parameters('_artifactsLocation'),'/','dscv2','/','ConfigureAlwaysOnSqlServer.ps1.zip', parameters('_artifactsLocationSasToken'))]"
+            "value": "[concat(parameters('_artifactsLocation'),'/','dscv2','/','ConfAO.ps1.zip', parameters('_artifactsLocationSasToken'))]"
           },
           "sqlAOConfigurationFunction": {
-            "value": "ConfigureAlwaysOnSqlServer.ps1\\ConfigureAlwaysOnSqlServer"
+            "value": "ConfAO.ps1\\ConfigureAlwaysOnSqlServer"
           },
           "sqlAOEPName": {
             "value": "[variables('sqlAOEPName')]"
