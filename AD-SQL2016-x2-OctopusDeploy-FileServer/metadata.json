@@ -1,7 +1,7 @@
 {
-  "itemDisplayName": "Create a DLM Demo arena",
+  "itemDisplayName": "Create a DLM Demo arena - With some servers",
   "description": "This template creates some new servers that will include one DC and Some SQL",
-  "summary": "This template creates a DLM Demo hopefully",
+  "summary": "This template creates a DLM Demo hopefully with new xsqlserver module",
   "githubUsername": "sqldbawithabeard",
   "dateUpdated": "2017-07-27"
 }
