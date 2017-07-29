@@ -1,13 +1,13 @@
-Login-AzureRmAccount
+## Login-AzureRmAccount
 
-$ResourcegroupName = 'DemoRG'
+$ResourcegroupName = 'DemoLabWithAORG'
 $location = 'westeurope'
-New-AzureRmResourceGroup -Name ExampleResourceGroup -Location $location
+New-AzureRmResourceGroup -Name $ResourcegroupName -Location $location
 
 ## Deploys overarching template from Git
 $newAzureRmResourceGroupDeploymentSplat = @{
     ResourceGroupName = $ResourcegroupName
-    TemplateFile = 'Git:\ARMTemplates\DemoLab\azuredeploy.json'
+    TemplateFile = 'Git:\ARMTemplates\DemoLab-AD-2016AO\azuredeploy.json' 
     Name = $ResourcegroupName
 }
 
