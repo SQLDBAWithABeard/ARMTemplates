@@ -8,7 +8,7 @@
         "group": "Infrastructure settings",
         "description": "Change this value to your repo name if deploying from a fork"
       },
-      "defaultValue": "https://raw.githubusercontent.com/SQLDBAWithABeard/ARMTemplates/tree/master/"
+      "defaultValue": "https://raw.githubusercontent.com/SQLDBAWithABeard/ARMTemplates/master"
     },
     "_artifactsLocationSasToken": {
       "type": "securestring",
@@ -17,12 +17,12 @@
         "description": "Auto-generated token to access _artifactsLocation",
         "artifactsLocationSasToken": ""
       },
-      "defaultValue": "5476d9939ac09a8ac32c517b8214d652e849339a"
+      "defaultValue": ""
     }
   },
   "resources": [
     {
-      "name": "Deploy Domain Controller",
+      "name": "DeployDomainController",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "properties": {
