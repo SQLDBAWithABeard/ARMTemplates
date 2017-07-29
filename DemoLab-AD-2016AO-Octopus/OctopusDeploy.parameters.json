@@ -1,0 +1,39 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmAdminUsername": {
+      "value": "DomainAdmin"
+    },
+    "vmAdminPassword": {
+      "value": "DLMPassword01"
+    },
+    "networkDnsName": {
+      "value": "dlmocotpus"
+    },
+    "sqlServerName": {
+      "value": "TheBeard-sql-1"
+    },
+    "sqlAdminUsername": {
+      "value": "DomainAdmin"
+    },
+    "sqlAdminPassword": {
+      "value": "DLMPassword0!"
+    },
+    "licenseFullName": {
+      "value": "Rob Sewell"
+    },
+    "licenseOrganisationName": {
+      "value": "DLM Consultants"
+    },
+    "licenseEmailAddress": {
+      "value": "rob@sewells-consulting.co.uk"
+    },
+    "octopusAdminUsername": {
+      "value": "octoadmin"
+    },
+    "octopusAdminPassword": {
+      "value": "DLMPassword0!"
+    }
+  }
+}
