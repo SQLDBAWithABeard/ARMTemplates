@@ -35,19 +35,14 @@
     "existingSqlSubnetName": {
       "value": "adSubnet"
     },
-    "vnetID": {
-      "value": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', 'adVNET')]"
-    },
-    "existingVirtualNetworkId": {
-      "value": "[concat(parameters('vnetID'),'/subnets/', parameters('existingSQLSubnetName'))]"
-    },
     "existingAdPDCVMName": {
       "value": "adVM"
     },
     "sqlLBIPAddress": {
       "value": "10.0.0.200"
+    },
+    "existingVnetName": {
+      "value": "adVNET"
     }
-
-
   }
 }
