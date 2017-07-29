@@ -1,0 +1,7 @@
+{
+  "itemDisplayName": "02 - Create a Demo Lab with AD and SQL 2016 AO ",
+  "description": "This template creates a Domain Controller and a SQL 2016 AO",
+  "summary": "This template creates an Azure VM with AD and a SQL 2016 AO",
+  "githubUsername": "sqldbawithabeard",
+  "dateUpdated": "2017-07-29"
+}
