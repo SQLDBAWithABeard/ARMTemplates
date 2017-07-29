@@ -36,6 +36,22 @@
           "contentVersion": "1.0.0.0"
         }
       }
-    }
+    },
+        {
+          "name": "DeploySQL",
+          "type": "Microsoft.Resources/deployments",
+          "apiVersion": "2017-05-10",
+          "properties": {
+            "mode": "Incremental",
+            "templateLink": {
+              "uri": "[concat(parameters('_artifactsLocation'),'/','sql-server-2016-alwayson-existing-vnet-and-ad','/','azuredeploy.json', parameters('_artifactsLocationSasToken'))]",
+              "contentVersion": "1.0.0.0"
+            },
+            "parametersLink": {
+              "uri": "[concat(parameters('_artifactsLocation'),'/','DemoLab','/','SQLAO.parameters.json', parameters('_artifactsLocationSasToken'))]",
+              "contentVersion": "1.0.0.0"
+            }
+          }
+        }
   ]
 }
