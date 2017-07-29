@@ -10,7 +10,7 @@
       },
       "defaultValue": "https://raw.githubusercontent.com/SQLDBAWithABeard/ARMTemplates/tree/master/"
     },
-    "_artifactsLocationSasToken": {
+    "artifactsLocationSasToken": {
       "type": "securestring",
       "metadata": {
         "group": "Infrastructure settings",
@@ -28,11 +28,11 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'),'/','active-directory-new-domain','/','azuredeploy.json', parameters('_artifactsLocationSasToken'))]",
+          "uri": "[concat(parameters('_artifactsLocation'),'/','active-directory-new-domain','/','azuredeploy.json', parameters('artifactsLocationSasToken'))]",
           "contentVersion": "1.0.0.0"
         },
         "parametersLink": {
-          "uri": "[concat(parameters('_artifactsLocation'),'/','DemoLab','/','DomainController.parameters.json', parameters('_artifactsLocationSasToken'))]",
+          "uri": "[concat(parameters('_artifactsLocation'),'/','DemoLab','/','DomainController.parameters.json', parameters('artifactsLocationSasToken'))]",
           "contentVersion": "1.0.0.0"
         }
       }

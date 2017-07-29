@@ -1,5 +1,5 @@
 {
-  "itemDisplayName": "01 - Create a Demo Lab",
+  "itemDisplayName": "01 - Create a Demo Lab - with SAS",
   "description": "This template creates a new Azure VM, it configures the VM to be an AD DC for a new Forest",
   "summary": "This template creates an Azure VM with AD",
   "githubUsername": "sqldbawithabeard",
