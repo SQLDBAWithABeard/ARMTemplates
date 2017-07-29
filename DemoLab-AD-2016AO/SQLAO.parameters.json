@@ -20,11 +20,8 @@
     "sqlServerServiceAccountPassword": {
       "value": "DLMPassword0!"
     },
-    "existingSqlSubnetName": {
-      "value": "default"
-    },
     "storageAccountType": {
-      "value": "default"
+      "value": "Premium_LRS"
     },
     "sqlVMSize": {
       "value": "Standard_DS3_V2"
