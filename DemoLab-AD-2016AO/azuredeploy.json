@@ -41,6 +41,7 @@
           "name": "DeploySQL",
           "type": "Microsoft.Resources/deployments",
           "apiVersion": "2017-05-10",
+          "dependsOn": ["Microsoft.Resources/deployments/DeployDomainController"],
           "properties": {
             "mode": "Incremental",
             "templateLink": {
