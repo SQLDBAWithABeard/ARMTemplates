@@ -111,12 +111,8 @@
     }
   },
   "variables": {
-    "vnetID": {
-      "value": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('existingVnetName'))]"
-    },
-    "existingVirtualNetworkId": {
-      "value": "[concat(variables('vnetID'),'/subnets/', parameters('existingSQLSubnetName'))]"
-    },
+    "vnetID": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('existingVnetName'))]",
+    "existingVirtualNetworkId":"[concat(variables('vnetID'),'/subnets/', parameters('existingSQLSubnetName'))]",
     "sqlSubnetRef": "[concat(variables('existingVirtualNetworkId'),'/subnets/',parameters('existingSqlSubnetName'))]",
     "deploySqlClusterTemplateURL": "[concat(parameters('_artifactsLocation'),'/nested/deploy-sql-cluster.json',parameters('_artifactsLocationSasToken'))]",
     "deploySqlCluster": "deploySqlCluster"
