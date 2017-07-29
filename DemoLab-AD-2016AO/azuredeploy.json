@@ -32,7 +32,7 @@
           "contentVersion": "1.0.0.0"
         },
         "parametersLink": {
-          "uri": "[concat(parameters('_artifactsLocation'),'/','DemoLab','/','DomainController.parameters.json', parameters('_artifactsLocationSasToken'))]",
+          "uri": "[concat(parameters('_artifactsLocation'),'/','DemoLab-AD-2016AO','/','DomainController.parameters.json', parameters('_artifactsLocationSasToken'))]",
           "contentVersion": "1.0.0.0"
         }
       }
@@ -48,7 +48,7 @@
               "contentVersion": "1.0.0.0"
             },
             "parametersLink": {
-              "uri": "[concat(parameters('_artifactsLocation'),'/','DemoLab','/','SQLAO.parameters.json', parameters('_artifactsLocationSasToken'))]",
+              "uri": "[concat(parameters('_artifactsLocation'),'/','DemoLab-AD-2016AO','/','SQLAO.parameters.json', parameters('_artifactsLocationSasToken'))]",
               "contentVersion": "1.0.0.0"
             }
           }
