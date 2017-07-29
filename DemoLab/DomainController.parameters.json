@@ -3,16 +3,16 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "adminUsername": {
-      "value": "GEN-UNIQUE"
+      "value": "DomainAdmin"
     },
     "adminPassword": {
-      "value": "GEN-PASSWORD"
+      "value": "DLMPassword0!"
     },
     "domainName": {
       "value": "TheBeard.Local"
     },
     "dnsPrefix": {
-      "value": "GEN-UNIQUE"
+      "value": "dlmdemo-dc01"
     }
   }
 }
