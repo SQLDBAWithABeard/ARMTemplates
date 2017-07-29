@@ -1,0 +1,53 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "namePrefix": {
+      "value": "SQL"
+    },
+    "existingDomainName": {
+      "value": "TheBeard.Local"
+    },
+    "adminUsername": {
+      "value": "DomainAdmin"
+    },
+    "adminPassword": {
+      "value": "DLMPassword0!"
+    },
+    "sqlServerServiceAccountUserName": {
+      "value": "sqlservice"
+    },
+    "sqlServerServiceAccountPassword": {
+      "value": "DLMPassword0!"
+    },
+    "existingSqlSubnetName": {
+      "value": "default"
+    },
+    "storageAccountType": {
+      "value": "default"
+    },
+    "sqlVMSize": {
+      "value": "Standard_DS3_V2"
+    },
+    "sqlWitnessVMSize": {
+      "value": "Standard_DS1_V2"
+    },
+    "existingSqlSubnetName": {
+      "value": "adSubnet"
+    },
+    "vnetID": {
+      "value": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', 'adVNET')]"
+    },
+    "existingVirtualNetworkId": {
+      "value": "[concat(parameters('vnetID'),'/subnets/', parameters('existingSQLSubnetName'))]"
+    },
+    "existingAdPDCVMName": {
+      "value": "adVM"
+    },
+    "sqlLBIPAddress": {
+      "value": "10.0.0.200"
+    }
+
+
+  }
+}
