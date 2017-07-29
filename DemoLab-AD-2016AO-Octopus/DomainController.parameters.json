@@ -12,7 +12,7 @@
       "value": "TheBeard.Local"
     },
     "dnsPrefix": {
-      "value": "dlmdemo-dc01"
+      "value": "dlmoctodemo-dc01"
     }
   }
 }
