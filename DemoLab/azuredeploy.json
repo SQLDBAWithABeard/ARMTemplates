@@ -10,14 +10,14 @@
       },
       "defaultValue": "https://raw.githubusercontent.com/SQLDBAWithABeard/ARMTemplates/tree/master/"
     },
-    "artifactsLocationSasToken": {
+    "_artifactsLocationSasToken": {
       "type": "securestring",
       "metadata": {
         "group": "Infrastructure settings",
         "description": "Auto-generated token to access _artifactsLocation",
         "artifactsLocationSasToken": ""
       },
-      "defaultValue": ""
+      "defaultValue": "13829cd1bc19f597cc6b3d0bacbdaaa0f0d8225c"
     }
   },
   "resources": [
@@ -28,11 +28,11 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'),'/','active-directory-new-domain','/','azuredeploy.json', parameters('artifactsLocationSasToken'))]",
+          "uri": "[concat(parameters('_artifactsLocation'),'/','active-directory-new-domain','/','azuredeploy.json', parameters('_artifactsLocationSasToken'))]",
           "contentVersion": "1.0.0.0"
         },
         "parametersLink": {
-          "uri": "[concat(parameters('_artifactsLocation'),'/','DemoLab','/','DomainController.parameters.json', parameters('artifactsLocationSasToken'))]",
+          "uri": "[concat(parameters('_artifactsLocation'),'/','DemoLab','/','DomainController.parameters.json', parameters('_artifactsLocationSasToken'))]",
           "contentVersion": "1.0.0.0"
         }
       }
