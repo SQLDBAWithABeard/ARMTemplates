@@ -1,7 +1,8 @@
 Login-AzureRmAccount
 
 $ResourcegroupName = 'DemoRG'
-New-AzureRmResourceGroup -Name ExampleResourceGroup -Location ukwest
+$location = 'westeurope'
+New-AzureRmResourceGroup -Name ExampleResourceGroup -Location $location
 
 ## Deploys overarching template from Git
 $newAzureRmResourceGroupDeploymentSplat = @{
