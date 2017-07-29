@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "namePrefix": {
-      "value": "SQL"
+      "value": "thebeard"
     },
     "existingDomainName": {
       "value": "TheBeard.Local"
