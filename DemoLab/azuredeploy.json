@@ -4,25 +4,48 @@
       "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
       "contentVersion": "1.0.0.0",
       "parameters": {
-          "_artifactsLocation": {
+        "_artifactsLocation": {
+          "type": "string",
+          "metadata": {
+            "group": "Infrastructure settings",
+            "description": "Change this value to your repo name if deploying from a fork"
+          },
+          "defaultValue": "https://raw.githubusercontent.com/SQLDBAWithABeard/ARMTemplates/tree/master/"
+        },
+        "_artifactsLocationSasToken": {
+          "type": "securestring",
+          "metadata": {
+            "group": "Infrastructure settings",
+            "description": "Auto-generated token to access _artifactsLocation",
+            "artifactsLocationSasToken": ""
+          },
+          "defaultValue": ""
+        },
+        "childParameter": {
+          "DomainadminUsername": {
             "type": "string",
             "metadata": {
-              "group": "Infrastructure settings",
-              "description": "Change this value to your repo name if deploying from a fork"
-            },
-            "defaultValue": "https://raw.githubusercontent.com/SQLDBAWithABeard/ARMTemplates/tree/master/"
+              "description": "The name of the administrator account of the new VM and domain"
+            }
           },
-          "_artifactsLocationSasToken": {
+          "DomainadminPassword": {
             "type": "securestring",
             "metadata": {
-              "group": "Infrastructure settings",
-              "description": "Auto-generated token to access _artifactsLocation",
-              "artifactsLocationSasToken": ""
-            },
-            "defaultValue": ""
+              "description": "The password for the administrator account of the new VM and domain"
+            }
           },
-        "childParameter": {
-          "type": "string"
+          "domainName": {
+            "type": "string",
+            "metadata": {
+              "description": "The FQDN of the Active Directory Domain to be created"
+            }
+          },
+          "DomaindnsPrefix": {
+            "type": "string",
+            "metadata": {
+              "description": "The DNS prefix for the public IP address used by the Load Balancer"
+            }
+          }
         }
       },
       "resources": [
@@ -33,16 +56,15 @@
           "properties": {
             "mode": "Incremental",
             "templateLink": {
-              "uri": "http://mystorageaccount.blob.core.windows.net/templates/template.json",
-              "contentVersion": "1.0.0.0"
-            },
-            "templateLink": {
-              "uri": "[concat(parameters('_artifactsLocation'),'/','nestedtemplates','/','creatingStorageAccounts.json', parameters('_artifactsLocationSasToken'))]",
+              "uri": "[concat(parameters('_artifactsLocation'),'/','active-directory-new-domain','/','azuredeploy.json', parameters('_artifactsLocationSasToken'))]",
               "contentVersion": "1.0.0.0"
             },
             "parameters": {
               "subParameterName": {
-                "value": "[parameters('childParameter')]"
+                "adminUsername": "[parameters('DomainadminUsername')]",
+                "adminPassword": "[parameters('DomainadminPassword')]",
+                "domainName": "[parameters('domainName')]",
+                "dnsPrefix": "[parameters('dnsPrefix')]"
               }
             }
           }
