@@ -20,30 +20,6 @@
             "artifactsLocationSasToken": ""
           },
           "defaultValue": ""
-        },
-        "DomainadminUsername": {
-          "type": "string",
-          "metadata": {
-            "description": "The name of the administrator account of the new VM and domain"
-          }
-        },
-        "DomainadminPassword": {
-          "type": "securestring",
-          "metadata": {
-            "description": "The password for the administrator account of the new VM and domain"
-          }
-        },
-        "domainName": {
-          "type": "string",
-          "metadata": {
-            "description": "The FQDN of the Active Directory Domain to be created"
-          }
-        },
-        "DomaindnsPrefix": {
-          "type": "string",
-          "metadata": {
-            "description": "The DNS prefix for the public IP address used by the Load Balancer"
-          }
         }
       }
     },
@@ -51,18 +27,16 @@
       {
         "name": "Deploy Domain Controller",
         "type": "Microsoft.Resources/deployments",
-        "apiVersion": "2015-01-01",
+        "apiVersion": "2017-05-10",
         "properties": {
           "mode": "Incremental",
           "templateLink": {
             "uri": "[concat(parameters('_artifactsLocation'),'/','active-directory-new-domain','/','azuredeploy.json', parameters('_artifactsLocationSasToken'))]",
             "contentVersion": "1.0.0.0"
           },
-          "parameters": {
-            "adminUsername": "[parameters('DomainadminUsername')]",
-            "adminPassword": "[parameters('DomainadminPassword')]",
-            "domainName": "[parameters('domainName')]",
-            "dnsPrefix": "[parameters('dnsPrefix')]"
+          "parametersLink": {
+            "uri": "[concat(parameters('_artifactsLocation'),'/','DemoLab','/','DomainController.parameters.json', parameters('_artifactsLocationSasToken'))]",
+            "contentVersion": "1.0.0.0"
           }
         }
       }
