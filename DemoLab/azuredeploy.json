@@ -17,7 +17,7 @@
         "description": "Auto-generated token to access _artifactsLocation",
         "artifactsLocationSasToken": ""
       },
-      "defaultValue": "13829cd1bc19f597cc6b3d0bacbdaaa0f0d8225c"
+      "defaultValue": ""
     }
   },
   "resources": [
