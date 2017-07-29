@@ -53,7 +53,7 @@
 		},
 		"windowsImageOffer": {
 			"type": "string",
-			"defaultValue": "SQL2016SP1-WS2016"
+			"defaultValue": "SQL2014SP2-WS2014R2"
 		},
 		"windowsImageSKU": {
 			"type": "string",
