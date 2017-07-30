@@ -1,6 +1,6 @@
 ## Login-AzureRmAccount
 
-$ResourcegroupName = 'DemoLabWithAORGOcto'
+$ResourcegroupName = 'DLM-Lab-AO-Octo-RG'
 $location = 'westeurope'
 New-AzureRmResourceGroup -Name $ResourcegroupName -Location $location
 
