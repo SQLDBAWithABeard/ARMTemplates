@@ -11,9 +11,6 @@
         "vmName": {
           "value": "dlm-win-10-client"
         },
-        "osType": {
-            "value": "Windows"
-        },
         "vmSize": {
             "value": "Standard_DS1_v2"
         },
