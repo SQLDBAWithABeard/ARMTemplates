@@ -13,6 +13,12 @@
     },
     "dnsPrefix": {
       "value": "GEN-UNIQUE"
+    },
+    "Users": {
+      "value": "one,two,three"
+    },
+    "UserPassword": {
+      "value": "GEN-PASSWORD"
     }
   }
 }
