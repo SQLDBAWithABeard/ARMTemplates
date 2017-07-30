@@ -3,13 +3,13 @@
   "contentVersion": "1.0.0.2",
   "parameters": {
     "vmIPPublicDnsNamePrefix": {
-      "value": "GEN-UNIQUE-13"
+      "value": "dlm-vs-devmachine"
     },
     "vmAdminUserName": {
-      "value": "ghuser"
+      "value": "DomainAdmin"
     },
     "vmAdminPassword": {
-      "value": "GEN-PASSWORD"
+      "value": "DLMPassword0!"
     }
   }
 }
