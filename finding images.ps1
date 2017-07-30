@@ -1,5 +1,7 @@
 ## FInding images
 
+Login-AzureRmAccount
+
 $loc = Get-AzureRmLocation | OGV -passthru | select Location #first set a location
 #View the templates available
 $publisher=Get-AzureRmVMImagePublisher -Location $loc.Location |OGV -passthru | select publishername #check all the publishers available
