@@ -1,21 +1,28 @@
 {
-  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "dnsLabelPrefix": {
-      "value": "dlm-client-123"
-    },
-    "vmName": {
-      "value": "dlm-clientwin10"
-    },
-    "adminUsername": {
-      "value": "DomainADmin"
-    },
-    "adminPassword": {
-      "value": "DLMPassword0!"
-    },
-    "rdpPort": {
-      "value": 50001
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "existingVirtualNetworkName": {
+            "value": "adVNET"
+        },
+        "subnetName": {
+            "value": "adSubnet"
+        },
+        "vmName": {
+          "value": "dlm-win-10-client"
+        },
+        "osType": {
+            "value": "Windows"
+        },
+        "vmSize": {
+            "value": "Standard_DS1_v2"
+        },
+        "adminUserName":{
+            "value": "DomainAdmin"
+        },
+        "adminPassword":{
+            "value":"DLMPassword0!"
+        }
+
     }
-  }
 }
