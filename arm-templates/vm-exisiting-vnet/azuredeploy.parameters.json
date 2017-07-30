@@ -11,9 +11,6 @@
         "vmName": {
           "value": "NameOfVM"
         },
-        "osType": {
-            "value": "Windows"
-        },
         "vmSize": {
             "value": "Standard_DS1_v2"
         },
