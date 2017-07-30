@@ -69,7 +69,7 @@
         "group": "Infrastructure settings",
         "description": "Change this value to your repo name if deploying from a fork"
       },
-      "defaultValue": "https://raw.githubusercontent.com/SQLDBAWithABeard/ARMTemplates/tree/master/AD-SQL2016-x2-OctopusDeploy-FileServer"
+      "defaultValue": "https://raw.githubusercontent.com/SQLDBAWithABeard/ARMTemplates/arm-templates/tree/master/AD-SQL2016-x2-OctopusDeploy-FileServer"
     },
     "_artifactsLocationSasToken": {
       "type": "securestring",
