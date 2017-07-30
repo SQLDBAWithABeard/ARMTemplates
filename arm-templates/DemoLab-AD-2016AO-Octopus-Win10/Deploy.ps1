@@ -7,7 +7,7 @@ New-AzureRmResourceGroup -Name $ResourcegroupName -Location $location
 ## Deploys overarching template from Git
 $newAzureRmResourceGroupDeploymentSplat = @{
     ResourceGroupName = $ResourcegroupName
-    TemplateFile = 'Git:\ARMTemplates\DemoLab-AD-2016AO-Octopus-Win10\azuredeploy.json' 
+    TemplateFile = 'Git:\ARMTemplates\arm-templates\DemoLab-AD-2016AO-Octopus-Win10\azuredeploy.json' 
     Name = $ResourcegroupName
 }
 

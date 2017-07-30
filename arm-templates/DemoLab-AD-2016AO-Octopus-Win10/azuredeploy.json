@@ -8,7 +8,7 @@
         "group": "Infrastructure settings",
         "description": "Change this value to your repo name if deploying from a fork"
       },
-      "defaultValue": "https://raw.githubusercontent.com/SQLDBAWithABeard/ARMTemplates/arm-templates/master"
+      "defaultValue": "https://raw.githubusercontent.com/SQLDBAWithABeard/ARMTemplates/master/arm-templates"
     },
     "_artifactsLocationSasToken": {
       "type": "securestring",
