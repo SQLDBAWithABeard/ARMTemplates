@@ -27,8 +27,6 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "dependsOn": [
-        "Microsoft.Resources/deployments/DeployDomainController",
-        "Microsoft.Resources/deployments/DeploySQL"
       ],
       "properties": {
         "mode": "Incremental",
