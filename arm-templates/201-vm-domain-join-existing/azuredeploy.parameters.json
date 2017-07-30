@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "location": {
-            "value": "westuerope"
+            "value": "westeurope"
         },
         "vmList": {
             "value": "dlm-clientwin10"
