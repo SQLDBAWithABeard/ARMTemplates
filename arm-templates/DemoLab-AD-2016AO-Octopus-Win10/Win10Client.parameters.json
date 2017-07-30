@@ -9,7 +9,7 @@
             "value": "adSubnet"
         },
         "vmName": {
-          "value": "dlm-win-10-client"
+          "value": "dlm-client-pc"
         },
         "vmSize": {
             "value": "Standard_DS1_v2"
