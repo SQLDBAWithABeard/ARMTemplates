@@ -8,7 +8,7 @@ New-AzureRmResourceGroup -Name $ResourcegroupName -Location $location
 $newAzureRmResourceGroupDeploymentSplat = @{
     ResourceGroupName = $ResourcegroupName
     TemplateFile = 'Git:\ARMTemplates\arm-templates\DemoLab-AD-2016AO-Octopus-Win10\azuredeploy.1.json' 
-    Name = $ResourcegroupName
+    Name = 'DeployWin101'
 }
 
 New-AzureRmResourceGroupDeployment @newAzureRmResourceGroupDeploymentSplat
