@@ -6,7 +6,7 @@
             "value": "westeurope"
         },
         "vmList": {
-            "value": "dlm-win-10-client"
+            "value": "dlmpc"
         },
         "domainJoinUserName": {
             "value": "TheBeard\\DomainAdmin"
