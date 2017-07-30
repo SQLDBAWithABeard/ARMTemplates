@@ -2,20 +2,17 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "dnsLabelPrefix": {
-      "value": "dlm-client-123"
-    },
-    "vmName": {
-      "value": "dlm-clientwin10"
-    },
     "adminUsername": {
-      "value": "DomainADmin"
+      "value": "DomainAdmin"
     },
     "adminPassword": {
       "value": "DLMPassword0!"
     },
-    "rdpPort": {
-      "value": 50001
+    "domainName": {
+      "value": "TheBeard.Local"
+    },
+    "dnsPrefix": {
+      "value": "dlmoctodemo-dc01"
     }
   }
 }
