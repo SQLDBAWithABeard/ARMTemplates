@@ -33,7 +33,7 @@
       "value": "adSubnet"
     },
     "existingAdPDCVMName": {
-      "value": "adVM"
+      "value": "TheBeardPDC-01"
     },
     "sqlLBIPAddress": {
       "value": "10.0.0.200"
