@@ -17,6 +17,9 @@
     "Users": {
       "value": "'Rob','Alex'"
     },
+    "userPassword": {
+      "value": "DLMPassword0!"
+    },
     "DCName": {
       "value": "TheBeardPDC"
     }
