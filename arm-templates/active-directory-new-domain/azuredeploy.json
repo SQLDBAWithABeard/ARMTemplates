@@ -21,12 +21,6 @@
         "description": "List of users to be added to domain admins make their names comma separate. E.g. VM01, VM02, VM03."
       }
     },
-    "userPassword": {
-      "type": "securestring",
-      "metadata": {
-        "description": "The password for each of the users account for the domain"
-      }
-    },
     "domainName": {
       "type": "string",
       "metadata": {
@@ -292,14 +286,13 @@
                 "Users": "[parameters('Users')]",
                 "UserCreds": {
                   "UserName": "[parameters('adminUsername')]",
-                  "UserPassword": "PrivateSettingsRef:UsersPassword"
+                  "UserPassword": "PrivateSettingsRef:AdminPassword"
                 }
               }
             },
             "protectedSettings": {
               "Items": {
-                "UsersPassword": "[parameters('userPassword')]",
-                "AdminPassword": "[parameters('AdminPassword')]"
+                "UsersPassword": "[parameters('userPassword')]"
               }
             }
           }
