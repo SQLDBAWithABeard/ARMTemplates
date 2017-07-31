@@ -41,7 +41,7 @@
     }
   },
   "variables": {
-    "StorageAccountName": "[concat(toLower(replace(parameters('vmName'),'-','')), 'stor')]",
+    "StorageAccountName": "[concat(toLower(replace(parameters('vmName'),'-','')), uniqueString(resourceGroup().id))]",
     "publicIPAddressType": "Dynamic",
     "vnetID": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('existingVirtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('subnetName'))]",
