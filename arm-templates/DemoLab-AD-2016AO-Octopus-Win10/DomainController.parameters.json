@@ -15,7 +15,7 @@
       "value": "dlmoctodemo-01"
     },
     "Users": {
-      "value": "'Rob','Alex'"
+      "value": ["Rob", "Alex"]
     },
     "DCName": {
       "value": "TheBeardPDC"

@@ -15,7 +15,7 @@
       }
     },
     "Users": {
-      "type": "string",
+      "type": "array",
       "minLength": 1,
       "metadata": {
         "description": "List of users to be added to domain admins make their names comma separate. E.g. VM01, VM02, VM03."
