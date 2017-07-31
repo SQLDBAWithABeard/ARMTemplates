@@ -283,12 +283,8 @@
                   "UserName": "[parameters('adminUsername')]",
                   "Password": "PrivateSettingsRef:AdminPassword"
                 },
-                "Users": "[parameters('Users')]",
-                "UserCreds": {
-                  "UserName": "[parameters('adminUsername')]",
-                  "UserPassword": "PrivateSettingsRef:AdminPassword"
-                }
-              }
+                "Users": "[parameters('Users')]"
+             }
             },
             "protectedSettings": {
               "Items": {

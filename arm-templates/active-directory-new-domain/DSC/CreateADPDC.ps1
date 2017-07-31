@@ -10,9 +10,6 @@
         [Parameter(Mandatory)]
         [String[]]$Users,
 
-        [Parameter(Mandatory)]
-        [System.Management.Automation.PSCredential]$UserCreds,
-
         [Int]$RetryCount = 20,
         [Int]$RetryIntervalSec = 30
     ) 
@@ -108,7 +105,7 @@
                 PsDscRunAsCredential = $DomainAdminCredential
                 Enabled              = $true
                 Ensure               = 'Present'
-                Password             = $UserCreds
+                Password             = $DomainAdminCredential.Password
                 PasswordNeverExpires = $true
                 DomainController     = $env:COMPUTERNAME
             }
