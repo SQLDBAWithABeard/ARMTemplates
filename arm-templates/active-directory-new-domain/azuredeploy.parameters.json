@@ -19,6 +19,9 @@
     },
     "UserPassword": {
       "value": "GEN-PASSWORD"
+    },
+    "DCName": {
+      "value": "GEN-UNIQUE"
     }
   }
 }

@@ -13,6 +13,9 @@
     },
     "dnsPrefix": {
       "value": "dlmdemo-dc01"
+    },
+    "DCName": {
+      "value": "TheBeardPDC"
     }
   }
 }

@@ -39,6 +39,12 @@
         "description": "The DNS prefix for the public IP address used by the Load Balancer"
       }
     },
+    "DCName" :{
+          "type": "string",
+          "metadata": {
+            "description": "The Name of the Domain Controller"
+          }
+    },
     "_artifactsLocation": {
       "type": "string",
       "metadata": {
@@ -63,7 +69,7 @@
     "adRDPNAT": "adRDP",
     "adNicName": "adNic",
     "adNicIPAddress": "10.0.0.4",
-    "adVMName": "adVM",
+    "adVMName": "[concat(parameters('DCName'),'-01')]",
     "adSubnetName": "adSubnet",
     "adSubnetAddressPrefix": "10.0.0.0/24",
     "publicIPAddressName": "adPublicIP",
@@ -332,6 +338,22 @@
           }
         }
       }
-    }
+    },
+        {
+          "apiVersion": "2015-06-15",
+          "type": "Microsoft.Compute/virtualMachines/extensions",
+          "name": "[concat(variables('advmName'),'/', 'BGInfo')]",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[concat('Microsoft.Compute/virtualMachines/', variables('advmName'))]"
+          ],
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "BGInfo",
+            "typeHandlerVersion": "2.1",
+            "settings": {},
+            "protectedSettings": null
+          }
+        }
   ]
 }
