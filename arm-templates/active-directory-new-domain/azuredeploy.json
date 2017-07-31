@@ -292,7 +292,7 @@
             },
             "protectedSettings": {
               "Items": {
-                "UsersPassword": "[parameters('userPassword')]"
+                "AdminPassword": "[parameters('AdminPassword')]"
               }
             }
           }
