@@ -14,8 +14,11 @@
     "dnsPrefix": {
       "value": "dlmoctodemo-01"
     },
-        "DCName": {
-          "value": "TheBeardPDC"
-        }
+    "Users": {
+      "value": "Rob,Alex"
+    },
+    "DCName": {
+      "value": "TheBeardPDC"
+    }
   }
 }
