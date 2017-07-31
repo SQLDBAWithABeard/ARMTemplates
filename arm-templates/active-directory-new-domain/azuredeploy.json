@@ -39,11 +39,11 @@
         "description": "The DNS prefix for the public IP address used by the Load Balancer"
       }
     },
-    "DCName" :{
-          "type": "string",
-          "metadata": {
-            "description": "The Name of the Domain Controller"
-          }
+    "DCName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Name of the Domain Controller"
+      }
     },
     "_artifactsLocation": {
       "type": "string",
@@ -298,7 +298,8 @@
             },
             "protectedSettings": {
               "Items": {
-                "UserPassword": "[parameters('userPassword')]"
+                "UsersPassword": "[parameters('userPassword')]",
+                "AdminPassword": "[parameters('AdminPassword')]"
               }
             }
           }
@@ -339,21 +340,21 @@
         }
       }
     },
-        {
-          "apiVersion": "2015-06-15",
-          "type": "Microsoft.Compute/virtualMachines/extensions",
-          "name": "[concat(variables('advmName'),'/', 'BGInfo')]",
-          "location": "[resourceGroup().location]",
-          "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', variables('advmName'))]"
-          ],
-          "properties": {
-            "publisher": "Microsoft.Compute",
-            "type": "BGInfo",
-            "typeHandlerVersion": "2.1",
-            "settings": {},
-            "protectedSettings": null
-          }
-        }
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('advmName'),'/', 'BGInfo')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', variables('advmName'))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "BGInfo",
+        "typeHandlerVersion": "2.1",
+        "settings": {},
+        "protectedSettings": null
+      }
+    }
   ]
 }
