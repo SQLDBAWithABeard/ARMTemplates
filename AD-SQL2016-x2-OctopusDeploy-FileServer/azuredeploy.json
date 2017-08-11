@@ -1,0 +1,725 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "metadata": {
+        "group": "Infrastructure settings",
+        "description": "The region to deploy the resources into. Only change if resources need to be deployed to a different location than the resource group."
+      },
+      "defaultValue": "[resourceGroup().location]"
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "group": "Infrastructure settings",
+        "description": "The name of the administrator account of the new VMs and Domain"
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "group": "Infrastructure settings",
+        "description": "The password for the administrator account of the new VMs and Domain"
+      }
+    },
+    "storageAccountNamePrefix": {
+      "type": "string",
+      "metadata": {
+        "group": "Infrastructure settings",
+        "description": "The prefix of the new storage account created to store the VM disks. Different storage accounts will be created for AD, SQL"
+      }
+    },
+    "storageAccountType": {
+      "type": "string",
+      "metadata": {
+        "group": "Infrastructure settings",
+        "description": "The type of storage account"
+      },
+      "defaultValue": "Premium_LRS"
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "defaultValue": "DLMDemoVNET",
+      "metadata": {
+        "group": "Infrastructure settings",
+        "description": "Name of virtual network to be created"
+      }
+    },
+    "virtualNetworkAddressRange": {
+      "type": "string",
+      "metadata": {
+        "group": "Infrastructure settings",
+        "description": "The address range of the new VNET in CIDR format"
+      },
+      "defaultValue": "10.0.0.0/16"
+    },
+    "staticSubnet": {
+      "type": "string",
+      "metadata": {
+        "group": "Infrastructure settings",
+        "description": "The address range of the subnet static IPs are allocated from in the new VNET"
+      },
+      "defaultValue": "10.0.0.0/24"
+    },
+    "_artifactsLocation": {
+      "type": "string",
+      "metadata": {
+        "group": "Infrastructure settings",
+        "description": "Change this value to your repo name if deploying from a fork"
+      },
+      "defaultValue": "https://raw.githubusercontent.com/SQLDBAWithABeard/ARMTemplates/tree/master/AD-SQL2016-x2-OctopusDeploy-FileServer"
+    },
+    "_artifactsLocationSasToken": {
+      "type": "securestring",
+      "metadata": {
+        "group": "Infrastructure settings",
+        "description": "Auto-generated token to access _artifactsLocation",
+        "artifactsLocationSasToken": ""
+      },
+      "defaultValue": ""
+    },
+    "domainName": {
+      "type": "string",
+      "metadata": {
+        "group": "Active Directory settings",
+        "description": "The FQDN of the AD Domain created "
+      },
+      "defaultValue": "TheBeard.local"
+    },
+    "adVMSize": {
+      "type": "string",
+      "metadata": {
+        "group": "Active Directory settings",
+        "description": "The size of the AD VMs created"
+      },
+      "defaultValue": "Standard_DS1"
+    },
+    "adPdcNicIPAddress": {
+      "type": "string",
+      "metadata": {
+        "group": "Active Directory settings",
+        "description": "The IP address of the new AD VM"
+      },
+      "defaultValue": "10.0.0.4"
+    },
+    "sqlVMSize": {
+      "type": "string",
+      "metadata": {
+        "group": "SQL Server settings",
+        "description": "The size of the SQL VMs created"
+      },
+      "defaultValue": "Standard_DS3"
+    },
+    "witnessVMSize": {
+      "type": "string",
+      "metadata": {
+        "group": "SQL Server settings",
+        "description": "The size of the witness VM created"
+      },
+      "defaultValue": "Standard_DS1"
+    },
+    "sqlServerServiceAccountUserName": {
+      "type": "string",
+      "metadata": {
+        "group": "SQL Server settings",
+        "description": "The SQL Server service account name"
+      },
+      "defaultValue": "sqlservice"
+    },
+    "sqlServerServiceAccountPassword": {
+      "type": "securestring",
+      "metadata": {
+        "group": "SQL Server settings",
+        "description": "The SQL Server Service account password"
+      }
+    },
+    "sqlLBIPAddress": {
+      "type": "string",
+      "metadata": {
+        "group": "SQL Server settings",
+        "description": "The IP address of the new SQL ILB"
+      },
+      "defaultValue": "10.0.0.6"
+    },
+    "sqlSubnet": {
+      "type": "string",
+      "metadata": {
+        "group": "SQL Server settings",
+        "description": "The address range of the SQL subnet created in the new VNET"
+      },
+      "defaultValue": "10.0.1.0/24"
+    },
+    "dnsPrefix": {
+      "type": "string",
+      "metadata": {
+        "group": "Server settings",
+        "description": "The DNS Prefix for the Public IP Address"
+      }
+    }
+  },
+  "variables": {
+    "lbSettings": {
+      "rdpLBFE": "rdpLBFE",
+      "sqlLBFE": "sqlLBFE",
+      "adLBBE": "adLBBE",
+      "sqlLBBE": "sqlLBBE",
+      "sqlLBName": "sqlLoadBalancer",
+      "rdpLBName": "rdpLoadBalancer"
+    },
+    "subnetNames": {
+      "staticSubnetName": "staticSubnet",
+      "sqlSubnetName": "sqlSubnet"
+    },
+    "RDPNAT": "RDP",
+    "SQLAOProbe": "SQLAlwaysOnEndPointProbe",
+    "rdpIPAddressName": "rdpIP",
+    "vmSettings": {
+      "availabilitySets": {
+        "sqlAvailabilitySetName": "sqlAvailabilitySet",
+        "adAvailabilitySetName": "adAvailabilitySet"
+      },
+      "noOfSqlVMs": 3,
+      "vmContainerName": "vhds",
+      "adPDCVMName": "ad-pdc",
+      "sqlVMName": "sql-",
+      "sqlwVMName": "sql-w",
+      "windowsImagePublisher": "MicrosoftWindowsServer",
+      "windowsImageOffer": "WindowsServer",
+      "windowsImageSKU": "2012-R2-Datacenter",
+      "sqlImagePublisher": "MicrosoftSQLServer",
+      "sqlImageOffer": "SQL2016SP1-WS2016",
+          "sqlImageSKU": "Enterprise",
+      "rdpPort": 3389,
+      "windowsDiskSize": 128,
+      "sqlDiskSize": 1000
+    },
+    "prefix": "[tolower(trim(subString(concat(parameters('dnsPrefix'),'           '),0,10)))]",
+    "sqlAOEPName": "[concat(variables('prefix'),'-hadr')]",
+    "sqlAOAGName": "[concat(variables('prefix'),'-ag')]",
+    "sqlAOListenerName": "[concat(variables('prefix'),'ag-listener')]",
+    "sharePath": "[concat(variables('prefix'),'-fsw')]",
+    "clusterName": "[concat(variables('prefix'),'-fc')]",
+    "adPdcNicName": "[concat(variables('vmSettings').adPDCVMName,'-nic')]",
+    "sqlwNicName": "[concat(variables('vmSettings').sqlwVMName,'-nic')]",
+    "VnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+    "staticSubnetRef": "[concat(variables('VnetID'),'/subnets/',variables('subnetNames').staticSubnetName)]",
+    "sqlSubnetRef": "[concat(variables('VnetID'),'/subnets/',variables('subnetNames').sqlSubnetName)]",
+    "ids": {
+      "adNicId": "[resourceId('Microsoft.Network/networkInterfaces',variables('adPdcNicName'))]",
+      "rdplbID": "[resourceId('Microsoft.Network/loadBalancers',variables('lbSettings').rdpLBName)]",
+      "sqllbID": "[resourceId('Microsoft.Network/loadBalancers',variables('lbSettings').sqlLBName)]",
+      "adAvailabilitySetName": "[resourceId('Microsoft.Compute/availabilitySets',variables('vmSettings').availabilitySets.adAvailabilitySetName)]",
+      "sqlAvailabilitySetName": "[resourceId('Microsoft.Compute/availabilitySets',variables('vmSettings').availabilitySets.sqlAvailabilitySetName)]"
+    },
+    "derivedIds": {
+      "adIPConfigID": "[concat(variables('ids').adNicId,'/ipConfigurations/ipconfig1')]",
+      "rdplbFEConfigID": "[concat(variables('ids').rdplbID,'/frontendIPConfigurations/',variables('lbSettings').rdpLBFE)]",
+      "adRDPNATRuleID": "[concat(variables('ids').rdplbID,'/inboundNatRules/',variables('RDPNAT'))]",
+      "adBEAddressPoolID": "[concat(variables('ids').rdplbID,'/backendAddressPools/',variables('lbSettings').adLBBE)]",
+      "sqlBEAddressPoolID": "[concat(variables('ids').sqllbID,'/backendAddressPools/',variables('lbSettings').sqlLBBE)]",
+      "sqllbFEConfigID": "[concat(variables('ids').sqllbID,'/frontendIPConfigurations/',variables('lbSettings').sqlLBFE)]",
+      "sqllbProbeID": "[concat(variables('ids').sqllbID,'/probes/',variables('SQLAOProbe'))]"
+    },
+    "subnets": [
+      {
+        "name": "[variables('subnetNames').staticSubnetName]",
+        "properties": {
+          "addressPrefix": "[parameters('staticSubnet')]"
+        }
+      },
+      {
+        "name": "[variables('subnetNames').sqlSubnetName]",
+        "properties": {
+          "addressPrefix": "[parameters('sqlSubnet')]"
+        }
+      }
+    ]
+  },
+  "resources": [
+    {
+      "name": "CreatingStorageAccounts",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'),'/','nestedtemplates','/','creatingStorageAccounts.json', parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "storageAccountNamePrefix": {
+            "value": "[parameters('storageAccountNamePrefix')]"
+          },
+          "storageAccountType": {
+            "value": "[parameters('storageAccountType')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "SettingUpRdp",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'),'/','nestedtemplates','/','publicip-rdp.json', parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "rdpIPAddressName": {
+            "value": "[variables('rdpIPAddressName')]"
+          },
+          "rdpLBName": {
+            "value": "[variables('lbSettings').rdpLBName]"
+          },
+          "rdpLBFE": {
+            "value": "[variables('lbSettings').rdpLBFE]"
+          },
+          "adLBBE": {
+            "value": "[variables('lbSettings').adLBBE]"
+          },
+          "RDPNAT": {
+            "value": "[variables('RDPNAT')]"
+          },
+          "rdplbFEConfigID": {
+            "value": "[variables('derivedIds').rdplbFEConfigID]"
+          }
+        }
+      }
+    },
+    {
+      "name": "CreatingAvailabilitySets",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'),'/','nestedtemplates','/','availabilitySets.json', parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "adAvailabilitySetName": {
+            "value": "[variables('vmSettings').availabilitySets.adAvailabilitySetName]"
+          },
+          "sqlAvailabilitySetName": {
+            "value": "[variables('vmSettings').availabilitySets.sqlAvailabilitySetName]"
+          }
+        }
+      }
+    },
+    {
+      "name": "CreatingVirtualNetwork",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'),'/','nestedtemplates','/','vnet-new.json', parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "virtualNetworkName": {
+            "value": "[parameters('virtualNetworkName')]"
+          },
+          "virtualNetworkAddressRange": {
+            "value": "[parameters('virtualNetworkAddressRange')]"
+          },
+          "subnets": {
+            "value": "[variables('subnets')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "SettingUpLoadBalancers",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/SettingUpRdp",
+        "Microsoft.Resources/deployments/CreatingVirtualNetwork"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'),'/','nestedtemplates','/','setupLBs.json', parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "sqlLBName": {
+            "value": "[variables('lbSettings').sqlLBName]"
+          },
+          "sqlLBFE": {
+            "value": "[variables('lbSettings').sqlLBFE]"
+          },
+          "sqlLBIPAddress": {
+            "value": "[parameters('sqlLBIPAddress')]"
+          },
+          "staticSubnetRef": {
+            "value": "[variables('staticSubnetRef')]"
+          },
+          "sqlLBBE": {
+            "value": "[variables('lbSettings').sqlLBBE]"
+          },
+          "sqllbFEConfigID": {
+            "value": "[variables('derivedIds').sqllbFEConfigID]"
+          },
+          "sqllbProbeID": {
+            "value": "[variables('derivedIds').sqllbProbeID]"
+          },
+          "SQLAOProbe": {
+            "value": "[variables('SQLAOProbe')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "CreatingNetworkInterfaces",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/CreatingVirtualNetwork",
+        "Microsoft.Resources/deployments/SettingUpRdp",
+        "Microsoft.Resources/deployments/SettingUpLoadBalancers"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'),'/','nestedtemplates','/','creatingNICS.json', parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "adPdcNicName": {
+            "value": "[variables('adPdcNicName')]"
+          },
+          "adPdcNicIPAddress": {
+            "value": "[parameters('adPdcNicIPAddress')]"
+          },
+          "staticSubnetRef": {
+            "value": "[variables('staticSubnetRef')]"
+          },
+          "adBEAddressPoolID": {
+            "value": "[variables('derivedIds').adBEAddressPoolID]"
+          },
+          "adRDPNATRuleID": {
+            "value": "[variables('derivedIds').adRDPNATRuleID]"
+          },
+          "sqlVMName": {
+            "value": "[variables('vmSettings').sqlVMName]"
+          },
+          "sqlSubnetRef": {
+            "value": "[variables('sqlSubnetRef')]"
+          },
+          "sqlBEAddressPoolID": {
+            "value": "[variables('derivedIds').sqlBEAddressPoolID]"
+          },
+          "sqlwNicName": {
+            "value": "[variables('sqlwNicName')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "ProvisioningPrimaryADDomainController",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/CreatingStorageAccounts",
+        "Microsoft.Resources/deployments/CreatingNetworkInterfaces",
+        "Microsoft.Resources/deployments/CreatingAvailabilitySets",
+        "Microsoft.Resources/deployments/SettingUpRdp"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'),'/','nestedtemplates','/','provisioningPrimaryDomainController.json', parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "adPDCVMName": {
+            "value": "[variables('vmSettings').adPDCVMName]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "storageAccountNamePrefix": {
+            "value": "[parameters('storageAccountNamePrefix')]"
+          },
+          "availabilitySet": {
+            "value": "[variables('ids').adAvailabilitySetName]"
+          },
+          "adVMSize": {
+            "value": "[parameters('adVMSize')]"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "windowsImagePublisher": {
+            "value": "[variables('vmSettings').windowsImagePublisher]"
+          },
+          "windowsImageOffer": {
+            "value": "[variables('vmSettings').windowsImageOffer]"
+          },
+          "windowsImageSKU": {
+            "value": "[variables('vmSettings').windowsImageSKU]"
+          },
+          "vmContainerName": {
+            "value": "[variables('vmSettings').vmContainerName]"
+          },
+          "adPdcNicName": {
+            "value": "[variables('adPdcNicName')]"
+          },
+          "domainName": {
+            "value": "[parameters('domainName')]"
+          },
+          "adPDCConfigurationFunction": {
+            "value": "CreateADPDC.ps1\\CreateADPDC"
+          },
+          "adPDCModulesURL": {
+            "value": "[concat(parameters('_artifactsLocation'),'/','dscv2','/','CreateADPDC.ps1.zip', parameters('_artifactsLocationSasToken'))]"
+          }
+        }
+      }
+    },
+    {
+      "name": "UpdatingDNStoPrimaryADVM",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/ProvisioningPrimaryADDomainController"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'), '/', 'nestedtemplates', '/','vnet-with-dns-server.json', parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "virtualNetworkName": {
+            "value": "[parameters('virtualNetworkName')]"
+          },
+          "virtualNetworkAddressRange": {
+            "value": "[parameters('virtualNetworkAddressRange')]"
+          },
+          "subnets": {
+            "value": "[variables('subnets')]"
+          },
+          "DNSServerAddress": {
+            "value": [
+              "[parameters('adPdcNicIPAddress')]"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "ProvisioningSQLVirtualMachines",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/CreatingStorageAccounts",
+        "Microsoft.Resources/deployments/CreatingNetworkInterfaces",
+        "Microsoft.Resources/deployments/CreatingAvailabilitySets"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'),'/','nestedtemplates','/','provisioningSQLVMs.json', parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "sqlVMName": {
+            "value": "[variables('vmSettings').sqlVMName]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "storageAccountNamePrefix": {
+            "value": "[parameters('storageAccountNamePrefix')]"
+          },
+          "availabilitySet": {
+            "value": "[variables('ids').sqlAvailabilitySetName]"
+          },
+          "sqlVMSize": {
+            "value": "[parameters('sqlVMSize')]"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "windowsImagePublisher": {
+            "value": "[variables('vmSettings').windowsImagePublisher]"
+          },
+          "windowsImageOffer": {
+            "value": "[variables('vmSettings').windowsImageOffer]"
+          },
+          "windowsImageSKU": {
+            "value": "[variables('vmSettings').windowsImageSKU]"
+          },
+          "vmContainerName": {
+            "value": "[variables('vmSettings').vmContainerName]"
+          },
+          "sqlImagePublisher": {
+            "value": "[variables('vmSettings').sqlImagePublisher]"
+          },
+          "sqlImageOffer": {
+            "value": "[variables('vmSettings').sqlImageOffer]"
+          },
+          "sqlImageSKU": {
+            "value": "[variables('vmSettings').sqlImageSKU]"
+          },
+          "domainName": {
+            "value": "[parameters('domainName')]"
+          },
+          "sqlAOPrepareModulesURL": {
+            "value": "[concat(parameters('_artifactsLocation'),'/','dscv2','/','PrepareAlwaysOnSqlServer.ps1.zip', parameters('_artifactsLocationSasToken'))]"
+          },
+          "sqlAOPrepareFunction": {
+            "value": "PrepareAlwaysOnSqlServer.ps1\\PrepareAlwaysOnSqlServer"
+          },
+          "prepareClusterModulesURL": {
+            "value": "[concat(parameters('_artifactsLocation'),'/','dscv2','/','PrepareFailoverCluster.ps1.zip', parameters('_artifactsLocationSasToken'))]"
+          },
+          "prepareClusterConfigurationFunction": {
+            "value": "PrepareFailoverCluster.ps1\\PrepareFailoverCluster"
+          },
+          "sharePath": {
+            "value": "[variables('sharePath')]"
+          },
+          "witnessVMSize": {
+            "value": "[parameters('witnessVMSize')]"
+          },
+          "sqlwVMName": {
+            "value": "[variables('vmSettings').sqlwVMName]"
+          },
+          "sqlwNicName": {
+            "value": "[variables('sqlwNicName')]"
+          },
+          "fswPreparationModulesURL": {
+            "value": "[concat(parameters('_artifactsLocation'),'/','dscv2','/','PrepareFileShareWitness.ps1.zip', parameters('_artifactsLocationSasToken'))]"
+          },
+          "fswPreparationFunction": {
+            "value": "PrepareFileShareWitness.ps1\\PrepareFileShareWitness"
+          },
+          "DNSServer": {
+            "value": "[parameters('adPdcNicIPAddress')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "ConfiguringSQLAlwaysOnCluster",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/ProvisioningSQLVirtualMachines"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'),'/','nestedtemplates','/','configuringSQLAlwaysOnCluster.json', parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "sqlVMName": {
+            "value": "[variables('vmSettings').sqlVMName]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "domainName": {
+            "value": "[parameters('domainName')]"
+          },
+          "sqlAOConfigurationModulesURL": {
+            "value": "[concat(parameters('_artifactsLocation'),'/','dscv2','/','ConfigureAlwaysOnSqlServer.ps1.zip', parameters('_artifactsLocationSasToken'))]"
+          },
+          "sqlAOConfigurationFunction": {
+            "value": "ConfigureAlwaysOnSqlServer.ps1\\ConfigureAlwaysOnSqlServer"
+          },
+          "sqlAOEPName": {
+            "value": "[variables('sqlAOEPName')]"
+          },
+          "sqlServerServiceAccountUserName": {
+            "value": "[parameters('sqlServerServiceAccountUserName')]"
+          },
+          "sqlServerServiceAccountPassword": {
+            "value": "[parameters('sqlServerServiceAccountPassword')]"
+          },
+          "configureClusterModulesURL": {
+            "value": "[concat(parameters('_artifactsLocation'),'/','dscv2','/','ConfigureFailoverCluster.ps1.zip', parameters('_artifactsLocationSasToken'))]"
+          },
+          "configureClusterConfigurationFunction": {
+            "value": "ConfigureFailoverCluster.ps1\\ConfigureFailoverCluster"
+          },
+          "clusterName": {
+            "value": "[variables('clusterName')]"
+          },
+          "sharePath": {
+            "value": "[variables('sharePath')]"
+          },
+          "sqlAOAGName": {
+            "value": "[variables('sqlAOAGName')]"
+          },
+          "sqlAOListenerName": {
+            "value": "[variables('sqlAOListenerName')]"
+          },
+          "sqlLBName": {
+            "value": "[variables('lbSettings').sqlLBName]"
+          },
+          "sqlLBIPAddress": {
+            "value": "[parameters('sqlLBIPAddress')]"
+          },
+          "adPDCVMName": {
+            "value": "[variables('vmSettings').adPDCVMName]"
+          },
+          "sqlwVMName": {
+            "value": "[variables('vmSettings').sqlwVMName]"
+          },
+          "fswConfigurationModulesURL": {
+            "value": "[concat(parameters('_artifactsLocation'),'/','dscv2','/','ConfigureFileShareWitness.ps1.zip', parameters('_artifactsLocationSasToken'))]"
+          },
+          "fswConfigurationFunction": {
+            "value": "ConfigureFileShareWitness.ps1\\ConfigureFileShareWitness"
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+
+  }
+}

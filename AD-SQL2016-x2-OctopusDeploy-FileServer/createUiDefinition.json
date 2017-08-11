@@ -1,0 +1,213 @@
+{
+  "handler": "Microsoft.Compute.MultiVm",
+  "version": "0.0.1-preview",
+  "parameters": {
+    "basics": [
+    ],
+    "steps": [
+      {
+        "name": "infrastructureConfig",
+        "label": "Infrastructure settings",
+        "subLabel": {
+          "preValidation": "Configure the infrastructure settings",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "Infrastructure settings",
+        "elements": [
+          {
+            "name": "adminUsername",
+            "type": "Microsoft.Compute.UserNameTextBox",
+            "label": "Username",
+            "toolTip": "Admin username for the virtual machines and the Active Directory domain.",
+            "osPlatform": "Windows",
+            "constraints": {
+              "required": true
+            }
+          },
+          {
+            "name": "adminPassword",
+            "type": "Microsoft.Compute.CredentialsCombo",
+            "label": {
+              "password": "Password",
+              "confirmPassword": "Confirm password"
+            },
+            "toolTip": {
+              "password": "Admin password for the virtual machines and the Active Directory domain."
+            },
+            "osPlatform": "Windows",
+            "constraints": {
+              "required": true
+            }
+          },
+          {
+            "name": "storageAccounts",
+            "type": "Microsoft.Storage.MultiStorageAccountCombo",
+            "label": {
+              "prefix": "Storage account name prefix",
+              "type": "Storage account type"
+            },
+            "defaultValue": {
+              "type": "Premium_LRS"
+            },
+            "count": 4,
+            "constraints": {
+              "allowedTypes": [
+                "Premium_LRS"
+              ],
+              "required": true
+            }
+          }
+        ]
+      },
+      {
+        "name": "adConfig",
+        "label": "Active Directory settings",
+        "subLabel": {
+          "preValidation": "Configure the domain controllers",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "Active Directory settings",
+        "elements": [
+          {
+            "name": "domainName",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Forest root domain name",
+            "toolTip": "Fully-qualified domain name of the Active directory domain.",
+            "defaultValue": "contoso.com",
+            "constraints": {
+              "required": true,
+              "regex": "^([a-z0-9]+\\.)?([a-z0-9][a-z0-9-]*\\.)+[a-z]{2,6}$",
+              "validationMessage": "Must be a valid fully-qualified domain name."
+            }
+          },
+          {
+            "name": "adVmSize",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "Active Directory virtual machine size",
+            "toolTip": "The size of the virtual machines for the primary and backup domain controllers.",
+            "recommendedSizes": [
+              "Standard_DS2",
+              "Standard_DS3",
+              "Standard_DS4",
+              "Standard_DS2_v2",
+              "Standard_DS3_v2",
+              "Standard_DS4_v2"
+            ],
+            "constraints": {
+              "required": true,
+              "allowedSizes": [
+                "Standard_DS2",
+                "Standard_DS3",
+                "Standard_DS4",
+                "Standard_DS11",
+                "Standard_DS12",
+                "Standard_DS13",
+                "Standard_DS14",
+                "Standard_DS2_v2",
+                "Standard_DS3_v2",
+                "Standard_DS4_v2",
+                "Standard_DS11_v2",
+                "Standard_DS12_v2",
+                "Standard_DS13_v2",
+                "Standard_DS14_v2"
+              ]
+            },
+            "osPlatform": "Windows",
+            "count": 2
+          }
+        ]
+      },
+      {
+        "name": "sqlConfig",
+        "label": "SQL Server settings",
+        "subLabel": {
+          "preValidation": "Configure the SQL Servers",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "SQL Server settings",
+        "elements": [
+          {
+            "name": "sqlVmSize",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "SQL Server virtual machine size",
+            "toolTip": "The size of the virtual machines for the primary and secondary replicas.",
+            "recommendedSizes": [
+              "Standard_DS3",
+              "Standard_DS4",
+              "Standard_DS14",
+              "Standard_DS3_v2",
+              "Standard_DS4_v2",
+              "Standard_DS14_v2"
+            ],
+            "constraints": {
+              "required": true,
+              "allowedSizes": [
+                "Standard_DS3",
+                "Standard_DS4",
+                "Standard_DS11",
+                "Standard_DS12",
+                "Standard_DS13",
+                "Standard_DS14",
+                "Standard_DS3_v2",
+                "Standard_DS4_v2",
+                "Standard_DS11_v2",
+                "Standard_DS12_v2",
+                "Standard_DS13_v2",
+                "Standard_DS14_v2"
+              ]
+            },
+            "osPlatform": "Windows",
+            "count": 2
+          },
+          {
+            "name": "witnessVMSize",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "SQL Witness virtual machine size",
+            "toolTip": "The size of the virtual machine for the SQL witness.",
+            "recommendedSizes": [
+              "Standard_DS1",
+              "Standard_DS1_v2"
+            ],
+            "constraints": {
+              "required": true,
+              "allowedSizes": [
+                "Standard_DS1",
+                "Standard_DS1_v2"
+              ]
+            },
+            "osPlatform": "Windows",
+            "count": 1
+          },
+          {
+            "name": "sqlServerServiceAccountPassword",
+            "type": "Microsoft.Compute.CredentialsCombo",
+            "label": {
+              "password": "Service account password",
+              "confirmPassword": "Confirm password"
+            },
+            "toolTip": {
+              "password": "SQL Service account password, username is sqlserver, account is used to run  MSSQLSERVER and SQLSERVERAGENT."
+            },
+            "osPlatform": "Windows",
+            "constraints": {
+              "required": true
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "location": "[location()]",
+      "storageAccountNamePrefix": "[steps('infrastructureConfig').storageAccounts.prefix]",
+      "storageAccountType": "[steps('infrastructureConfig').storageAccounts.type]",
+      "adminUsername": "[steps('infrastructureConfig').adminUsername]",
+      "adminPassword": "[steps('infrastructureConfig').adminPassword.password]",
+      "virtualNetworkName": "[steps('infrastructureConfig').virtualNetworkName]",
+      "adVMSize": "[steps('adConfig').adVmSize]",
+      "sqlVMSize": "[steps('sqlConfig').sqlVmSize]",
+      "witnessVMSize": "[steps('sqlConfig').witnessVMSize]",
+      "domainName": "[steps('adConfig').domainName]",
+ "sqlServerServiceAccountPassword": "[steps('sqlConfig').sqlServerServiceAccountPassword.password]"
+    }
+  }
+}
