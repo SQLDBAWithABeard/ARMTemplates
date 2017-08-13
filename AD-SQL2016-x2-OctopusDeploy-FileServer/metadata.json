@@ -1,0 +1,7 @@
+{
+  "itemDisplayName": "Create a DLM Demo arena",
+  "description": "This template creates some new servers that will include one DC and Some SQL",
+  "summary": "This template creates a DLM Demo hopefully",
+  "githubUsername": "sqldbawithabeard",
+  "dateUpdated": "2017-07-27"
+}
