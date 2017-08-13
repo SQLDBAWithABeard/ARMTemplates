@@ -21,10 +21,10 @@
       "value": "DLMPassword0!"
     },
     "storageAccountType": {
-      "value": "Premium_LRS"
+      "value": "Standard_LRS"
     },
     "sqlVMSize": {
-      "value": "Standard_DS3_V2"
+      "value": "Standard_DS2_V2"
     },
     "sqlWitnessVMSize": {
       "value": "Standard_DS1_V2"
