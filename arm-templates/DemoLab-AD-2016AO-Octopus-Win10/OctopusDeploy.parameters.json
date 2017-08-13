@@ -9,10 +9,10 @@
       "value": "DLMPassword01"
     },
     "networkDnsName": {
-      "value": "dlmdemoocto"
+      "value": "dlmdemoocto01"
     },
     "sqlServerName": {
-      "value": "thebeard-sql-1"
+      "value": "thebeardoctosql"
     },
     "sqlAdminUsername": {
       "value": "DomainAdmin"
