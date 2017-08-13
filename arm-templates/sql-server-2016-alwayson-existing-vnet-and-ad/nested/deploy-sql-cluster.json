@@ -57,7 +57,7 @@
 		},
 		"windowsImageSKU": {
 			"type": "string",
-			"defaultValue": "SQLDEV"
+			"defaultValue": "Enterprise"
 		},
 		"windowsImageVersion": {
 			"type": "string",
