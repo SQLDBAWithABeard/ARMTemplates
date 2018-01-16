@@ -3,19 +3,19 @@
    "contentVersion":"1.0.0.0",
    "parameters":{  
       "adminUsername":{  
-         "value":"alwaysonadmin"
+         "value":"RobAdmin"
       },
       "adminPassword":{  
-         "value":"GEN-PASSWORD"
+         "value":"PasswordRobAdmin0!"
       },
       "sqlServerServiceAccountUserName":{  
-         "value":"sqlservice"
+         "value":"SVC_SQL"
       },
       "sqlServerServiceAccountPassword":{  
-         "value":"GEN-PASSWORD"
+         "value":"Password0!"
       },
       "sqlStorageAccountType":{  
-         "value":"Premium_LRS"
+         "value":"Standard_LRS"
       },
       "dcStorageAccountType":{  
          "value":"Standard_LRS"
@@ -27,16 +27,16 @@
          "value":"GEN-UNIQUE"
       },
       "adVMSize":{  
-         "value":"Standard_D1_v2"
+         "value":"Standard_DS2_v2"
       },
       "sqlVMSize":{  
-         "value":"Standard_DS4"
+         "value":"Standard_DS11_v2"
       },
       "witnessVMSize":{  
-         "value":"Standard_DS1"
+         "value":"Standard_DS2_v2"
       },
       "domainName":{  
-         "value":"contoso.local"
+         "value":"thebeard.local"
       },
       "virtualNetworkAddressRange":{  
          "value":"10.0.0.0/16"
@@ -54,7 +54,7 @@
          "value":"2"
       },
       "sqlAOAGName":{  
-         "value":"alwayson-ag"
+         "value":"thebeard-ag"
       },
       "sqlAOListenerPort":{  
          "value":"1433"
@@ -63,13 +63,13 @@
          "value":"alwayson-ag-listener"
       },
       "sqlServerVersion":{  
-         "value":"SQL2014SP1-WS2012R2"
+         "value":"SQL2017-WS2016"
       },
       "numberOfSqlVMDisks":{  
-         "value":"2"
+         "value":"1"
       },
       "workloadType":{  
-         "value":"OLTP"
+         "value":"GENERAL"
       }
    }
 }
