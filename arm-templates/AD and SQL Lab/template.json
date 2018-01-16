@@ -1,0 +1,290 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageAccounts_bearddc01_name": {
+            "defaultValue": "bearddc01",
+            "type": "String"
+        },
+        "storageAccounts_beardsql01_name": {
+            "defaultValue": "beardsql01",
+            "type": "String"
+        },
+        "virtualNetworks_beardvnet6n3oit_name": {
+            "defaultValue": "beardvnet6n3oit",
+            "type": "String"
+        },
+        "storageAccounts_m6sso6bsxb7kmfsw_name": {
+            "defaultValue": "m6sso6bsxb7kmfsw",
+            "type": "String"
+        },
+        "publicIPAddresses_backupDCIP6n3oi_name": {
+            "defaultValue": "backupDCIP6n3oi",
+            "type": "String"
+        },
+        "publicIPAddresses_primaryDCIP6n3o_name": {
+            "defaultValue": "primaryDCIP6n3o",
+            "type": "String"
+        },
+        "publicIPAddresses_sql0IP6n3oityvv_name": {
+            "defaultValue": "sql0IP6n3oityvv",
+            "type": "String"
+        },
+        "publicIPAddresses_sql1IP6n3oityvv_name": {
+            "defaultValue": "sql1IP6n3oityvv",
+            "type": "String"
+        },
+        "storageAccounts_m6sso6bsxb7kmdiag_name": {
+            "defaultValue": "m6sso6bsxb7kmdiag",
+            "type": "String"
+        },
+        "subnets_sqlSubnet_name": {
+            "defaultValue": "sqlSubnet",
+            "type": "String"
+        },
+        "subnets_staticSubnet_name": {
+            "defaultValue": "staticSubnet",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "comments": "Generalized from resource: '/subscriptions/6d8f994c-9051-4cef-ba61-528bab27d213/resourceGroups/BeardADSQL/providers/Microsoft.Network/publicIPAddresses/backupDCIP6n3oi'.",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[parameters('publicIPAddresses_backupDCIP6n3oi_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "westeurope",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "1556eb5a-b51a-4a67-858b-f0a71b4324be",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/6d8f994c-9051-4cef-ba61-528bab27d213/resourceGroups/BeardADSQL/providers/Microsoft.Network/publicIPAddresses/primaryDCIP6n3o'.",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[parameters('publicIPAddresses_primaryDCIP6n3o_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "westeurope",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "7fff2fd4-98e0-48b1-9758-9ef023d620cb",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/6d8f994c-9051-4cef-ba61-528bab27d213/resourceGroups/BeardADSQL/providers/Microsoft.Network/publicIPAddresses/sql0IP6n3oityvv'.",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[parameters('publicIPAddresses_sql0IP6n3oityvv_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "westeurope",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "3fef4316-cd38-42ab-91cc-dda79af7d25e",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/6d8f994c-9051-4cef-ba61-528bab27d213/resourceGroups/BeardADSQL/providers/Microsoft.Network/publicIPAddresses/sql1IP6n3oityvv'.",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[parameters('publicIPAddresses_sql1IP6n3oityvv_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "westeurope",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "ebcb36b4-6591-476d-8b7c-972014cf808c",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/6d8f994c-9051-4cef-ba61-528bab27d213/resourceGroups/BeardADSQL/providers/Microsoft.Network/virtualNetworks/beardvnet6n3oit'.",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[parameters('virtualNetworks_beardvnet6n3oit_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "westeurope",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "01317cea-9625-4c31-8519-f776e03e5d63",
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "staticSubnet",
+                        "etag": "W/\"771bf5eb-80f8-4222-8bc0-9f8770ea9b36\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "addressPrefix": "10.0.0.0/24"
+                        }
+                    },
+                    {
+                        "name": "sqlSubnet",
+                        "etag": "W/\"771bf5eb-80f8-4222-8bc0-9f8770ea9b36\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "addressPrefix": "10.0.1.0/26"
+                        }
+                    }
+                ],
+                "virtualNetworkPeerings": []
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/6d8f994c-9051-4cef-ba61-528bab27d213/resourceGroups/BeardADSQL/providers/Microsoft.Storage/storageAccounts/m6sso6bsxb7kmdiag'.",
+            "type": "Microsoft.Storage/storageAccounts",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "kind": "Storage",
+            "name": "[parameters('storageAccounts_m6sso6bsxb7kmdiag_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "westeurope",
+            "scale": null,
+            "properties": {
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "enabled": true
+                        },
+                        "blob": {
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/6d8f994c-9051-4cef-ba61-528bab27d213/resourceGroups/BeardADSQL/providers/Microsoft.Storage/storageAccounts/beardsql01'.",
+            "type": "Microsoft.Storage/storageAccounts",
+            "sku": {
+                "name": "Premium_LRS",
+                "tier": "Premium"
+            },
+            "kind": "Storage",
+            "name": "[parameters('storageAccounts_beardsql01_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "westeurope",
+            "scale": null,
+            "properties": {
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "enabled": true
+                        },
+                        "blob": {
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/6d8f994c-9051-4cef-ba61-528bab27d213/resourceGroups/BeardADSQL/providers/Microsoft.Storage/storageAccounts/m6sso6bsxb7kmfsw'.",
+            "type": "Microsoft.Storage/storageAccounts",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "kind": "Storage",
+            "name": "[parameters('storageAccounts_m6sso6bsxb7kmfsw_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "westeurope",
+            "scale": null,
+            "properties": {
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "enabled": true
+                        },
+                        "blob": {
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/6d8f994c-9051-4cef-ba61-528bab27d213/resourceGroups/BeardADSQL/providers/Microsoft.Storage/storageAccounts/bearddc01'.",
+            "type": "Microsoft.Storage/storageAccounts",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "kind": "Storage",
+            "name": "[parameters('storageAccounts_bearddc01_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "westeurope",
+            "scale": null,
+            "properties": {
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "enabled": true
+                        },
+                        "blob": {
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/6d8f994c-9051-4cef-ba61-528bab27d213/resourceGroups/BeardADSQL/providers/Microsoft.Network/virtualNetworks/beardvnet6n3oit/subnets/staticSubnet'.",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "name": "[concat(parameters('virtualNetworks_beardvnet6n3oit_name'), '/', parameters('subnets_staticSubnet_name'))]",
+            "apiVersion": "2017-06-01",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "addressPrefix": "10.0.0.0/24"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_beardvnet6n3oit_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/6d8f994c-9051-4cef-ba61-528bab27d213/resourceGroups/BeardADSQL/providers/Microsoft.Network/virtualNetworks/beardvnet6n3oit/subnets/sqlSubnet'.",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "name": "[concat(parameters('virtualNetworks_beardvnet6n3oit_name'), '/', parameters('subnets_sqlSubnet_name'))]",
+            "apiVersion": "2017-06-01",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "addressPrefix": "10.0.1.0/26"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_beardvnet6n3oit_name'))]"
+            ]
+        }
+    ]
+}

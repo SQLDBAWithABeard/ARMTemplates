@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageAccounts_bearddc01_name": {
+            "value": null
+        },
+        "storageAccounts_beardsql01_name": {
+            "value": null
+        },
+        "virtualNetworks_beardvnet6n3oit_name": {
+            "value": null
+        },
+        "storageAccounts_m6sso6bsxb7kmfsw_name": {
+            "value": null
+        },
+        "publicIPAddresses_backupDCIP6n3oi_name": {
+            "value": null
+        },
+        "publicIPAddresses_primaryDCIP6n3o_name": {
+            "value": null
+        },
+        "publicIPAddresses_sql0IP6n3oityvv_name": {
+            "value": null
+        },
+        "publicIPAddresses_sql1IP6n3oityvv_name": {
+            "value": null
+        },
+        "storageAccounts_m6sso6bsxb7kmdiag_name": {
+            "value": null
+        },
+        "subnets_sqlSubnet_name": {
+            "value": null
+        },
+        "subnets_staticSubnet_name": {
+            "value": null
+        }
+    }
+}

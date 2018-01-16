@@ -11,5 +11,5 @@ $newAzureRmResourceGroupDeploymentSplat = @{
     Name = 'DeployLab'
 }
 
-New-AzureRmResourceGroupDeployment @newAzureRmResourceGroupDeploymentSplat
+New-AzureRmResourceGroupDeployment @newAzureRmResourceGroupDeploymentSplat -Verbose 
 
