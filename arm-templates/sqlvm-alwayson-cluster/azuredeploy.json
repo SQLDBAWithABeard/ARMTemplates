@@ -248,14 +248,14 @@
       "metadata": {
         "description": "Linked Templates base url"
       },
-      "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/sqlvm-alwayson-cluster/nested"
+      "defaultValue": "https://github.com/SQLDBAWithABeard/ARMTemplates/tree/master/arm-templates/sqlvm-alwayson-cluster/nested"
     },
     "scriptsBaseUrl": {
       "type": "string",
       "metadata": {
         "description": "DSC Scripts base url"
       },
-      "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/sqlvm-alwayson-cluster/scripts"
+      "defaultValue": "https://github.com/SQLDBAWithABeard/ARMTemplates/tree/master/arm-templates/sqlvm-alwayson-cluster/scripts"
     },
     "autoPatchingDay": {
       "type": "string",
