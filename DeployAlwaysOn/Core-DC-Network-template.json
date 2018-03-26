@@ -67,7 +67,7 @@
         },
         "BaseUri":{
             "type": "string",
-            "defaultValue": "[deployment().properties.templateLink.uri]"
+            "defaultValue": "https://github.com/SQLDBAWithABeard/iac/blob/master/"
         },
         "NestedBase":{
             "type": "string"
