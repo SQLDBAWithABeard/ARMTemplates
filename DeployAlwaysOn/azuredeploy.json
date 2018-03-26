@@ -2,6 +2,20 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "subnetId": {
+      "type": "string"
+    },
+    "nodeIpAddresses": {
+      "type": "array",
+      "defaultValue": [
+        "10.0.1.10",
+        "10.0.1.11"
+      ]
+    },
+    "clusterIpAddress": {
+      "type": "string",
+      "defaultValue": "10.0.1.30"
+    },
     "adminUsername": {
       "type": "string",
       "defaultValue": "EnterpriseAdmin"
@@ -11,9 +25,9 @@
     },
     "domainName": {
       "type": "string",
-      "defaultValue": "devnet.contoso.us"
+      "defaultValue": "TheBeard.Local"
     },
-    "jumpBoxVmSize": {
+    "sqlVmSize": {
       "type": "string",
       "allowedValues": [
         "Standard_D1_v2",
@@ -37,57 +51,37 @@
         "Standard_DS14_v2",
         "Standard_DS15_v2"
       ],
-      "defaultValue": "Standard_D2_v2"
+      "defaultValue": "Standard_DS2_v2"
     },
-    "DCVmSize": {
+    "sqlVmImagePublisher": {
       "type": "string",
-      "allowedValues": [
-        "Standard_D1_v2",
-        "Standard_D2_v2",
-        "Standard_D3_v2",
-        "Standard_D4_v2",
-        "Standard_D5_v2",
-        "Standard_D11_v2",
-        "Standard_D12_v2",
-        "Standard_D13_v2",
-        "Standard_D14_v2",
-        "Standard_D15_v2",
-        "Standard_DS1_v2",
-        "Standard_DS2_v2",
-        "Standard_DS3_v2",
-        "Standard_DS4_v2",
-        "Standard_DS5_v2",
-        "Standard_DS11_v2",
-        "Standard_DS12_v2",
-        "Standard_DS13_v2",
-        "Standard_DS14_v2",
-        "Standard_DS15_v2"
-      ],
-      "defaultValue": "Standard_D1_v2"
+      "defaultValue": "MicrosoftSqlServer"
+    },
+    "sqlVmImageOffer": {
+      "type": "string",
+      "defaultValue": "SQL2017-WS2016"
+    },
+    "sqlVmImageSku": {
+      "type": "string",
+      "defaultValue": "Enterprise"
     }
   },
   "variables": {
-    "diagStorageAccountName": "[concat(uniquestring(resourceGroup().id), 'vmdiag')]",
-    "coreVnetName": "corevnet",
-    "corevnetPrefix": "10.0.0.0/16",
-    "corevnetDCSubnetName": "Subnet-1",
-    "corevnetDCSubnetPrefix": "10.0.0.0/24",
-    "corevnetDevOpsSubnetName": "Subnet-2",
-    "corevnetDevOpsSubnetPrefix": "10.0.1.0/24",
-    "jumpNICVnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('coreVnetName'))]",
-    "jumpNICSubnetRef": "[concat(variables('jumpNICVnetID'), '/subnets/', variables('corevnetDevOpsSubnetName'))]",
-    "ADSubnetRef": "[concat(variables('jumpNICVnetID'), '/subnets/', variables('corevnetDCSubnetName'))]",
-    "jumpVMName": "JumpBox",
-    "adPDCVMName": "DC1",
-    "adBDCVMName": "DC2",
-    "DCHASetName": "DCHASet",
-    "baseUri": "[deployment().properties.templateLink.uri]",
-    "windowsVmTemplateURL": "[uri(variables('baseUri'),'../primitives/windowsvm.json')]",
-    "adPDCModulesURL": "[uri(variables('baseUri'),'DSC/CreateADPDC.ps1.zip')]",
-    "adPDCConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
-    "adBDCModulesURL": "[uri(variables('baseUri'),'DSC/ConfigureADBDC.ps1.zip')]",
-    "adBDCConfigurationFunction": "ConfigureADBDC.ps1\\ConfigureADBDC",
-    "vnetwithDNSTemplateUri": "[uri(variables('baseUri'),'nested-templates/update-vnet-dns.json')]"
+    "diagStorageAccountName": "[concat(uniquestring(resourceGroup().id), 'sqlvmdiag')]",
+    "cloudWitnessStorageAccountName": "[concat(uniquestring(resourceGroup().id), 'sqlw')]",
+    "HASetName": "SqlHASet",
+    "SqlVmPrefix": "SQL",
+    "baseUri": "https://github.com/SQLDBAWithABeard/ARMTemplates/blob/master/DeployAlwaysOn",
+    "SQLPrepareModuleURL": "[uri(variables('baseUri'), 'DSC/PrepareSQLServer.ps1.zip')]",
+    "SQLPrepareFunction": "PrepareSQLServer.ps1\\SQLServerPrepareDsc",
+    "windowsVmTemplateURL": "https://raw.githubusercontent.com/SQLDBAWithABeard/iac/master/primitives/windowsvm.json",
+    "LBName": "SQLLB",
+    "LBBEName": "[concat(variables('LBName'),'BE')]",
+    "LBFEName": "[concat(variables('LBName'),'FE')]",
+    "LBProbeName": "[concat(variables('LBName'),'Probe')]",
+    "sqlBEAddressPoolID": "[concat(resourceId('Microsoft.Network/loadBalancers',variables('LBName')),'/backendAddressPools/',variables('LBBEName'))]",
+    "sqllbFEConfigID": "[concat(resourceId('Microsoft.Network/loadBalancers',variables('LBName')),'/frontendIPConfigurations/',variables('LBFEName'))]",
+    "sqllbProbeID": "[concat(resourceId('Microsoft.Network/loadBalancers',variables('LBName')),'/probes/',variables('LBProbeName'))]"
   },
   "resources": [
     {
@@ -102,42 +96,22 @@
       "properties": {}
     },
     {
-      "name": "[variables('coreVnetName')]",
-      "type": "Microsoft.Network/virtualNetworks",
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('cloudWitnessStorageAccountName')]",
+      "apiVersion": "2016-01-01",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2016-03-30",
-      "dependsOn": [],
-      "properties": {
-        "addressSpace": {
-          "addressPrefixes": [
-            "[variables('corevnetPrefix')]"
-          ]
-        },
-        "subnets": [
-          {
-            "name": "[variables('corevnetDCSubnetName')]",
-            "properties": {
-              "addressPrefix": "[variables('corevnetDCSubnetPrefix')]"
-            }
-          },
-          {
-            "name": "[variables('corevnetDevOpsSubnetName')]",
-            "properties": {
-              "addressPrefix": "[variables('corevnetDevOpsSubnetPrefix')]"
-            }
-          }
-        ]
-      }
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "kind": "Storage",
+      "properties": {}
     },
     {
-      "name": "[variables('DCHASetName')]",
+      "name": "[variables('HASetName')]",
       "type": "Microsoft.Compute/availabilitySets",
       "location": "[resourceGroup().location]",
       "apiVersion": "2017-03-30",
       "dependsOn": [],
-      "tags": {
-        "displayName": "DCHASet"
-      },
       "properties": {
         "platformUpdateDomainCount": 2,
         "platformFaultDomainCount": 2
@@ -147,13 +121,75 @@
       }
     },
     {
-      "name": "DC1Deploy",
+      "name": "[variables('LBName')]",
+      "type": "Microsoft.Network/loadBalancers",
+      "apiVersion": "2017-10-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "frontendIPConfigurations": [
+          {
+            "name": "[variables('LBFEName')]",
+            "properties": {
+              "privateIPAddress": "[parameters('clusterIpAddress')]",
+              "privateIPAllocationMethod": "Static",
+              "subnet": {
+                "id": "[parameters('subnetId')]"
+              }
+            }
+          }
+        ],
+        "backendAddressPools": [
+          {
+            "name": "[variables('LBBEName')]"
+          }
+        ],
+        "loadBalancingRules": [
+          {
+            "name": "SQLLBRule",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('sqllbFEConfigID')]"
+              },
+              "backendAddressPool": {
+                "id": "[variables('sqlBEAddressPoolID')]"
+              },
+              "probe": {
+                "id": "[variables('sqllbProbeID')]"
+              },
+              "frontendPort": 1433,
+              "backendPort": 1433,
+              "enableFloatingIP": true,
+              "idleTimeoutInMinutes": 4,
+              "protocol": "Tcp",
+              "loadDistribution": "Default"
+            }
+          }
+        ],
+        "probes": [
+          {
+            "name": "[variables('LBProbeName')]",
+            "properties": {
+              "protocol": "Tcp",
+              "port": 59999,
+              "intervalInSeconds": 5,
+              "numberOfProbes": 2
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[concat('SqlVmDeploy', copyindex())]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', variables('coreVnetName'))]",
-        "[resourceId('Microsoft.Storage/storageAccounts', variables('diagStorageAccountName'))]"
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('diagStorageAccountName'))]",
+        "[resourceId('Microsoft.Network/loadBalancers', variables('LBName'))]"
       ],
+      "copy": {
+        "name": "sqlvmloop",
+        "count": 2
+      },
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -162,16 +198,16 @@
         },
         "parameters": {
           "vmName": {
-            "value": "[variables('adPDCVMName')]"
+            "value": "[concat(variables('SqlVmPrefix'), copyindex())]"
           },
           "vmSize": {
-            "value": "[parameters('DCVmSize')]"
+            "value": "[parameters('sqlVmSize')]"
           },
           "subnetId": {
-            "value": "[variables('ADSubnetRef')]"
+            "value": "[parameters('subnetId')]"
           },
           "fixedPrivateIp": {
-            "value": "10.0.0.4"
+            "value": "[parameters('nodeIpAddresses')[copyIndex()]]"
           },
           "adminUsername": {
             "value": "[parameters('adminUsername')]"
@@ -183,153 +219,19 @@
             "value": "[resourceId('Microsoft.Storage/storageAccounts', variables('diagStorageAccountName'))]"
           },
           "availabilitySetId": {
-            "value": "[resourceId('Microsoft.Compute/availabilitySets', variables('DCHASetName'))]"
-          }
-        }
-      }
-    },
-    {
-      "name": "DC2Deploy",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
-      "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', variables('coreVnetName'))]",
-        "[resourceId('Microsoft.Storage/storageAccounts', variables('diagStorageAccountName'))]",
-        "[resourceId('Microsoft.Resources/deployments', 'UpdateVNetDNS')]"        
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('windowsVmTemplateURL')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "vmName": {
-            "value": "[variables('adBDCVMName')]"
+            "value": "[resourceId('Microsoft.Compute/availabilitySets', variables('HASetName'))]"
           },
-          "vmSize": {
-            "value": "[parameters('DCVmSize')]"
+          "imagePublisher": {
+            "value": "[parameters('sqlVmImagePublisher')]"
           },
-          "subnetId": {
-            "value": "[variables('ADSubnetRef')]"
+          "imageOffer": {
+            "value": "[parameters('sqlVmImageOffer')]"
           },
-          "fixedPrivateIp": {
-            "value": "10.0.0.5"
+          "imageSku": {
+            "value": "[parameters('sqlVmImageSku')]"
           },
-          "adminUsername": {
-            "value": "[parameters('adminUsername')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "diagStorageAccountId": {
-            "value": "[resourceId('Microsoft.Storage/storageAccounts', variables('diagStorageAccountName'))]"
-          },
-          "availabilitySetId": {
-            "value": "[resourceId('Microsoft.Compute/availabilitySets', variables('DCHASetName'))]"
-          }
-        }
-      }
-    },
-    {
-      "name": "JumpDeploy",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
-      "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', variables('coreVnetName'))]",
-        "[resourceId('Microsoft.Storage/storageAccounts', variables('diagStorageAccountName'))]",
-        "[resourceId('Microsoft.Resources/deployments', 'UpdateVNetDNS')]"        
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('windowsVmTemplateURL')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "vmName": {
-            "value": "[variables('jumpVMName')]"
-          },
-          "vmSize": {
-            "value": "[parameters('jumpBoxVmSize')]"
-          },          
-          "subnetId": {
-            "value": "[variables('jumpNICSubnetRef')]"
-          },
-          "adminUsername": {
-            "value": "[parameters('adminUsername')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "diagStorageAccountId": {
-            "value": "[resourceId('Microsoft.Storage/storageAccounts', variables('diagStorageAccountName'))]"
-          },
-          "assignPublicIP": {
-            "value": true
-          }
-        }
-      }
-    },
-    {
-      "apiVersion": "2016-03-30",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('adPDCVMName'),'/CreateADForest')]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'DC1Deploy')]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Powershell",
-        "type": "DSC",
-        "typeHandlerVersion": "2.19",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "ModulesUrl": "[variables('adPDCModulesURL')]",
-          "ConfigurationFunction": "[variables('adPDCConfigurationFunction')]",
-          "Properties": {
-            "DomainName": "[parameters('domainName')]",
-            "AdminCreds": {
-              "UserName": "[parameters('adminUserName')]",
-              "Password": "PrivateSettingsRef:AdminPassword"
-            }
-          }
-        },
-        "protectedSettings": {
-          "Items": {
-            "AdminPassword": "[parameters('adminPassword')]"
-          }
-        }
-      }
-    },
-    {
-      "apiVersion": "2016-03-30",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('adBDCVMName'),'/ConfigureADBDC')]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'DC2Deploy')]",
-        "[resourceId('Microsoft.Resources/deployments', 'UpdateVNetDNS')]"                
-      ],
-      "properties": {
-        "publisher": "Microsoft.Powershell",
-        "type": "DSC",
-        "typeHandlerVersion": "2.19",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "ModulesUrl": "[variables('adBDCModulesURL')]",
-          "ConfigurationFunction": "[variables('adBDCConfigurationFunction')]",
-          "Properties": {
-            "DomainName": "[parameters('domainName')]",
-            "AdminCreds": {
-              "UserName": "[parameters('adminUserName')]",
-              "Password": "PrivateSettingsRef:AdminPassword"
-            }
-          }
-        },
-        "protectedSettings": {
-          "Items": {
-            "AdminPassword": "[parameters('adminPassword')]"
+          "LoadBalancerBEId": {
+            "value": "[variables('sqlBEAddressPoolID')]"
           }
         }
       }
@@ -337,11 +239,69 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('jumpVMName'),'/joindomain')]",
+      "name": "[concat(variables('SqlVmPrefix'), copyindex(), '/SqlIaasExtension')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'JumpDeploy')]"
+        "[resourceId('Microsoft.Resources/deployments', concat('SqlVmDeploy', copyindex()))]"
       ],
+      "copy": {
+        "name": "sqliaasextensionsloop",
+        "count": 2
+      },
+      "properties": {
+        "type": "SqlIaaSAgent",
+        "publisher": "Microsoft.SqlServer.Management",
+        "typeHandlerVersion": "1.2",
+        "autoUpgradeMinorVersion": "true",
+        "settings": {
+          "AutoTelemetrySettings": {
+            "Region": "[resourceGroup().location]"
+          },
+          "AutoPatchingSettings": {
+            "PatchCategory": "WindowsMandatoryUpdates",
+            "Enable": true,
+            "DayOfWeek": "Sunday",
+            "MaintenanceWindowStartingHour": "2",
+            "MaintenanceWindowDuration": "60"
+          },
+          "KeyVaultCredentialSettings": {
+            "Enable": false,
+            "CredentialName": ""
+          },
+          "ServerConfigurationsManagementSettings": {
+            "SQLConnectivityUpdateSettings": {
+              "ConnectivityType": "Private",
+              "Port": "1433"
+            },
+            "SQLWorkloadTypeUpdateSettings": {
+              "SQLWorkloadType": "GENERAL"
+            },
+            "SQLStorageUpdateSettings": {
+              "DiskCount": "1",
+              "NumberOfColumns": "1",
+              "StartingDeviceID": "2",
+              "DiskConfigurationType": "NEW"
+            },
+            "AdditionalFeaturesServerConfigurations": {
+              "IsRServicesEnabled": "false"
+            }
+          }
+        },
+        "protectedSettings": {}
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('SqlVmPrefix'), copyindex(), '/joindomain')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat(resourceId('Microsoft.Compute/virtualMachines', concat(variables('SqlVmPrefix'), copyindex())), '/extensions/SqlIaasExtension')]"
+      ],
+      "copy": {
+        "name": "sqlvmjoinloop",
+        "count": 2
+      },
       "properties": {
         "publisher": "Microsoft.Compute",
         "type": "JsonADDomainExtension",
@@ -360,33 +320,44 @@
       }
     },
     {
-      "name": "UpdateVNetDNS",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('SqlVmPrefix'), copyindex(), '/configuresql', copyindex())]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', variables('adPDCVMName'),'/extensions/CreateADForest')]"
+        "[concat(resourceId('Microsoft.Compute/virtualMachines', concat(variables('SqlVmPrefix'), copyindex())), '/extensions/joindomain')]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('diagStorageAccountName'))]"
       ],
+      "apiVersion": "2016-03-30",
+      "copy": {
+        "name": "sqlconfigloop",
+        "count": 2,
+        "mode": "Serial",
+        "batchSize": 1
+      },
+      "location": "[resourceGroup().location]",
       "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('vnetwithDNSTemplateUri')]",
-          "contentVersion": "1.0.0.0"
+        "publisher": "Microsoft.Powershell",
+        "type": "DSC",
+        "typeHandlerVersion": "2.21",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "modulesURL": "[variables('SQLPrepareModuleURL')]",
+          "configurationFunction": "[variables('SQLPrepareFunction')]",
+          "properties": {
+            "domainName": "[parameters('domainName')]",
+            "adminCreds": {
+              "userName": "[parameters('adminUserName')]",
+              "password": "privateSettingsRef:adminPassword"
+            },
+            "ClusterName": "SQLClusterAG",
+            "ClusterOwnerNode": "[concat(variables('SqlVmPrefix'), '0')]",
+            "ClusterIP": "[parameters('clusterIpAddress')]",
+            "witnessStorageBlobEndpoint": "[reference(variables('cloudWitnessStorageAccountName'), '2016-01-01').primaryEndpoints.blob]",
+            "witnessStorageAccountKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('cloudWitnessStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
+          }
         },
-        "parameters": {
-          "vnetName": {
-            "value": "[variables('coreVnetName')]"
-          },
-          "dnsServers": {
-            "value": [
-              "10.0.0.4",
-              "10.0.0.5"
-            ]
-          },
-          "addressSpace": {
-            "value": "[reference(concat('Microsoft.Network/virtualNetworks/', variables('coreVnetName'))).addressSpace]"
-          },
-          "subnets": {
-            "value": "[reference(concat('Microsoft.Network/virtualNetworks/', variables('coreVnetName'))).subnets]"
+        "protectedSettings": {
+          "items": {
+            "adminPassword": "[parameters('adminPassword')]"
           }
         }
       }
