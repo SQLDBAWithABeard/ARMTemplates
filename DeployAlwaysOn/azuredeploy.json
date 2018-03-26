@@ -71,7 +71,7 @@
     "cloudWitnessStorageAccountName": "[concat(uniquestring(resourceGroup().id), 'sqlw')]",
     "HASetName": "SqlHASet",
     "SqlVmPrefix": "SQL",
-    "baseUri": "https://github.com/SQLDBAWithABeard/ARMTemplates/blob/master/DeployAlwaysOn",
+    "baseUri": "https://raw.githubusercontent.com/SQLDBAWithABeard/ARMTemplates/blob/master/DeployAlwaysOn",
     "SQLPrepareModuleURL": "[uri(variables('baseUri'), 'DSC/PrepareSQLServer.ps1.zip')]",
     "SQLPrepareFunction": "PrepareSQLServer.ps1\\SQLServerPrepareDsc",
     "windowsVmTemplateURL": "https://raw.githubusercontent.com/SQLDBAWithABeard/iac/master/primitives/windowsvm.json",

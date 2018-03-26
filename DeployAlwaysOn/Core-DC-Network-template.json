@@ -81,7 +81,7 @@
     "adPDCVMName": "DC1",
     "adBDCVMName": "DC2",
     "DCHASetName": "DCHASet",
-    "baseUri": "https://github.com/SQLDBAWithABeard/ARMTemplates/blob/master/DeployAlwaysOn",
+    "baseUri": "https://raw.githubusercontent.com/ARMTemplates/blob/master/DeployAlwaysOn",
     "windowsVmTemplateURL": "https://raw.githubusercontent.com/SQLDBAWithABeard/iac/master/primitives/windowsvm.json",
     "adPDCModulesURL": "[uri(variables('baseUri'),'DSC/CreateADPDC.ps1.zip')]",
     "adPDCConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
