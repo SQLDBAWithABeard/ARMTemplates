@@ -70,7 +70,7 @@
             "defaultValue": "https://github.com/SQLDBAWithABeard/iac/blob/master/"
         },
         "NestedBase":{
-            "type": "string"
+            "type": "https://github.com/SQLDBAWithABeard/ARMTemplates/blob/master/DeployAlwaysOn"
         }
     },
     "variables": {
