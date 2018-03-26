@@ -248,14 +248,14 @@
       "metadata": {
         "description": "Linked Templates base url"
       },
-      "defaultValue": "https://github.com/SQLDBAWithABeard/ARMTemplates/tree/master/arm-templates/sqlvm-alwayson-cluster/nested"
+      "defaultValue": "https://raw.githubusercontent.com/SQLDBAWithABeard/ARMTemplates/master/arm-templates/sqlvm-alwayson-cluster/nested"
     },
     "scriptsBaseUrl": {
       "type": "string",
       "metadata": {
         "description": "DSC Scripts base url"
       },
-      "defaultValue": "https://github.com/SQLDBAWithABeard/ARMTemplates/tree/master/arm-templates/sqlvm-alwayson-cluster/scripts"
+      "defaultValue": "https://raw.githubusercontent.com/SQLDBAWithABeard/ARMTemplates/master/arm-templates/sqlvm-alwayson-cluster/scripts"
     },
     "autoPatchingDay": {
       "type": "string",
@@ -655,7 +655,7 @@
     {
       "name": "ProvisioningVMs",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
+      "apiVersion": "2017-08-01",
       "dependsOn": [
         "Microsoft.Resources/deployments/CreatingNetworkInterfaces"
       ],

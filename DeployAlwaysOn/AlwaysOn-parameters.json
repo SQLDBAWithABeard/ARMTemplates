@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "subnetId": {
+            "value": "/subscriptions/6d8f994c-9051-4cef-ba61-528bab27d213/resourceGroups/BeardAlwaysOn2017/providers/Microsoft.Network/virtualNetworks/corevnet/subnets/Subnet-2"
+        },
+        "nodeIpAddresses": {
+            "value": [
+                "10.0.1.10",
+                "10.0.1.11"
+            ]
+        },
+        "clusterIpAddress": {
+            "value": "10.0.1.30"
+        },
+        "adminUsername": {
+            "value": "EnterpriseAdmin"
+        },
+        "adminPassword": {
+            "value": null
+        },
+        "domainName": {
+            "value": "TheBeard.Local"
+        },
+        "sqlVmSize": {
+            "value": "Standard_D4s_v3"
+        },
+        "sqlVmImagePublisher": {
+            "value": "MicrosoftSqlServer"
+        },
+        "sqlVmImageOffer": {
+            "value": "SQL2017-WS2016"
+        },
+        "sqlVmImageSku": {
+            "value": "Enterprise"
+        }
+    }
+}
