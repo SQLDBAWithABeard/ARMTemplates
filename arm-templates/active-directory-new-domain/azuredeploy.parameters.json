@@ -3,25 +3,22 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "adminUsername": {
-      "value": "GEN-UNIQUE"
+      "value": "EnterpriseAdmin"
     },
     "adminPassword": {
       "value": "GEN-PASSWORD"
     },
     "domainName": {
-      "value": "mydomain.local"
+      "value": "TheBeard.local"
     },
     "dnsPrefix": {
-      "value": "GEN-UNIQUE"
+      "value": "sqlbeardalwayson"
     },
     "Users": {
       "value": "one,two,three"
     },
-    "UserPassword": {
-      "value": "GEN-PASSWORD"
-    },
     "DCName": {
-      "value": "GEN-UNIQUE"
+      "value": "BeardDC"
     }
   }
 }
