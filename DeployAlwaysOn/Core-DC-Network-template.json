@@ -393,5 +393,10 @@
       }
     }
   ],
-  "outputs": {}
+  "outputs": {
+    "VMsubnetID": {
+      "type": "string",
+      "value": "[variables('jumpNICSubnetRef')]"
+    }
+  }
 }
