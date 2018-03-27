@@ -81,7 +81,7 @@
     "adPDCVMName": "DC1",
     "adBDCVMName": "DC2",
     "DCHASetName": "DCHASet",
-    "baseUri": "https://raw.githubusercontent.com/SQLDBAWithABeard/ARMTemplates/master/DeployAlwaysOn",
+    "baseUri": "https://raw.githubusercontent.com/SQLDBAWithABeard/ARMTemplates/master/DeployAlwaysOn/",
     "basezipUri": "https://github.com/SQLDBAWithABeard/ARMTemplates/raw/master/DeployAlwaysOn/",
     "windowsVmTemplateURL": "https://raw.githubusercontent.com/SQLDBAWithABeard/iac/master/primitives/windowsvm.json",
     "adPDCModulesURL": "[uri(variables('basezipUri'),'DSC/CreateADPDC.ps1.zip')]",
