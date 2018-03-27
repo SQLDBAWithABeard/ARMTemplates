@@ -82,10 +82,11 @@
     "adBDCVMName": "DC2",
     "DCHASetName": "DCHASet",
     "baseUri": "https://raw.githubusercontent.com/ARMTemplates/blob/master/DeployAlwaysOn/",
+    "basezipUri": "https://github.com/SQLDBAWithABeard/ARMTemplates/raw/master/DeployAlwaysOn/",
     "windowsVmTemplateURL": "https://raw.githubusercontent.com/SQLDBAWithABeard/iac/master/primitives/windowsvm.json",
-    "adPDCModulesURL": "[uri(variables('baseUri'),'DSC/CreateADPDC.ps1.zip')]",
+    "adPDCModulesURL": "[uri(variables('basezipUri'),'DSC/CreateADPDC.ps1.zip')]",
     "adPDCConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
-    "adBDCModulesURL": "https://github.com/SQLDBAWithABeard/ARMTemplates/raw/master/DeployAlwaysOn/DSC/CreateADPDC.ps1.zip",
+    "adBDCModulesURL": "[uri(variables('basezipUri'),'DSC/CreateADBDC.ps1.zip')]",
     "adBDCConfigurationFunction": "ConfigureADBDC.ps1\\ConfigureADBDC",
     "vnetwithDNSTemplateUri": "[uri(variables('baseUri'),'nested-templates/update-vnet-dns.json')]"
   },
