@@ -94,7 +94,7 @@
     "SqlVmPrefix": "SQL",
     "baseUri": "https://raw.githubusercontent.com/SQLDBAWithABeard/ARMTemplates/master/DeployAlwaysOn/",
     "basezipUri": "https://github.com/SQLDBAWithABeard/ARMTemplates/raw/master/DeployAlwaysOn/",
-    "SQLPrepareModuleURL": "[uri(variables('basezipeUri'), 'DSC/PrepareSQLServer.ps1.zip')]",
+    "SQLPrepareModuleURL": "[uri(variables('basezipUri'), 'DSC/PrepareSQLServer.ps1.zip')]",
     "SQLPrepareFunction": "PrepareSQLServer.ps1\\SQLServerPrepareDsc",
     "windowsVmTemplateURL": "https://raw.githubusercontent.com/SQLDBAWithABeard/iac/master/primitives/windowsvm.json",
     "LBName": "SQLLB",
