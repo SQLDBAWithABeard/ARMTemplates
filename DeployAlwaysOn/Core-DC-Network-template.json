@@ -390,7 +390,29 @@
           }
         }
       }
-    }
+    },
+    {
+      "apiVersion": "[providers('Microsoft.DevTestLab','labs').apiVersions[0]]",
+      "type": "microsoft.devtestlab/schedules",
+      "name": "[concat('shutdown-computevm-','DC2Deploy')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+          "[concat('Microsoft.Compute/virtualMachines/','DC2Deploy')]"
+      ],
+      "properties": {
+          "status": "Enabled",
+          "taskType": "ComputeVmShutdownTask",
+          "dailyRecurrence": {
+              "time": "1900"
+          },
+          "timeZoneId": "W. Europe Standard Time",
+          "notificationSettings": {
+              "status": "Disabled",
+              "timeInMinutes": 15
+          },
+          "targetResourceId": "[concat('Microsoft.Compute/virtualMachines/','DC2Deploy')]"
+      }
+  }
   ],
   "outputs": {}
 }
