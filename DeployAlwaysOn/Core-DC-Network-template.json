@@ -88,7 +88,8 @@
     "adPDCConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
     "adBDCModulesURL": "[uri(variables('basezipUri'),'DSC/ConfigureADBDC.ps1.zip')]",
     "adBDCConfigurationFunction": "ConfigureADBDC.ps1\\ConfigureADBDC",
-    "vnetwithDNSTemplateUri": "[uri(variables('baseUri'),'nested-templates/update-vnet-dns.json')]"
+    "vnetwithDNSTemplateUri": "[uri(variables('baseUri'),'nested-templates/update-vnet-dns.json')]",
+    "hostDNSNameScriptArgument": "[concat('*.',resourceGroup().location,'.cloudapp.azure.com')]"
   },
   "resources": [
     {
@@ -461,6 +462,28 @@
 
         "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', variables('jumpVMName'))]"
     } 
+},
+{
+  "type": "Microsoft.Compute/virtualMachines/extensions",
+  "name": "variables('jumpVMName'),'/WinRMCustomScriptExtension')]",
+  "apiVersion": "2015-06-15",
+  "location": "[resourceGroup().location]",
+  "dependsOn": [
+    "[resourceId('Microsoft.Resources/deployments', 'JumpDeploy')]"
+  ],
+  "properties": {
+    "publisher": "Microsoft.Compute",
+    "type": "CustomScriptExtension",
+    "typeHandlerVersion": "1.4",
+    "settings": {
+      "fileUris": [
+        "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1",
+        "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe",
+        "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd"
+      ],
+      "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ConfigureWinRM.ps1 ',variables('hostDNSNameScriptArgument'))]"
+    }
+  }
 }
   ],
   "outputs": {
