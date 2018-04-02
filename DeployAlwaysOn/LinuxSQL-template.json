@@ -35,7 +35,7 @@
         }
     },
     "variables": {
-        "diagStorageAccountName": "[concat(uniquestring(resourceGroup().id), 'SQLLinuxvmdiag')]",
+        "diagStorageAccountName": "[concat(uniquestring(resourceGroup().id), 'sqlnixdiag')]",
         "vnetId": "[resourceId(resourceGroup().name,'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
         "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]"
     },
