@@ -383,7 +383,36 @@
           }
         }
       }
-    }
+    },
+    {
+      "apiVersion": "[providers('Microsoft.DevTestLab','labs').apiVersions[0]]",
+      "type": "microsoft.devtestlab/schedules",
+      "name": "[concat(variables('SqlVmPrefix'), copyindex(), '-shutdown-computevm', copyindex())]",
+      "copy": {
+        "name": "sqlconfigloop",
+        "count": 2,
+        "mode": "Serial",
+        "batchSize": 1
+      },
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat(resourceId('Microsoft.Compute/virtualMachines', concat(variables('SqlVmPrefix'), copyindex())), '/extensions/configuresql')]"
+      ],
+      "properties": {
+          "status": "Enabled",
+          "taskType": "ComputeVmShutdownTask",
+          "dailyRecurrence": {
+              "time": "1905"
+          },
+          "timeZoneId": "GMT Standard Time",
+          "notificationSettings": {
+              "status": "Disabled",
+              "timeInMinutes": 15
+          },
+  
+          "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('SqlVmPrefix'), copyindex()) )]"
+      } 
+  }
   ],
   "outputs": {}
 }
