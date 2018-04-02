@@ -411,8 +411,9 @@
               "status": "Disabled",
               "timeInMinutes": 15
           },
-          "targetResourceId": "[resourceId('Microsoft.Resources/deployments', 'DC2Deploy')]"
-      }
+
+          "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', variables('adBDCVMName'))]"
+      } 
   }
   ],
   "outputs": {
