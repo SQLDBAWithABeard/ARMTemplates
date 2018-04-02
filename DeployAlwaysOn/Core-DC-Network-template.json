@@ -395,7 +395,7 @@
     {
       "apiVersion": "[providers('Microsoft.DevTestLab','labs').apiVersions[0]]",
       "type": "microsoft.devtestlab/schedules",
-      "name": "[concat('shutdown-computevm-','DC2Deploy')]",
+      "name": "[concat('shutdown-computevm-',variables('adBDCVMName'))]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
           "[resourceId('Microsoft.Resources/deployments', 'DC2Deploy')]"
