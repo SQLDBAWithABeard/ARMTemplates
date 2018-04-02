@@ -402,7 +402,7 @@
           "status": "Enabled",
           "taskType": "ComputeVmShutdownTask",
           "dailyRecurrence": {
-              "time": "1905"
+              "time": "1900"
           },
           "timeZoneId": "GMT Standard Time",
           "notificationSettings": {
