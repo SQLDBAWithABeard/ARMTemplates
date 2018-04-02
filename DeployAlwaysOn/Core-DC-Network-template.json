@@ -398,7 +398,7 @@
       "name": "[concat('shutdown-computevm-','DC2Deploy')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-          "[concat('Microsoft.Compute/virtualMachines/','DC2Deploy')]"
+          "[resourceId('Microsoft.Resources/deployments', 'DC2Deploy')]"
       ],
       "properties": {
           "status": "Enabled",
