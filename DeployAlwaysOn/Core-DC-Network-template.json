@@ -411,7 +411,7 @@
               "status": "Disabled",
               "timeInMinutes": 15
           },
-          "targetResourceId": "[concat('Microsoft.Compute/virtualMachines/','DC2Deploy')]"
+          "targetResourceId": "[resourceId('Microsoft.Resources/deployments', 'DC2Deploy')]"
       }
   }
   ],
