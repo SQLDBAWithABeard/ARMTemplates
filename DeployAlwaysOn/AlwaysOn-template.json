@@ -396,7 +396,7 @@
       },
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat(resourceId('Microsoft.Compute/virtualMachines', concat(variables('SqlVmPrefix'), copyindex())) )]"
+        "[resourceId('Microsoft.Resources/deployments', concat('SqlVmDeploy', copyindex()))]"
       ],
       "properties": {
           "status": "Enabled",
