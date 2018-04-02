@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "westeurope"
+        },
+        "virtualMachineName": {
+            "value": "BeardLinuxSQL"
+        },
+        "virtualMachineSize": {
+            "value": "Standard_D4s_v3"
+        },
+        "adminUsername": {
+            "value": "enterpriseadmin"
+        },
+        "virtualNetworkName": {
+            "value": "corevnet"
+        },
+        "networkInterfaceName": {
+            "value": "beardlinuxsql921"
+        },
+        "fixedPrivateIp": {
+            "value": "10.0.1.201"
+        },
+        "networkSecurityGroupName": {
+            "value": "BeardLinuxSQL-nsg"
+        },
+        "adminPassword": {
+            "value": null
+        },
+        "subnetName": {
+            "value": "Subnet-2"
+        }
+    }
+}
