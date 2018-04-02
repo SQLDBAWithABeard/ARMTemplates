@@ -149,7 +149,7 @@
     "name": "[concat('shutdown-computevm-',parameters('virtualMachineName'))]",
     "location": "[resourceGroup().location]",
     "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', parameters('virtualMachineName'))]"
+        "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachineName'))]"
     ],
     "properties": {
         "status": "Enabled",
