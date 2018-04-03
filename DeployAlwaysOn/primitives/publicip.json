@@ -10,8 +10,7 @@
             "defaultValue": "ipconfig1"
         },
         "dnsLabelPrefix": {
-            "type": "string",
-            "value": "GEN-UNIQUE"
+            "type": "string"
           },
         "subnetId": {
             "type": "string"
