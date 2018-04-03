@@ -1,28 +1,39 @@
-  #Install PackageProviders
-  
-  Install-PackageProvider nuget -Force
-  Install-PackageProvider Chocolatey -Force
+#Install Chocolatey
+
+Write-Output "Installing Chocolatey"
+Set-ExecutionPolicy Bypass -Scope Process -Force
+Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
 
-        #Install packages
+#Install software
+Write-Output "Installing programmes"
+choco install googlechrome --yes
+choco install visualstudiocode --yes
+choco install vscode-powershell --yes
+choco install vscode-mssql --yes
+choco install vscode-gitlens --yes
+choco install notepadplusplus --yes
+choco install sql-server-management-studio  --yes
+choco install sql-operations-studio --yes
+choco install git --yes
+choco install powerbi --yes
 
-        Install-Package vscode.portable -Source Chocolatey -Force
-        Install-Package vscode-powershell -Source Chocolatey -Force
-        Install-Package vscode-mssql -Source Chocolatey -Force
-        Install-Package vscode-gitlens -Source Chocolatey -Force
-        # Install-Package vscode-docker -Source Chocolatey -Force
-        Install-Package -Name GoogleChrome -Source Chocolatey -Force
-        Install-Package -Name notepadplusplus -Source Chocolatey -Force
+# Install vscodeextensions module and extensions
 
+Install-Module vscodeextensions -Scope CurrentUser
 
+Install-VSCodeExtension -ExtensionName material-theme-pack 
+Install-VSCodeExtension -ExtensionName bracket-pair-colorizer 
 
-        # Install vscodeextensions module and extensions
+$Modules = 'dbatools','PSFramework','dbachecks'
 
-        Install-Module vscodeextensions -Scope CurrentUser
-
-        Install-VSCodeExtension -ExtensionName material-theme-pack 
-        Install-VSCodeExtension -ExtensionName bracket-pair-colorizer 
-
-
-
+$Modules.ForEach{
+    if(-not (Get-Module $Psitem -ErrorAction SilentlyContinue)){
+        Write-Output "Installing Module $Psitem"
+        Install-Module $Psitem -Scope CurrentUser
     }
+    else{
+        Write-Output "Updating Module $Psitem"
+        Update-Module $Psitem
+    }
+}
