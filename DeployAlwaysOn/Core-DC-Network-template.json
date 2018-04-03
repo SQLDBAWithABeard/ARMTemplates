@@ -189,7 +189,7 @@
             "value": "[resourceId('Microsoft.Compute/availabilitySets', variables('DCHASetName'))]"
           },
           "PublicIPDNS": {
-            "Value": null
+            "Value": "dummy"
           }
         }
       }
@@ -235,7 +235,7 @@
             "value": "[resourceId('Microsoft.Compute/availabilitySets', variables('DCHASetName'))]"
           },
           "PublicIPDNS": {
-            "Value": null
+            "Value": "dummy"
           }
         }
       }
