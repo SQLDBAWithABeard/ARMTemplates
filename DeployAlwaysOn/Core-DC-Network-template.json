@@ -67,7 +67,7 @@
     }
   },
   "variables": {
-    "JumpBoxDNS" : "beardjumpbox",
+    "JumpBoxDNS": "beardjumpbox",
     "diagStorageAccountName": "[concat(uniquestring(resourceGroup().id), 'vmdiag')]",
     "coreVnetName": "corevnet",
     "corevnetPrefix": "10.0.0.0/16",
@@ -187,6 +187,9 @@
           },
           "availabilitySetId": {
             "value": "[resourceId('Microsoft.Compute/availabilitySets', variables('DCHASetName'))]"
+          },
+          "PublicIPDNS": {
+            "Value": null
           }
         }
       }
@@ -198,7 +201,7 @@
       "dependsOn": [
         "[resourceId('Microsoft.Network/virtualNetworks', variables('coreVnetName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', variables('diagStorageAccountName'))]",
-        "[resourceId('Microsoft.Resources/deployments', 'UpdateVNetDNS')]"        
+        "[resourceId('Microsoft.Resources/deployments', 'UpdateVNetDNS')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -230,6 +233,9 @@
           },
           "availabilitySetId": {
             "value": "[resourceId('Microsoft.Compute/availabilitySets', variables('DCHASetName'))]"
+          },
+          "PublicIPDNS": {
+            "Value": null
           }
         }
       }
@@ -241,7 +247,7 @@
       "dependsOn": [
         "[resourceId('Microsoft.Network/virtualNetworks', variables('coreVnetName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', variables('diagStorageAccountName'))]",
-        "[resourceId('Microsoft.Resources/deployments', 'UpdateVNetDNS')]"        
+        "[resourceId('Microsoft.Resources/deployments', 'UpdateVNetDNS')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -255,7 +261,7 @@
           },
           "vmSize": {
             "value": "[parameters('jumpBoxVmSize')]"
-          },          
+          },
           "subnetId": {
             "value": "[variables('jumpNICSubnetRef')]"
           },
@@ -271,7 +277,7 @@
           "assignPublicIP": {
             "value": true
           },
-          "PublicIPDNS":{
+          "PublicIPDNS": {
             "value": "[variables('JumpBoxDNS')]"
           }
         }
@@ -315,7 +321,7 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'DC2Deploy')]",
-        "[resourceId('Microsoft.Resources/deployments', 'UpdateVNetDNS')]"                
+        "[resourceId('Microsoft.Resources/deployments', 'UpdateVNetDNS')]"
       ],
       "properties": {
         "publisher": "Microsoft.Powershell",
@@ -403,70 +409,66 @@
       "name": "[concat('shutdown-computevm-',variables('adBDCVMName'))]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-          "[resourceId('Microsoft.Resources/deployments', 'DC2Deploy')]"
+        "[resourceId('Microsoft.Resources/deployments', 'DC2Deploy')]"
       ],
       "properties": {
-          "status": "Enabled",
-          "taskType": "ComputeVmShutdownTask",
-          "dailyRecurrence": {
-              "time": "1905"
-          },
-          "timeZoneId": "GMT Standard Time",
-          "notificationSettings": {
-              "status": "Disabled",
-              "timeInMinutes": 15
-          },
-
-          "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', variables('adBDCVMName'))]"
-      } 
-  },
-  {
-    "apiVersion": "[providers('Microsoft.DevTestLab','labs').apiVersions[0]]",
-    "type": "microsoft.devtestlab/schedules",
-    "name": "[concat('shutdown-computevm-',variables('adPDCVMName'))]",
-    "location": "[resourceGroup().location]",
-    "dependsOn": [
+        "status": "Enabled",
+        "taskType": "ComputeVmShutdownTask",
+        "dailyRecurrence": {
+          "time": "1905"
+        },
+        "timeZoneId": "GMT Standard Time",
+        "notificationSettings": {
+          "status": "Disabled",
+          "timeInMinutes": 15
+        },
+        "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', variables('adBDCVMName'))]"
+      }
+    },
+    {
+      "apiVersion": "[providers('Microsoft.DevTestLab','labs').apiVersions[0]]",
+      "type": "microsoft.devtestlab/schedules",
+      "name": "[concat('shutdown-computevm-',variables('adPDCVMName'))]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'DC1Deploy')]"
-    ],
-    "properties": {
+      ],
+      "properties": {
         "status": "Enabled",
         "taskType": "ComputeVmShutdownTask",
         "dailyRecurrence": {
-            "time": "1905"
+          "time": "1905"
         },
         "timeZoneId": "GMT Standard Time",
         "notificationSettings": {
-            "status": "Disabled",
-            "timeInMinutes": 15
+          "status": "Disabled",
+          "timeInMinutes": 15
         },
-
         "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', variables('adPDCVMName'))]"
-    } 
-}
-,
-  {
-    "apiVersion": "[providers('Microsoft.DevTestLab','labs').apiVersions[0]]",
-    "type": "microsoft.devtestlab/schedules",
-    "name": "[concat('shutdown-computevm-',variables('jumpVMName'))]",
-    "location": "[resourceGroup().location]",
-    "dependsOn": [
+      }
+    },
+    {
+      "apiVersion": "[providers('Microsoft.DevTestLab','labs').apiVersions[0]]",
+      "type": "microsoft.devtestlab/schedules",
+      "name": "[concat('shutdown-computevm-',variables('jumpVMName'))]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'JumpDeploy')]"
-    ],
-    "properties": {
+      ],
+      "properties": {
         "status": "Enabled",
         "taskType": "ComputeVmShutdownTask",
         "dailyRecurrence": {
-            "time": "1905"
+          "time": "1905"
         },
         "timeZoneId": "GMT Standard Time",
         "notificationSettings": {
-            "status": "Disabled",
-            "timeInMinutes": 15
+          "status": "Disabled",
+          "timeInMinutes": 15
         },
-
         "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', variables('jumpVMName'))]"
-    } 
-}
+      }
+    }
   ],
   "outputs": {
     "VMsubnetID": {

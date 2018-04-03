@@ -6,7 +6,7 @@
       "value": "EnterpriseAdmin"
     },
     "adminPassword": {
-      "value": "DomainAdminPassword0!"
+      "value": null
     },
     "domainName": {
       "value": "TheBeard.Local"

@@ -41,7 +41,7 @@
         },
         "PublicIPDNS":{
             "type": "string",
-            "defaultValue": "null"
+            "defaultValue": "dummy"
         },
         "fixedPrivateIp": {
             "type": "string",
