@@ -26,6 +26,8 @@ Install-Module vscodeextensions -Scope CurrentUser -Force
 Install-VSCodeExtension -ExtensionName material-theme-pack 
 Install-VSCodeExtension -ExtensionName bracket-pair-colorizer 
 
+Install-Module Pester -Scope CurrentUser -SkipPublisherCheck -Force -ErrorAction SilentlyContinue
+
 $Modules = 'dbatools','PSFramework','dbachecks'
 
 $Modules.ForEach{
