@@ -31,6 +31,7 @@ $LinuxSQLBuildParams = Get-GitHubRawPath -File .\DeployAlwaysOn\LinuxSQL-paramet
 $SQLInstall = Get-GitHubRawPath -File .\DeployAlwaysOn\SoftwareInstallation\SQLInstall.ps1
 $JumpBoxSoftwareInstall = Get-GitHubRawPath -File .\DeployAlwaysOn\SoftwareInstallation\JumpBox-Software-Installation.ps1
 $VSTSAzureTasks = Get-GitHubRawPath -File .\DeployAlwaysOn\SoftwareInstallation\VSTSTask-GetAzurevalues.ps1
+$PesterProgramme = Get-GitHubRawPath -File .\DeployAlwaysOn\Pester\01-Programmes.Tests.ps1
 
 
 Write-Host "##vso[task.setvariable variable=DomainBuildJson]$DomainBuildJson"
@@ -41,7 +42,8 @@ Write-Host "##vso[task.setvariable variable=LInuxbuildjson]$LinuxSQLBuild"
 Write-Host "##vso[task.setvariable variable=linuxbuildparams]$LinuxSQLBuildParams"
 Write-Host "##vso[task.setvariable variable=sqlinstallscript]$SQLInstall"
 Write-Host "##vso[task.setvariable variable=JumpBoxSoftwareInstallscript]$JumpBoxSoftwareInstall"
-Write-Host "##vso[task.setvariable variable=VSTSAzureTasks]$VSTSAzureTasks "
+Write-Host "##vso[task.setvariable variable=VSTSAzureTasks]$VSTSAzureTasks"
+Write-Host "##vso[task.setvariable variable=PesterProgramme]$PesterProgramme"
 
 ## Check we have the variables ready for another process
 
@@ -54,3 +56,4 @@ Write-Output "Linux SQL Build Params File Path = $ENV:linuxbuildparams"
 Write-Output "SQL Install File Path = $ENV:sqlinstallscript"
 Write-Output "JumpBox Software Install File Path = $ENV:JumpBoxSoftwareInstallscript"
 Write-Output "VSTS Azure Tasks  File Path = $ENV:VSTSAzureTasks"
+Write-Output "Pester Programme File Path = $ENV:PesterProgramme"
