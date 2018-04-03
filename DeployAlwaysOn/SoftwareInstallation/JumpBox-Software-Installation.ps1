@@ -20,6 +20,7 @@ choco install powerbi --yes
 
 # Install vscodeextensions module and extensions
 
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 Install-Module vscodeextensions -Scope CurrentUser
 
 Install-VSCodeExtension -ExtensionName material-theme-pack 

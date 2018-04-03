@@ -1,4 +1,3 @@
-cls
 $agName = 'SQLClusterAG'
 $SqlVM0 = 'sql0'
 $SqlVM1 = 'sql1'
