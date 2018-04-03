@@ -11,5 +11,5 @@ Write-Output "Downloading File"
 $ICOuput = Invoke-Command -Session $session -ScriptBlock {(New-Object System.Net.WebClient).DownloadFile($Using:Url, 'C:\Windows\Temp\SoftwareInstall.ps1')}
 Write-Output $ICOutput
 Write-Output "Running Install Script"
-$ICOuput = Invoke-Command -Session $session -ScriptBlock{ 'C:\Windows\Temp\SoftwareInstall.ps1'}
+$ICOuput = Invoke-Command -Session $session -ScriptBlock{C:\Windows\Temp\SoftwareInstall.ps1}
 Write-Output $ICOutput
