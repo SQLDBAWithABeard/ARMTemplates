@@ -27,10 +27,10 @@
             "location": "[resourceGroup().location]",
             "apiVersion": "2016-03-30",
             "properties": {
-                "publicIPAllocationMethod": "Dynamic"
-            },
-            "dnsSettings": {
-              "domainNameLabel": "[parameters('dnsLabelPrefix')]"
+                "publicIPAllocationMethod": "Dynamic",
+                "dnsSettings": {
+                  "domainNameLabel": "[parameters('dnsLabelPrefix')]"
+                }
             }
         },
         {
