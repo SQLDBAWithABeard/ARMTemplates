@@ -21,7 +21,7 @@ choco install powerbi --yes
 # Install vscodeextensions module and extensions
 
 Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-Install-Module vscodeextensions -Scope CurrentUser
+Install-Module vscodeextensions -Scope CurrentUser -Force
 
 Install-VSCodeExtension -ExtensionName material-theme-pack 
 Install-VSCodeExtension -ExtensionName bracket-pair-colorizer 
@@ -31,7 +31,7 @@ $Modules = 'dbatools','PSFramework','dbachecks'
 $Modules.ForEach{
     if(-not (Get-Module $Psitem -ErrorAction SilentlyContinue)){
         Write-Output "Installing Module $Psitem"
-        Install-Module $Psitem -Scope CurrentUser
+        Install-Module $Psitem -Scope CurrentUser -Force
     }
     else{
         Write-Output "Updating Module $Psitem"
