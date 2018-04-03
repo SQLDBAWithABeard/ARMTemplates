@@ -19,4 +19,4 @@ $ICOuput = Invoke-Command -Session $session -ScriptBlock{C:\Windows\Temp\Softwar
 Write-Output $ICOutput
 Write-Output "Running Pester"
 Invoke-Command -Session $session -ScriptBlock{Invoke-Pester C:\Windows\Temp\ -OutputFile PesterTestResults.xml -OutputFormat NUnitXml} 
-Copy-Item -FromSession $session C:\windows\Temp\PesterTestResults.xml -Destination $PWD
+Copy-Item -FromSession $session C:\windows\Temp\PesterTestResults.xml -Destination $(System.DefaultWorkingDirectory)
