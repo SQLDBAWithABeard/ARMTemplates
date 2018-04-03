@@ -26,9 +26,10 @@ Install-Module vscodeextensions -Scope CurrentUser -Force
 Install-VSCodeExtension -ExtensionName material-theme-pack 
 Install-VSCodeExtension -ExtensionName bracket-pair-colorizer 
 
+# do this first as it is a pain - it will error if it is already there and then can be updated below
 Install-Module Pester -Scope CurrentUser -SkipPublisherCheck -Force -ErrorAction SilentlyContinue
 
-$Modules = 'dbatools','PSFramework','dbachecks'
+$Modules = 'dbatools','PSFramework','dbachecks','Pester'
 
 $Modules.ForEach{
     if(-not (Get-Module $Psitem -ErrorAction SilentlyContinue)){
@@ -36,6 +37,7 @@ $Modules.ForEach{
         Install-Module $Psitem -Scope CurrentUser -Force
     }
     else{
+        Remove-Module $Psitem
         Write-Output "Updating Module $Psitem"
         Update-Module $Psitem
     }
