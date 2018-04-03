@@ -67,6 +67,7 @@
     }
   },
   "variables": {
+    "JumpBoxDNS" : "beardjumpbox",
     "diagStorageAccountName": "[concat(uniquestring(resourceGroup().id), 'vmdiag')]",
     "coreVnetName": "corevnet",
     "corevnetPrefix": "10.0.0.0/16",
@@ -269,6 +270,9 @@
           },
           "assignPublicIP": {
             "value": true
+          },
+          "PublicIPDNS":{
+            "value": "[variables('JumpBoxDNS')]"
           }
         }
       }
