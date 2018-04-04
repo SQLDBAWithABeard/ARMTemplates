@@ -76,9 +76,9 @@ Remove-PSSession $sess
 #endregion
 
 #region create share
-$ServiceAccount = (Get-DbaSqlService -ComputerName $SqlVm0).Where{$Psitem.ServiceName -eq 'MSSQLSERVER'}.StartName
+$ServiceAccount = (Get-DbaSqlService -ComputerName $SqlVm0 -Credential $cred).Where{$Psitem.ServiceName -eq 'MSSQLSERVER'}.StartName
 
-$Cim = New-CimSession -ComputerName $SqlVm0
+$Cim = New-CimSession -ComputerName $SqlVm0 -Credential $cred
 if (-Not ( Get-SmbShare -CimSession $cim -Name SQLBackups -ErrorAction SilentlyContinue)) {
     Write-Verbose "Creating Backup Share"
     New-SmbShare -Name SQLBackups -Path 'F:\Backups' -FullAccess $ServiceAccount -CimSession $cim 
