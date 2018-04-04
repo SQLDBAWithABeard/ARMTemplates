@@ -93,8 +93,20 @@ Remove-CimSession $Cim
 
 #region Restore database ontSQL Servers
 
-if (-not(Get-Dbaagdatabase -sqlinstance $SQlVm0 -Availabilitygroup $AgName -Database WideWorldImporters -SqlCredential $cred)) {
-    $srv = Connect-DbaInstance -SqlInstance $SQLvm0 -SqlCredential $cred
+
+try {
+    Write-Verbose "Checking if the database is on the AG"
+    $CheckAGDb = Get-Dbaagdatabase -sqlinstance $SQlVm0 -Availabilitygroup $AgName -Database WideWorldImporters
+Write-Verbose "Checked if the database is on the AG"
+}
+catch {
+    Write-Error "Failed to Check the AG"
+    break
+}
+
+
+if (-not($CheckAGDb)) {
+    $srv = Connect-DbaInstance -SqlInstance $SQLvm0
 
     if(($srv.Databases.Name -notcontains 'WideWorldImporters')){
         Write-Verbose " Restoring database"
