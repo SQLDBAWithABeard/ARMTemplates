@@ -179,4 +179,25 @@ if (-not($CheckAGDb)) {
 else {
     Write-Verbose "Database already on $agName Availability Group on $sqlvm0"
 }
+
+Invoke-Command -ComputerName $sqlvm0 -Credential $cred -ScriptBlock {
+    $VerbosePreference = 'Continue'
+    $xe = (Get-DbaXEStore -SqlInstance $Using:SqlVM0).Sessions['Alwayson_Health']
+    $xe.AutoStart = $true
+    $xe.Alter()
+    if ($xe.Start -eq $false) {
+        $xe.Start()
+    }
+}
+
+Invoke-Command -ComputerName $SqlVM1 -Credential $cred -ScriptBlock {
+    $VerbosePreference = 'Continue'
+    $xe = (Get-DbaXEStore -SqlInstance $Using:SqlVM1).Sessions['Alwayson_Health']
+    $xe.AutoStart = $true
+    $xe.Alter()
+    if ($xe.Start -eq $false) {
+        $xe.Start()
+    }
+}
+
 Write-Verbose "FiINISHED THE THING"
