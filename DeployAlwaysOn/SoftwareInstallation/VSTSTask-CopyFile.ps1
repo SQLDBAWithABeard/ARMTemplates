@@ -22,11 +22,11 @@ $ICOuput = Invoke-Command -Session $session -ScriptBlock {
     (New-Object System.Net.WebClient).DownloadFile($Using:SQLInstallUrl, 'C:\Windows\Temp\SQLInstall.ps1')
 
 } *>&1
-Write-Verbose $ICOutput
+Write-Verbose "File Output is - $ICOutput"
 
-Write-Verbose "Running Install Script"
+Write-Verbose "Running Software Install Script"
 $ICOuput = Invoke-Command -Session $session -ScriptBlock{C:\Windows\Temp\SoftwareInstall.ps1} *>&1
-Write-Verbose $ICOutput
+Write-Verbose "Software Install Output is -$ICOutput"
 
 Write-Verbose "Running Pester"
 Invoke-Command -Session $session -ScriptBlock{Invoke-Pester C:\Windows\Temp\ -OutputFile C:\Windows\Temp\PesterTestResults.xml -OutputFormat NUnitXml} *>&1
@@ -34,6 +34,6 @@ Copy-Item -FromSession $session C:\windows\Temp\PesterTestResults.xml -Destinati
 
 $session = New-PSSession -ComputerName beardjumpbox.westeurope.cloudapp.azure.com -Credential $cred -UseSSL -SessionOption $so -Authentication Credssp
 
-Write-Verbose "Running Install Script"
+Write-Verbose "Running SQL Install Script"
 $ICOuput = Invoke-Command -Session $session -ScriptBlock{C:\Windows\Temp\SQLInstall.ps1} *>&1
-Write-Verbose $ICOutput
+Write-Verbose "SQL Install Output is -$ICOutput"
