@@ -1,4 +1,5 @@
 Param($DomainAdminPassword)
+$VerbosePreference = 'Continue'
 $Username = 'EnterpriseAdmin'
 
 $Password = $DomainAdminPassword | ConvertTo-SecureString -AsPlainText  -Force 
