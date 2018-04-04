@@ -9,10 +9,6 @@ $SqlVM1 = 'sql1'
 $Password = $DomainAdminPassword | ConvertTo-SecureString -AsPlainText  -Force 
 $cred = New-Object System.Management.Automation.PSCredential $Username, $Password
 
-$PSDefaultParameterValues += @{ '*:SqlCredential' = $cred}
-$PSDefaultParameterValues += @{ '*:Credential' = $cred}
-
-
 #region SqlServer Module
 
 if (-not (Get-module sqlserver -ListAvailable)) {
@@ -92,6 +88,9 @@ else {
 }
 Remove-CimSession $Cim
 #endregion
+
+$PSDefaultParameterValues += @{ '*:SqlCredential' = $cred}
+$PSDefaultParameterValues += @{ '*:Credential' = $cred}
 
 #region Restore database ontSQL Servers
 
