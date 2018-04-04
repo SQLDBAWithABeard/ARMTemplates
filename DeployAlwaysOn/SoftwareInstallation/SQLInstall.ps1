@@ -162,8 +162,8 @@ if (-not($CheckAGDb)) {
         Restore-DbaDatabase -SqlInstance $Using:sqlvm1 -Path "\\$Using:SQlVm0\SQlBackups\WWI-Full-AGseed.bak", "\\$Using:SQlVm0\SQlBackups\WWI-Log-AGseed.trn" -WithReplace -NoRecovery 
     }
     Write-Verbose "Add database to AG"
-    $PrimaryPAth = "SQLSERVER:\SQL\$SQLVM0\DEFAULT\AvailabilityGroups\$Using:AGName"
-    $SecondaryPAth = "SQLSERVER:\SQL\$SQLVM1\DEFAULT\AvailabilityGroups\$Using:AGName"
+    $PrimaryPAth = "SQLSERVER:\SQL\$SQLVM0\DEFAULT\AvailabilityGroups\$AGName"
+    $SecondaryPAth = "SQLSERVER:\SQL\$SQLVM1\DEFAULT\AvailabilityGroups\$AGName"
     Add-SqlAvailabilityDatabase -Path $PrimaryPAth -Database WideWorldImporters 
     Add-SqlAvailabilityDatabase -Path $secondaryPAth -Database WideWorldImporters  
 }
