@@ -56,14 +56,9 @@ try {
 
     $VSCodeExtensions = 'material-theme-pack', 'bracket-pair-colorizer', 'powershell', 'mssql', 'gitlens'
     $VSCodeExtensions.ForEach{
-        if (Get-VsCodeExtension $PSitem) {
-            Write-Verbose "VS Code Extension $psitem already installed"
-        }
-        else {
             Write-Verbose "Installing VS Code Extension $psitem "
             Install-VSCodeExtension -ExtensionName $PSitem
         }
-    }
 
     # do this first as it is a pain - it will error if it is already there and then can be updated below
     Install-Module Pester -Scope CurrentUser -SkipPublisherCheck -Force -ErrorAction SilentlyContinue
@@ -83,4 +78,5 @@ try {
 catch {
     Write-Warning "An error Occured"
     $_ | Fl -force
+    Throw
 }
