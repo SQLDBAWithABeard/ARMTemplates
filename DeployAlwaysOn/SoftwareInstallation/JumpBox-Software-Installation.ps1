@@ -42,3 +42,9 @@ $Modules.ForEach{
         Update-Module $Psitem
     }
 }
+
+# Enable Credssp
+
+Enable-WSManCredSSP –Role Client –DelegateComputer sql0.TheBeard.Local -Force
+Enable-WSManCredSSP –Role Client –DelegateComputer sql1.TheBeard.Local -Force
+
