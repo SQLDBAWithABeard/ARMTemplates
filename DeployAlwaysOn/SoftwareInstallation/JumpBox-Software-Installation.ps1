@@ -1,8 +1,12 @@
+$VerbosePreference = 'Continue'
 #Install Chocolatey
-
+if (!(Test-Path "$($env:ProgramData)\chocolatey\choco.exe")) {
 Write-Output "Installing Chocolatey"
 Set-ExecutionPolicy Bypass -Scope Process -Force
 Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+}else{
+    Write-output "Chocolatey installed"
+}
 
 
 #Install software
@@ -45,6 +49,6 @@ $Modules.ForEach{
 
 # Enable Credssp
 
-Enable-WSManCredSSP –Role Client –DelegateComputer sql0.TheBeard.Local -Force
-Enable-WSManCredSSP –Role Client –DelegateComputer sql1.TheBeard.Local -Force
+Enable-WSManCredSSP -Role Client -DelegateComputer sql0.TheBeard.Local -Force
+Enable-WSManCredSSP -Role Client -DelegateComputer sql1.TheBeard.Local -Force
 
