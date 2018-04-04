@@ -127,7 +127,7 @@ if (-not($CheckAGDb)) {
 
         if (($srv.Databases.Name -notcontains 'WideWorldImporters')) {
             Write-Verbose " Restoring database"
-            Restore-DbaDatabase -SqlInstance $SqlVM0 -Path F:\Backups\WideWorldImporters-Full.bak 
+            Restore-DbaDatabase -SqlInstance $Using:SQLvm0 -Path F:\Backups\WideWorldImporters-Full.bak 
         }
         else {
             Write-Verbose "Database already on $SQLVM0"
