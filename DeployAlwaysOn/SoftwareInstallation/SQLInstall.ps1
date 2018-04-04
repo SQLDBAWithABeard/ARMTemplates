@@ -96,7 +96,7 @@ Remove-CimSession $Cim
 
 try {
     Write-Verbose "Checking if the database is on the AG"
-    $CheckAGDb = Get-Dbaagdatabase -sqlinstance $SQlVm0 -Availabilitygroup $AgName -Database WideWorldImporters
+    $CheckAGDb = Get-Dbaagdatabase -sqlinstance $SQlVm0 -Availabilitygroup $AgName -Database WideWorldImporters -SqlCredential $cred -EnableException
 Write-Verbose "Checked if the database is on the AG"
 }
 catch {
