@@ -78,6 +78,15 @@ else {
     Break
 }
 
+try {
+    Write-Verbose "Removing backup files"
+    Invoke-Command -Session $sess -ScriptBlock {Get-ChildItem -Path F:\Backups -Filter *AGSeed* | Remove-Item -Force}
+}
+catch {
+    Write-Warning "Failed to remove backup files"
+}
+
+
 ## Copy dbatools module onto SQL Server because of stupid WinRM errors with VSTS
 
 try {
