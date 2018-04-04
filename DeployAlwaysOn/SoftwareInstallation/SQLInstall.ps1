@@ -18,11 +18,12 @@ if (-not (Get-module sqlserver -ListAvailable)) {
 else{
     Write-Verbose "SQLServer module exists"
 }
-
-Import-Module SqlServer
+$VerbosePreference = 'SilentlyContinue'
+Import-Module SqlServer 
+Import-Module SmbShare
 
 #endregion
-
+$VerbosePreference = 'Continue'
 #region downlaod sql backupfile
 $bak = $env:TEMP + '/WideWorldImporters-Full.bak' 
 
@@ -44,9 +45,10 @@ else{
 
 #region Create folder
 
-$sess = New-Pssession -ComputerName $SQLVM0
+$sess = New-Pssession -ComputerName $SQLVM0 -Credential $cred
 
 $Command = {
+    $VerbosePreference = 'Continue'
     if(-not(Test-Path F:\Backups)){
         Write-Verbose "Backup Directory created"
         New-Item 'F:\Backups' -ItemType Directory
