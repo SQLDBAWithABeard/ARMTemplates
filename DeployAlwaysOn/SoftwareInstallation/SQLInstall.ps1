@@ -1,6 +1,6 @@
 Param($DomainAdminPassword)
 $VerbosePreference = 'Continue'
-$Username = 'EnterpriseAdmin'
+$Username = 'THEBEARD\EnterpriseAdmin'
 
 $agName = 'SQLClusterAG'
 $SqlVM0 = 'sql0'
