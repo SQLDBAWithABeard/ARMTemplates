@@ -36,7 +36,7 @@ Install-Module Pester -Scope CurrentUser -SkipPublisherCheck -Force -ErrorAction
 $Modules = 'dbatools','PSFramework','dbachecks','Pester'
 
 $Modules.ForEach{
-    if(-not (Get-Module $Psitem -ErrorAction SilentlyContinue)){
+    if(-not (Get-Module $Psitem -ListAvailable -ErrorAction SilentlyContinue)){
         Write-Verbose "Installing Module $Psitem"
         Install-Module $Psitem -Scope CurrentUser -Force
     }
