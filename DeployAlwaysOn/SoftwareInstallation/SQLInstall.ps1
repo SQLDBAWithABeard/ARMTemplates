@@ -15,7 +15,7 @@ if (-not (Get-module sqlserver -ListAvailable)) {
     Write-Verbose "installing sqlserver module"
     Install-module SqlServer -Scope CurrentUser -Force
 }
-else{
+else {
     Write-Verbose "SQLServer module exists"
 }
 $VerbosePreference = 'SilentlyContinue'
@@ -38,7 +38,7 @@ if (-not(Test-Path $bak )) {
 
     (New-Object System.Net.WebClient).DownloadFile($dbbakURL, $bak)
 }
-else{
+else {
     Write-Verbose "BackupFile exists"
 }
 #endregion
@@ -49,11 +49,11 @@ $sess = New-Pssession -ComputerName $SQLVM0 -Credential $cred
 
 $Command = {
     $VerbosePreference = 'Continue'
-    if(-not(Test-Path F:\Backups)){
+    if (-not(Test-Path F:\Backups)) {
         Write-Verbose "Backup Directory created"
         New-Item 'F:\Backups' -ItemType Directory
     }
-    else{
+    else {
         Write-Verbose "Backup Folder exists"
     }
 }
@@ -65,17 +65,29 @@ Invoke-Command -Session $sess -ScriptBlock $Command *>&1
 
 $Testpath = Invoke-Command -Session $sess -ScriptBlock {Test-Path F:\Backups\WideWorldImporters-Full.bak} *>&1
 
-if($Testpath -eq $false){
-Write-Verbose "Copying backup file to SQL Server"
-Copy-Item $bak -Destination F:\Backups -ToSession $sess
+if ($Testpath -eq $false) {
+    Write-Verbose "Copying backup file to SQL Server"
+    Copy-Item $bak -Destination F:\Backups -ToSession $sess
 }
-elseif($Testpath -eq $true){
+elseif ($Testpath -eq $true) {
     Write-Verbose "Backup file exists on SQLServer"
 }
-else{
+else {
     Write-Error "Something went wrong with TestPath"
     Break
 }
+
+## Copy dbatools module onto SQL Server because of stupid WinRM errors with VSTS
+
+try {
+    Write-Verbose "Copying dbatools moduel to $SQLVM0"
+    Copy-Item -Path $ENV:USERPROFILE\Documents\WindowsPowerShell\Modules\dbatools\* -Recurse -Destination 'C:\Program Files\WindowsPowerShell\Modules\dbatools' -Container -ToSession $sess -Force
+}
+catch {
+   $_
+   Write-Error "Failed to copy module to $SQLvm0"
+}
+
 
 Remove-PSSession $sess
 
@@ -100,8 +112,8 @@ Remove-CimSession $Cim
 
 try {
     Write-Verbose "Checking if the database is on the AG"
-    $CheckAGDb = Get-Dbaagdatabase -sqlinstance $SQlVm0 -Availabilitygroup $AgName -Database WideWorldImporters -SqlCredential $cred -EnableException
-Write-Verbose "Checked if the database is on the AG"
+    $CheckAGDb = Invoke-Command -ComputerName $sqlvm0 -Credential $cred -ScriptBlock {Get-Dbaagdatabase -sqlinstance $Using:SQlVm0 -Availabilitygroup $Using:AgName -Database WideWorldImporters}
+    Write-Verbose "Checked if the database is on the AG"
 }
 catch {
     Write-Error "Failed to Check the AG"
@@ -110,34 +122,36 @@ catch {
 
 
 if (-not($CheckAGDb)) {
-    $srv = Connect-DbaInstance -SqlInstance $SQLvm0
+    Invoke-Command -ComputerName $sqlvm0 -Credential $cred -ScriptBlock {
+        $srv = Connect-DbaInstance -SqlInstance $Using:SQLvm0
 
-    if(($srv.Databases.Name -notcontains 'WideWorldImporters')){
-        Write-Verbose " Restoring database"
-        Restore-DbaDatabase -SqlInstance $SqlVM0 -Path F:\Backups\WideWorldImporters-Full.bak -SqlCredential $cred
-    }
-    else{
-        Write-Verbose "Database already on $SQLVM0"
-    }
-    if((Get-DbaDbRecoveryModel -SqlInstance $sqlvm0 -Database WideWorldImporters -SqlCredential $cred).RecoveryModel -eq 'SIMPLE' ){
-        Write-Verbose "Set the recovery model to FULL"
-        Set-DbaDbRecoveryModel -SqlInstance $sqlvm0 -Database WideWorldImporters -RecoveryModel Full -SqlCredential $cred -Confirm:$false
-    }
-    else{
-        Write-Verbose "Database set to FULL Already"
-    }
+        if (($srv.Databases.Name -notcontains 'WideWorldImporters')) {
+            Write-Verbose " Restoring database"
+            Restore-DbaDatabase -SqlInstance $SqlVM0 -Path F:\Backups\WideWorldImporters-Full.bak 
+        }
+        else {
+            Write-Verbose "Database already on $SQLVM0"
+        }
+        if ((Get-DbaDbRecoveryModel -SqlInstance $Using:sqlvm0 -Database WideWorldImporters).RecoveryModel -eq 'SIMPLE' ) {
+            Write-Verbose "Set the recovery model to FULL"
+            Set-DbaDbRecoveryModel -SqlInstance $Using:sqlvm0 -Database WideWorldImporters -RecoveryModel Full  -Confirm:$false
+        }
+        else {
+            Write-Verbose "Database set to FULL Already"
+        }
 
 
-    Write-Verbose "Backup Database"
-    Backup-DbaDatabase -SqlInstance $SqlVM0 -Database WideWorldImporters -BackupDirectory F:\Backups -BackupFileName WWI-Full-AGseed.bak -Type Full -SqlCredential $cred
-    Backup-DbaDatabase -SqlInstance $SqlVM0 -Database WideWorldImporters -BackupDirectory F:\Backups -BackupFileName WWI-Log-AGseed.trn -Type Log -SqlCredential $cred
-    Write-Verbose "Restore database"
-    Restore-DbaDatabase -SqlInstance $sqlvm1 -Path "\\$SQlVm0\SQlBackups\WWI-Full-AGseed.bak","\\$SQlVm0\SQlBackups\WWI-Log-AGseed.trn" -WithReplace -NoRecovery -SqlCredential $cred
-    Write-Verbose "Add database to AG"
-    $PrimaryPAth = "SQLSERVER:\SQL\$SQLVM0\DEFAULT\AvailabilityGroups\$AGName"
-    $SecondaryPAth = "SQLSERVER:\SQL\$SQLVM1\DEFAULT\AvailabilityGroups\$AGName"
-    Add-SqlAvailabilityDatabase -Path $PrimaryPAth -Database WideWorldImporters 
-    Add-SqlAvailabilityDatabase -Path $secondaryPAth -Database WideWorldImporters  
+        Write-Verbose "Backup Database"
+        Backup-DbaDatabase -SqlInstance $Using:SqlVM0 -Database WideWorldImporters -BackupDirectory F:\Backups -BackupFileName WWI-Full-AGseed.bak -Type Full 
+        Backup-DbaDatabase -SqlInstance $Using:SqlVM0 -Database WideWorldImporters -BackupDirectory F:\Backups -BackupFileName WWI-Log-AGseed.trn -Type Log 
+        Write-Verbose "Restore database"
+        Restore-DbaDatabase -SqlInstance $Using:sqlvm1 -Path "\\$Using:SQlVm0\SQlBackups\WWI-Full-AGseed.bak", "\\$Using:SQlVm0\SQlBackups\WWI-Log-AGseed.trn" -WithReplace -NoRecovery 
+        Write-Verbose "Add database to AG"
+        $PrimaryPAth = "SQLSERVER:\SQL\$SQLVM0\DEFAULT\AvailabilityGroups\$Using:AGName"
+        $SecondaryPAth = "SQLSERVER:\SQL\$SQLVM1\DEFAULT\AvailabilityGroups\$Using:AGName"
+        Add-SqlAvailabilityDatabase -Path $PrimaryPAth -Database WideWorldImporters 
+        Add-SqlAvailabilityDatabase -Path $secondaryPAth -Database WideWorldImporters  
+    }
 }
 else {
     Write-Verbose "Database already on $agName Availability Group on $sqlvm0"
