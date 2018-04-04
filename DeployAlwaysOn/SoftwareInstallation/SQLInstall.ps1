@@ -164,8 +164,14 @@ if (-not($CheckAGDb)) {
     Write-Verbose "Add database to AG"
     $PrimaryPAth = "SQLSERVER:\SQL\$SQLVM0\DEFAULT\AvailabilityGroups\$AGName"
     $SecondaryPAth = "SQLSERVER:\SQL\$SQLVM1\DEFAULT\AvailabilityGroups\$AGName"
-    Add-SqlAvailabilityDatabase -Path $PrimaryPAth -Database WideWorldImporters 
-    Add-SqlAvailabilityDatabase -Path $secondaryPAth -Database WideWorldImporters  
+    Invoke-Command -ComputerName $sqlvm0 -Credential $cred -ScriptBlock {
+        $VerbosePreference = 'Continue'
+        Add-SqlAvailabilityDatabase -Path $Using:PrimaryPAth -Database WideWorldImporters 
+    }
+    Invoke-Command -ComputerName $sqlvm0 -Credential $cred -ScriptBlock {
+        $VerbosePreference = 'Continue'
+        Add-SqlAvailabilityDatabase -Path $Using:secondaryPAth -Database WideWorldImporters  
+    }
 }
 
 else {
