@@ -1,16 +1,16 @@
 $VerbosePreference = 'Continue'
 #Install Chocolatey
 if (!(Test-Path "$($env:ProgramData)\chocolatey\choco.exe")) {
-Write-Output "Installing Chocolatey"
+Write-Verbose "Installing Chocolatey"
 Set-ExecutionPolicy Bypass -Scope Process -Force
 Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 }else{
-    Write-output "Chocolatey installed"
+    Write-Verbose "Chocolatey installed"
 }
 
 
 #Install software
-Write-Output "Installing programmes"
+Write-Verbose "Installing programmes"
 choco install googlechrome --yes
 choco install visualstudiocode --yes
 choco install vscode-powershell --yes
@@ -37,12 +37,12 @@ $Modules = 'dbatools','PSFramework','dbachecks','Pester'
 
 $Modules.ForEach{
     if(-not (Get-Module $Psitem -ErrorAction SilentlyContinue)){
-        Write-Output "Installing Module $Psitem"
+        Write-Verbose "Installing Module $Psitem"
         Install-Module $Psitem -Scope CurrentUser -Force
     }
     else{
         Remove-Module $Psitem
-        Write-Output "Updating Module $Psitem"
+        Write-Verbose "Updating Module $Psitem"
         Update-Module $Psitem
     }
 }
