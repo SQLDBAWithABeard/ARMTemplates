@@ -17,7 +17,7 @@ $PSDefaultParameterValues += @{ '*:Credential' = $cred}
 
 if (-not (Get-module sqlserver -ListAvailable)) {
     Write-Verbose "installing sqlserver module"
-    Install-module SqlServer -Scope CurrentUser
+    Install-module SqlServer -Scope CurrentUser -Force
 }
 else{
     Write-Verbose "SQLServer module exists"
