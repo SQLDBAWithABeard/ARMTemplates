@@ -23,7 +23,7 @@ $ICOuput = Invoke-Command -Session $session -ScriptBlock {
 Write-Verbose "File Output is - $ICOutput"
 
 Write-Verbose "Running Software Install Script"
-$ICOuput = Invoke-Command -Session $session -ScriptBlock{C:\Windows\Temp\SoftwareInstall.ps1} *>&1
+Invoke-Command -Session $session -ScriptBlock{C:\Windows\Temp\SoftwareInstall.ps1} *>&1
 Write-Verbose "Software Install Output is -$ICOutput"
 
 Write-Verbose "Running Pester"
