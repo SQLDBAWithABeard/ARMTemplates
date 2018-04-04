@@ -63,14 +63,18 @@ Invoke-Command -Session $sess -ScriptBlock $Command *>&1
 
 #region Copy BackupFile
 
-$remotepath = "\\$SQlVm0\F`$\Backups\WideWorldImporters-Full.bak"
+$Testpath = Invoke-Command -Session $sess -ScriptBlock {Test-Path F:\Backups\WideWorldImporters-Full.bak} *>&1
 
-if(-not(Test-Path $remotepath )){
+if($Testpath -eq $false){
 Write-Verbose "Copying backup file to SQL Server"
 Copy-Item $bak -Destination F:\Backups -ToSession $sess
 }
-else{
+elseif($Testpath -eq $true){
     Write-Verbose "Backup file exists on SQLServer"
+}
+else{
+    Write-Error "Something went wrong with TestPath"
+    Break
 }
 
 Remove-PSSession $sess
