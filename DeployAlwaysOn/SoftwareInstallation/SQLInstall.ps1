@@ -1,7 +1,18 @@
+Param($DomainAdminPassword)
+$VerbosePreference = 'Continue'
+$Username = 'EnterpriseAdmin'
+
 $agName = 'SQLClusterAG'
 $SqlVM0 = 'sql0'
 $SqlVM1 = 'sql1'
-$VerbosePreference = 'Continue'
+
+$Password = $DomainAdminPassword | ConvertTo-SecureString -AsPlainText  -Force 
+$cred = New-Object System.Management.Automation.PSCredential $Username, $Password
+
+$PSDefaultParameterValues += @{ '*:SqlCredential' = $cred}
+$PSDefaultParameterValues += @{ '*:Credential' = $cred}
+
+
 #region SqlServer Module
 
 if (-not (Get-module sqlserver -ListAvailable)) {
