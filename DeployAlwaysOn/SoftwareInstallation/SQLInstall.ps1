@@ -139,7 +139,7 @@ if (-not($CheckAGDb)) {
         $srv = Connect-DbaInstance -SqlInstance $Using:SQLvm0
 
         if (($srv.Databases.Name -notcontains 'WideWorldImporters')) {
-            Write-Verbose " Restoring database"
+            Write-Verbose " Restoring database on $Using:SQLvm0"
             Restore-DbaDatabase -SqlInstance $Using:SQLvm0 -Path F:\Backups\WideWorldImporters-Full.bak 
         }
         else {
@@ -152,13 +152,13 @@ if (-not($CheckAGDb)) {
         else {
             Write-Verbose "Database set to FULL Already"
         }
-        Write-Verbose "Backup Database"
+        Write-Verbose "Backup Database on $Using:SQLvm0"
         Backup-DbaDatabase -SqlInstance $Using:SqlVM0 -Database WideWorldImporters -BackupDirectory F:\Backups -BackupFileName WWI-Full-AGseed.bak -Type Full 
         Backup-DbaDatabase -SqlInstance $Using:SqlVM0 -Database WideWorldImporters -BackupDirectory F:\Backups -BackupFileName WWI-Log-AGseed.trn -Type Log 
     }
     Invoke-Command -ComputerName $SqlVM1 -Credential $cred -ScriptBlock {
         $VerbosePreference = 'Continue'
-        Write-Verbose "Restore database"
+        Write-Verbose "Restore database on $Using:sqlvm1"
         Restore-DbaDatabase -SqlInstance $Using:sqlvm1 -Path "\\$Using:SQlVm0\SQlBackups\WWI-Full-AGseed.bak", "\\$Using:SQlVm0\SQlBackups\WWI-Log-AGseed.trn" -WithReplace -NoRecovery 
     }
     Write-Verbose "Add database to AG"
@@ -166,10 +166,12 @@ if (-not($CheckAGDb)) {
     $SecondaryPAth = "SQLSERVER:\SQL\$SQLVM1\DEFAULT\AvailabilityGroups\$AGName"
     Invoke-Command -ComputerName $sqlvm0 -Credential $cred -ScriptBlock {
         $VerbosePreference = 'Continue'
+        Write-Verbose "Add database to AG on $Using:SQLvm0"
         Add-SqlAvailabilityDatabase -Path $Using:PrimaryPAth -Database WideWorldImporters 
     }
-    Invoke-Command -ComputerName $sqlvm0 -Credential $cred -ScriptBlock {
+    Invoke-Command -ComputerName $sqlvm1 -Credential $cred -ScriptBlock {
         $VerbosePreference = 'Continue'
+        Write-Verbose "Add database to AG on $Using:SQLvm1"
         Add-SqlAvailabilityDatabase -Path $Using:secondaryPAth -Database WideWorldImporters  
     }
 }
@@ -177,3 +179,4 @@ if (-not($CheckAGDb)) {
 else {
     Write-Verbose "Database already on $agName Availability Group on $sqlvm0"
 }
+Write-Verbose "FiINISHED THE THING"
