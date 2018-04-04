@@ -2,7 +2,7 @@ Param($DomainAdminPassword)
 $VerbosePreference = 'Continue'
 $Username = 'EnterpriseAdmin'
 
-Enable-WSManCredSSP -Role client -DelegateComputer beardjumpbox.westeurope.cloudapp.azure.com -Force
+Enable-WSManCredSSP -Role server -Force
 
 $Password = $DomainAdminPassword | ConvertTo-SecureString -AsPlainText  -Force 
 $cred = New-Object System.Management.Automation.PSCredential $Username, $Password
