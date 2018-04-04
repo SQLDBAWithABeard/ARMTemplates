@@ -25,5 +25,5 @@ Invoke-Command -Session $session -ScriptBlock{Invoke-Pester C:\Windows\Temp\ -Ou
 Copy-Item -FromSession $session C:\windows\Temp\PesterTestResults.xml -Destination $ENV:SYSTEM_DEFAULTWORKINGDIRECTORY
 
 Write-Output "Running Install Script"
-$ICOuput = Invoke-Command -Session $session -ScriptBlock{C:\Windows\Temp\SQLInstall.ps1}
+#$ICOuput = Invoke-Command -Session $session -ScriptBlock{C:\Windows\Temp\SQLInstall.ps1}
 Write-Output $ICOutput
