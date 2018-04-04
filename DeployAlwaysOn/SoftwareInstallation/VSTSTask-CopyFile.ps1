@@ -4,7 +4,7 @@ $Username = 'EnterpriseAdmin'
 
 Enable-WSManCredSSP -Role server -Force
 Enable-WSManCredSSP -Role client -DelegateComputer beardjumpbox.westeurope.cloudapp.azure.com -Force -Verbose
-Set-Item wsman:localhost\client\trustedhosts -value *
+Set-Item wsman:localhost\client\trustedhosts -value * -Force
 
 $Password = $DomainAdminPassword | ConvertTo-SecureString -AsPlainText  -Force 
 $cred = New-Object System.Management.Automation.PSCredential $Username, $Password
