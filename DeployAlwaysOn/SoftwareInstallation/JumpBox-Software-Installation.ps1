@@ -41,7 +41,6 @@ $Modules.ForEach{
         Install-Module $Psitem -Scope CurrentUser -Force
     }
     else{
-        Remove-Module $Psitem
         Write-Verbose "Updating Module $Psitem"
         Update-Module $Psitem
     }
