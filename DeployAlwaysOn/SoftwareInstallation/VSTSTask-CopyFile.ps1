@@ -2,29 +2,38 @@ Param($DomainAdminPassword)
 $VerbosePreference = 'Continue'
 $Username = 'EnterpriseAdmin'
 
+Enable-WSManCredSSP -Role client -DelegateComputer beardjumpbox.westeurope.cloudapp.azure.com -Force
+
 $Password = $DomainAdminPassword | ConvertTo-SecureString -AsPlainText  -Force 
 $cred = New-Object System.Management.Automation.PSCredential $Username, $Password
-Write-Output "Creating PSSession"
-$so = New-PsSessionOption -SkipCACheck -SkipCNCheck
+
+Write-Verbose "Creating PSSession"
+$so = New-PsSessionOption -SkipCACheck -SkipCNCheck 
 $session = New-PSSession -ComputerName beardjumpbox.westeurope.cloudapp.azure.com -Credential $cred -UseSSL -SessionOption $so
 $Url = $ENV:JumpBoxSoftwareInstallscript
 $PesterUrl = $ENV:PesterProgramme
 $SQLInstallUrl = $ENV:SQLInstallFile
-Write-Output "Downloading the files"
+
+Write-Verbose "Downloading the files"
 $ICOuput = Invoke-Command -Session $session -ScriptBlock {
+    $VerbosePreference = 'Continue'
     (New-Object System.Net.WebClient).DownloadFile($Using:Url, 'C:\Windows\Temp\SoftwareInstall.ps1')
     (New-Object System.Net.WebClient).DownloadFile($Using:PesterUrl, 'C:\Windows\Temp\Programmes.Tests.ps1')
     (New-Object System.Net.WebClient).DownloadFile($Using:SQLInstallUrl, 'C:\Windows\Temp\SQLInstall.ps1')
-} *>&1
-Write-Output $ICOutput
-Write-Output "Running Install Script"
-$ICOuput = Invoke-Command -Session $session -ScriptBlock{C:\Windows\Temp\SoftwareInstall.ps1}*>&1
-Write-Output $ICOutput
 
-Write-Output "Running Pester"
-Invoke-Command -Session $session -ScriptBlock{Invoke-Pester C:\Windows\Temp\ -OutputFile C:\Windows\Temp\PesterTestResults.xml -OutputFormat NUnitXml}*>&1
+} *>&1
+Write-Verbose $ICOutput
+
+Write-Verbose "Running Install Script"
+$ICOuput = Invoke-Command -Session $session -ScriptBlock{C:\Windows\Temp\SoftwareInstall.ps1} *>&1
+Write-Verbose $ICOutput
+
+Write-Verbose "Running Pester"
+Invoke-Command -Session $session -ScriptBlock{Invoke-Pester C:\Windows\Temp\ -OutputFile C:\Windows\Temp\PesterTestResults.xml -OutputFormat NUnitXml} *>&1
 Copy-Item -FromSession $session C:\windows\Temp\PesterTestResults.xml -Destination $ENV:SYSTEM_DEFAULTWORKINGDIRECTORY
 
-Write-Output "Running Install Script"
-#$ICOuput = Invoke-Command -Session $session -ScriptBlock{C:\Windows\Temp\SQLInstall.ps1} *>&1
-Write-Output $ICOutput
+$session = New-PSSession -ComputerName beardjumpbox.westeurope.cloudapp.azure.com -Credential $cred -UseSSL -SessionOption $so -Authentication Credssp
+
+Write-Verbose "Running Install Script"
+$ICOuput = Invoke-Command -Session $session -ScriptBlock{C:\Windows\Temp\SQLInstall.ps1} *>&1
+Write-Verbose $ICOutput
