@@ -15,16 +15,16 @@ $ICOuput = Invoke-Command -Session $session -ScriptBlock {
     (New-Object System.Net.WebClient).DownloadFile($Using:Url, 'C:\Windows\Temp\SoftwareInstall.ps1')
     (New-Object System.Net.WebClient).DownloadFile($Using:PesterUrl, 'C:\Windows\Temp\Programmes.Tests.ps1')
     (New-Object System.Net.WebClient).DownloadFile($Using:SQLInstallUrl, 'C:\Windows\Temp\SQLInstall.ps1')
-}
+} *>&1
 Write-Output $ICOutput
 Write-Output "Running Install Script"
-$ICOuput = Invoke-Command -Session $session -ScriptBlock{C:\Windows\Temp\SoftwareInstall.ps1}
+$ICOuput = Invoke-Command -Session $session -ScriptBlock{C:\Windows\Temp\SoftwareInstall.ps1}*>&1
 Write-Output $ICOutput
 
 Write-Output "Running Pester"
-Invoke-Command -Session $session -ScriptBlock{Invoke-Pester C:\Windows\Temp\ -OutputFile C:\Windows\Temp\PesterTestResults.xml -OutputFormat NUnitXml} 
+Invoke-Command -Session $session -ScriptBlock{Invoke-Pester C:\Windows\Temp\ -OutputFile C:\Windows\Temp\PesterTestResults.xml -OutputFormat NUnitXml}*>&1
 Copy-Item -FromSession $session C:\windows\Temp\PesterTestResults.xml -Destination $ENV:SYSTEM_DEFAULTWORKINGDIRECTORY
 
 Write-Output "Running Install Script"
-#$ICOuput = Invoke-Command -Session $session -ScriptBlock{C:\Windows\Temp\SQLInstall.ps1}
+#$ICOuput = Invoke-Command -Session $session -ScriptBlock{C:\Windows\Temp\SQLInstall.ps1} *>&1
 Write-Output $ICOutput
