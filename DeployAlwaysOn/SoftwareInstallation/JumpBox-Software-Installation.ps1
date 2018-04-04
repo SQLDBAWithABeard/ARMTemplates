@@ -74,8 +74,7 @@ $Modules.ForEach{
         Install-Module $Psitem -Scope CurrentUser -Force
     }
     else {
-        Write-Verbose "Updating Module $Psitem"
-        Update-Module $Psitem
+        Write-Verbose "Mosule $psitem already exists"
     }
 }
 
