@@ -56,7 +56,7 @@ $Command = {
     }
 }
 
-Invoke-Command -Session $sess -ScriptBlock $Command 
+Invoke-Command -Session $sess -ScriptBlock $Command *>&1
 #endregion
 
 #region Copy BackupFile
@@ -89,24 +89,21 @@ else {
 Remove-CimSession $Cim
 #endregion
 
-$PSDefaultParameterValues += @{ '*:SqlCredential' = $cred}
-$PSDefaultParameterValues += @{ '*:Credential' = $cred}
-
 #region Restore database ontSQL Servers
 
-if (-not(Get-Dbaagdatabase -sqlinstance $SQlVm0 -Availabilitygroup $AgName -Database WideWorldImporters)) {
-    $srv = Connect-DbaInstance -SqlInstance $SQLvm0
+if (-not(Get-Dbaagdatabase -sqlinstance $SQlVm0 -Availabilitygroup $AgName -Database WideWorldImporters -SqlCredential $cred)) {
+    $srv = Connect-DbaInstance -SqlInstance $SQLvm0 -SqlCredential $cred
 
     if(($srv.Databases.Name -notcontains 'WideWorldImporters')){
         Write-Verbose " Restoring database"
-        Restore-DbaDatabase -SqlInstance $SqlVM0 -Path F:\Backups\WideWorldImporters-Full.bak
+        Restore-DbaDatabase -SqlInstance $SqlVM0 -Path F:\Backups\WideWorldImporters-Full.bak -SqlCredential $cred
     }
     else{
         Write-Verbose "Database already on $SQLVM0"
     }
-    if((Get-DbaDbRecoveryModel -SqlInstance $sqlvm0 -Database WideWorldImporters).RecoveryModel -eq 'SIMPLE'){
+    if((Get-DbaDbRecoveryModel -SqlInstance $sqlvm0 -Database WideWorldImporters -SqlCredential $cred).RecoveryModel -eq 'SIMPLE' ){
         Write-Verbose "Set the recovery model to FULL"
-        Set-DbaDbRecoveryModel -SqlInstance $sqlvm0 -Database WideWorldImporters -RecoveryModel Full -Confirm:$false
+        Set-DbaDbRecoveryModel -SqlInstance $sqlvm0 -Database WideWorldImporters -RecoveryModel Full -SqlCredential $cred -Confirm:$false
     }
     else{
         Write-Verbose "Database set to FULL Already"
@@ -114,14 +111,14 @@ if (-not(Get-Dbaagdatabase -sqlinstance $SQlVm0 -Availabilitygroup $AgName -Data
 
 
     Write-Verbose "Backup Database"
-    Backup-DbaDatabase -SqlInstance $SqlVM0 -Database WideWorldImporters -BackupDirectory F:\Backups -BackupFileName WWI-Full-AGseed.bak -Type Full
-    Backup-DbaDatabase -SqlInstance $SqlVM0 -Database WideWorldImporters -BackupDirectory F:\Backups -BackupFileName WWI-Log-AGseed.trn -Type Log
+    Backup-DbaDatabase -SqlInstance $SqlVM0 -Database WideWorldImporters -BackupDirectory F:\Backups -BackupFileName WWI-Full-AGseed.bak -Type Full -SqlCredential $cred
+    Backup-DbaDatabase -SqlInstance $SqlVM0 -Database WideWorldImporters -BackupDirectory F:\Backups -BackupFileName WWI-Log-AGseed.trn -Type Log -SqlCredential $cred
     Write-Verbose "Restore database"
-    Restore-DbaDatabase -SqlInstance $sqlvm1 -Path "\\$SQlVm0\SQlBackups\WWI-Full-AGseed.bak","\\$SQlVm0\SQlBackups\WWI-Log-AGseed.trn" -WithReplace -NoRecovery
+    Restore-DbaDatabase -SqlInstance $sqlvm1 -Path "\\$SQlVm0\SQlBackups\WWI-Full-AGseed.bak","\\$SQlVm0\SQlBackups\WWI-Log-AGseed.trn" -WithReplace -NoRecovery -SqlCredential $cred
     Write-Verbose "Add database to AG"
     $PrimaryPAth = "SQLSERVER:\SQL\$SQLVM0\DEFAULT\AvailabilityGroups\$AGName"
     $SecondaryPAth = "SQLSERVER:\SQL\$SQLVM1\DEFAULT\AvailabilityGroups\$AGName"
-    Add-SqlAvailabilityDatabase -Path $PrimaryPAth -Database WideWorldImporters  
+    Add-SqlAvailabilityDatabase -Path $PrimaryPAth -Database WideWorldImporters 
     Add-SqlAvailabilityDatabase -Path $secondaryPAth -Database WideWorldImporters  
 }
 else {
