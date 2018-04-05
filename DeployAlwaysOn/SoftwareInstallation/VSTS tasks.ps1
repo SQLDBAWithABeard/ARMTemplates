@@ -33,6 +33,7 @@ $JumpBoxSoftwareInstall = Get-GitHubRawPath -File .\DeployAlwaysOn\SoftwareInsta
 $VSTSAzureTasks = Get-GitHubRawPath -File .\DeployAlwaysOn\SoftwareInstallation\VSTSTask-GetAzurevalues.ps1
 $PesterProgramme = Get-GitHubRawPath -File .\DeployAlwaysOn\Pester\01-Programmes.Tests.ps1
 $SQLInstallFile = Get-GitHubRawPath -File .\DeployAlwaysOn\SoftwareInstallation\SQLInstall.ps1
+$dbachecksconfig = Get-GitHubRawPath -File .\DeployAlwaysOn\Pester\FirstBuild.json
 
 
 Write-Host "##vso[task.setvariable variable=DomainBuildJson]$DomainBuildJson"
@@ -46,6 +47,7 @@ Write-Host "##vso[task.setvariable variable=JumpBoxSoftwareInstallscript]$JumpBo
 Write-Host "##vso[task.setvariable variable=VSTSAzureTasks]$VSTSAzureTasks"
 Write-Host "##vso[task.setvariable variable=PesterProgramme]$PesterProgramme"
 Write-Host "##vso[task.setvariable variable=SQLInstallFile]$SQLInstallFile"
+Write-Host "##vso[task.setvariable variable=dbachecksconfig ]$dbachecksconfig "
 
 ## Check we have the variables ready for another process
 
@@ -60,3 +62,4 @@ Write-Output "JumpBox Software Install File Path = $ENV:JumpBoxSoftwareInstallsc
 Write-Output "VSTS Azure Tasks  File Path = $ENV:VSTSAzureTasks"
 Write-Output "Pester Programme File Path = $ENV:PesterProgramme"
 Write-Output "SQL Install File Path = $ENV:SQLInstallFile"
+Write-Output "Pester Config File Path = $ENV:dbachecksconfig"
