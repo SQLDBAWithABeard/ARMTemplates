@@ -138,7 +138,10 @@ if (-not($CheckAGDb)) {
     Invoke-Command -ComputerName $sqlvm0 -Credential $cred -ScriptBlock {
         $VerbosePreference = 'Continue'
         $srv = Connect-DbaInstance -SqlInstance $Using:SQLvm0
+        Set-DbaSpConfigure -SqlInstance $Using:SQLvm0 -ConfigName DefaultBackupCompression -Value $True        
+        Set-DbaSpConfigure -SqlInstance $Using:SQLvm0 -ConfigName RemoteDacConnectionsEnabled -Value $True   
 
+        Set-DbaMaxMemory -SqlInstance $Using:SQLvm0 -MaxMB (Test-DbaMaxMemory -SqlInstance $Using:SQLvm0).RecommendedMb
         if (($srv.Databases.Name -notcontains 'WideWorldImporters')) {
             Write-Verbose " Restoring database on $Using:SQLvm0"
             Restore-DbaDatabase -SqlInstance $Using:SQLvm0 -Path F:\Backups\WideWorldImporters-Full.bak 
@@ -153,14 +156,22 @@ if (-not($CheckAGDb)) {
         else {
             Write-Verbose "Database set to FULL Already"
         }
+        $srv.Databases['WideWorldImporters'].AutoUpdateStatisticsAsync = $false
+        $srv.Databases['WideWorldImporters'].Alter()
+
         Write-Verbose "Backup Database on $Using:SQLvm0"
         Backup-DbaDatabase -SqlInstance $Using:SqlVM0 -Database WideWorldImporters -BackupDirectory F:\Backups -BackupFileName WWI-Full-AGseed.bak -Type Full 
+        Backup-DbaDatabase -SqlInstance $Using:SqlVM0 -Database WideWorldImporters -BackupDirectory F:\Backups -BackupFileName WWI-Diff-AGseed.bak -Type Differential
         Backup-DbaDatabase -SqlInstance $Using:SqlVM0 -Database WideWorldImporters -BackupDirectory F:\Backups -BackupFileName WWI-Log-AGseed.trn -Type Log 
     }
     Invoke-Command -ComputerName $SqlVM1 -Credential $cred -ScriptBlock {
         $VerbosePreference = 'Continue'
         Write-Verbose "Restore database on $Using:sqlvm1"
-        Restore-DbaDatabase -SqlInstance $Using:sqlvm1 -Path "\\$Using:SQlVm0\SQlBackups\WWI-Full-AGseed.bak", "\\$Using:SQlVm0\SQlBackups\WWI-Log-AGseed.trn" -WithReplace -NoRecovery 
+        Set-DbaMaxMemory -SqlInstance $Using:SQLvm1 -MaxMB (Test-DbaMaxMemory -SqlInstance $Using:SQLvm1).RecommendedMb
+        Set-DbaSpConfigure -SqlInstance $Using:SQLvm1 -ConfigName DefaultBackupCompression -Value $True
+        Set-DbaSpConfigure -SqlInstance $Using:SQLvm1 -ConfigName RemoteDacConnectionsEnabled -Value $True
+
+        Restore-DbaDatabase -SqlInstance $Using:sqlvm1 -Path "\\$Using:SQlVm0\SQlBackups\WWI-Full-AGseed.bak", "\\$Using:SQlVm0\SQlBackups\WWI-Diff-AGseed.trn" , "\\$Using:SQlVm0\SQlBackups\WWI-Log-AGseed.trn" -WithReplace -NoRecovery 
     }
     Write-Verbose "Add database to AG"
     $PrimaryPAth = "SQLSERVER:\SQL\$SQLVM0\DEFAULT\AvailabilityGroups\$AGName"
@@ -209,6 +220,7 @@ Invoke-Command -ComputerName $SqlVM0 -Credential $cred -ScriptBlock {
     Write-Verbose "Installing Ola Hallengren maintenance solution on $Using:SQLvm0"
     $instance = $Using:SqlVM0 
     Set-Service -Name SQLSERVERAGENT -StartupType Automatic
+    Install-DbaWhoIsActive -SqlInstance $instance -Database master
     Install-DbaMaintenanceSolution -SqlInstance $instance -Database master -BackupLocation F:\Backups -CleanupTime 700 -OutputFileDirectory F:\Backups -LogToTable -InstallJobs 
     New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - SYSTEM_DATABASES - FULL'  -Schedule daily -FrequencyType Daily -FrequencyInterval Everyday -StartTime 010000 -Force
     New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - USER_DATABASES - DIFF'  -Schedule Weekdays -FrequencyType Weekly -FrequencyInterval Weekdays -StartTime 020000 -Force
@@ -231,7 +243,8 @@ Invoke-Command -ComputerName $SqlVM1 -Credential $cred -ScriptBlock {
     $instance = $Using:SqlVM1
     Set-Service -Name SQLSERVERAGENT -StartupType Automatic
     Install-DbaMaintenanceSolution -SqlInstance $instance -Database master -BackupLocation F:\Backups -CleanupTime 700 -OutputFileDirectory F:\Backups -LogToTable -InstallJobs 
-
+    Install-DbaWhoIsActive -SqlInstance $instance -Database master
+    
     New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - SYSTEM_DATABASES - FULL'  -Schedule daily -FrequencyType Daily -FrequencyInterval Everyday -StartTime 010000 -Force
     New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - USER_DATABASES - DIFF'  -Schedule Weekdays -FrequencyType Weekly -FrequencyInterval Weekdays -StartTime 020000 -Force
     New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - USER_DATABASES - FULL'  -Schedule Sunday -FrequencyType Weekly -FrequencyInterval Sunday -StartTime 020000 -Force
@@ -249,14 +262,14 @@ Invoke-Command -ComputerName $SqlVM1 -Credential $cred -ScriptBlock {
 }
 
 ## Install Alerts
-$SQL =  C:\Windows\Temp\AlertsInstall.ps1 -Instance $SQLvm0 -accountname DBATeam -EmailAddress DBAAlerts@thebeard.local -displayname DBATeam -replytoaddress TheDBATeam@TheBeard.Local -mailserver mail.TheBeard.Local -profilename DBATeam -Operatorname 'The DBA Team' -OperatorEmail TheDBATeam@TheBeard.Local -ScriptOnly
+$SQL = C:\Windows\Temp\AlertsInstall.ps1 -Instance $SQLvm0 -accountname DBATeam -EmailAddress DBAAlerts@thebeard.local -displayname DBATeam -replytoaddress TheDBATeam@TheBeard.Local -mailserver mail.TheBeard.Local -profilename DBATeam -Operatorname 'The DBA Team' -OperatorEmail TheDBATeam@TheBeard.Local -ScriptOnly
 Invoke-Command -ComputerName $SqlVM0 -Credential $cred -ScriptBlock {
     $VerbosePreference = 'Continue'
     Write-Verbose "Installing SQL ALerts on  $Using:SQLvm0" 
-Invoke-Sqlcmd -ServerInstance $Using:SQLvm0 -Database msdb -Query $Using:SQL
+    Invoke-Sqlcmd -ServerInstance $Using:SQLvm0 -Database msdb -Query $Using:SQL
 }
 
-$SQL =  C:\Windows\Temp\AlertsInstall.ps1 -Instance $SQLvm1 -accountname DBATeam -EmailAddress DBAAlerts@thebeard.local -displayname DBATeam -replytoaddress TheDBATeam@TheBeard.Local -mailserver mail.TheBeard.Local -profilename DBATeam -Operatorname 'The DBA Team' -OperatorEmail TheDBATeam@TheBeard.Local -ScriptOnly
+$SQL = C:\Windows\Temp\AlertsInstall.ps1 -Instance $SQLvm1 -accountname DBATeam -EmailAddress DBAAlerts@thebeard.local -displayname DBATeam -replytoaddress TheDBATeam@TheBeard.Local -mailserver mail.TheBeard.Local -profilename DBATeam -Operatorname 'The DBA Team' -OperatorEmail TheDBATeam@TheBeard.Local -ScriptOnly
 Invoke-Command -ComputerName $SQLvm1 -Credential $cred -ScriptBlock {
     $VerbosePreference = 'Continue'
     Write-Verbose "Installing SQL ALerts on  $Using:SQLvm1" 
