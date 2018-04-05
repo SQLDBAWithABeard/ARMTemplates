@@ -208,6 +208,7 @@ Invoke-Command -ComputerName $SqlVM0 -Credential $cred -ScriptBlock {
     $VerbosePreference = 'Continue'
     Write-Verbose "Installing Ola Hallengren maintenance solution on $Using:SQLvm0"
     $instance = $Using:SqlVM0 
+    Set-Service -Name SQLSERVERAGENT -StartupType Automatic
     Install-DbaMaintenanceSolution -SqlInstance $instance -Database master -BackupLocation F:\Backups -CleanupTime 700 -OutputFileDirectory F:\Backups -LogToTable -InstallJobs 
     New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - SYSTEM_DATABASES - FULL'  -Schedule daily -FrequencyType Daily -FrequencyInterval Everyday -StartTime 010000 -Force
     New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - USER_DATABASES - DIFF'  -Schedule Weekdays -FrequencyType Weekly -FrequencyInterval Weekdays -StartTime 020000 -Force
@@ -228,6 +229,7 @@ Invoke-Command -ComputerName $SqlVM1 -Credential $cred -ScriptBlock {
     $VerbosePreference = 'Continue'
     Write-Verbose "Installing Ola Hallengren maintenance solution on $Using:SQLvm1"   
     $instance = $Using:SqlVM1
+    Set-Service -Name SQLSERVERAGENT -StartupType Automatic
     Install-DbaMaintenanceSolution -SqlInstance $instance -Database master -BackupLocation F:\Backups -CleanupTime 700 -OutputFileDirectory F:\Backups -LogToTable -InstallJobs 
 
     New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - SYSTEM_DATABASES - FULL'  -Schedule daily -FrequencyType Daily -FrequencyInterval Everyday -StartTime 010000 -Force
