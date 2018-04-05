@@ -42,11 +42,8 @@ Write-Verbose "SQL Install Output is -$ICOutput"
 Install-Module Invoke-CommandAs -Scope CurrentUser -Force
 
 $scriptBlock = {
-    Install-Module Invoke-CommandAs -Scope CurrentUser -Force
-    Invoke-CommandAs -ScriptBlock {
         Import-Dbcconfig -Path C:\Windows\Temp\FirstBuild.json
-        Invoke-DbcCheck -AllChecks -Show Fails -PassThru | Update-DbcPowerBiDataSource -Path C:\windows\temp\PesterTestResultsdbachecks.xml
-    }
+        Invoke-DbcCheck -AllChecks -OutputFile PesterTestResultsdbachecks.xml -OutputFormat NUnitXml
 }
 Invoke-CommandAs -Session $session -As $cred -ScriptBlock $scriptBlock
 Copy-Item -FromSession $session C:\windows\temp\PesterTestResultsdbachecks.xml -Destination $ENV:SYSTEM_DEFAULTWORKINGDIRECTORY
