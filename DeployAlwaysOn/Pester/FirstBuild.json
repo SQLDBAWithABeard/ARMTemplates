@@ -1,0 +1,682 @@
+[
+    {
+        "Name":  "agent.alert.job",
+        "Value":  false,
+        "Description":  "Agent alert job notification. Ex job to write to eventlog for SCOM monitoring"
+    },
+    {
+        "Name":  "agent.alert.messageid",
+        "Value":  [
+                      "823",
+                      "824",
+                      "825"
+                  ],
+        "Description":  "Agent alert messageid to validate; https://www.brentozar.com/blitz/configure-sql-server-alerts/"
+    },
+    {
+        "Name":  "agent.alert.notification",
+        "Value":  true,
+        "Description":  "Agent alert notification"
+    },
+    {
+        "Name":  "agent.alert.severity",
+        "Value":  [
+                      "16",
+                      "17",
+                      "18",
+                      "19",
+                      "20",
+                      "21",
+                      "22",
+                      "23",
+                      "24",
+                      "25"
+                  ],
+        "Description":  "Agent alert severity to validate; https://www.brentozar.com/blitz/configure-sql-server-alerts/"
+    },
+    {
+        "Name":  "agent.databasemailprofile",
+        "Value":  "DBATeam",
+        "Description":  "Name of the Database Mail Profile in SQL Agent"
+    },
+    {
+        "Name":  "agent.dbaoperatoremail",
+        "Value":  null,
+        "Description":  "Email address of the DBA Operator in SQL Agent"
+    },
+    {
+        "Name":  "agent.dbaoperatorname",
+        "Value":  null,
+        "Description":  "Name of the DBA Operator in SQL Agent"
+    },
+    {
+        "Name":  "agent.failsafeoperator",
+        "Value":  "The DBA Team",
+        "Description":  "Email address of the DBA Operator in SQL Agent"
+    },
+    {
+        "Name":  "agent.validjobowner.name",
+        "Value":  "sa",
+        "Description":  "Agent job owner account should be this user"
+    },
+    {
+        "Name":  "app.checkrepos",
+        "Value":  "C:\\Users\\enterpriseadmin.THEBEARD\\Documents\\WindowsPowerShell\\Modules\\dbachecks\\1.1.118\\checks",
+        "Description":  "Where Pester tests/checks are stored"
+    },
+    {
+        "Name":  "app.cluster",
+        "Value":  "sql1",
+        "Description":  ""
+    },
+    {
+        "Name":  "app.computername",
+        "Value":  [
+                      "sql0",
+                      "sql1"
+                  ],
+        "Description":  "List of Windows Servers that Windows-based tests will run against"
+    },
+    {
+        "Name":  "app.localapp",
+        "Value":  "C:\\Users\\enterpriseadmin.THEBEARD\\AppData\\Local\\dbachecks",
+        "Description":  "Persisted files live here"
+    },
+    {
+        "Name":  "app.maildirectory",
+        "Value":  "C:\\Users\\enterpriseadmin.THEBEARD\\AppData\\Local\\dbachecks\\dbachecks.mail",
+        "Description":  "Files for mail are stored here"
+    },
+    {
+        "Name":  "app.sqlcredential",
+        "Value":  null,
+        "Description":  "The universal SQL credential if Trusted/Windows Authentication is not used"
+    },
+    {
+        "Name":  "app.sqlinstance",
+        "Value":  [
+                      "sql0",
+                      "sql1"
+                  ],
+        "Description":  "List of SQL Server instances that SQL-based tests will run against"
+    },
+    {
+        "Name":  "app.wincredential",
+        "Value":  null,
+        "Description":  "The universal Windows if default Windows Authentication is not used"
+    },
+    {
+        "Name":  "command.invokedbccheck.excludecheck",
+        "Value":  [
+                      "TestLastBackupVerifyOnly",
+                      "SARenamed",
+                      "LogShipping"
+                  ],
+        "Description":  "Invoke-DbcCheck: The checks that should be skipped by default."
+    },
+    {
+        "Name":  "command.invokedbccheck.excludedatabases",
+        "Value":  [
+
+                  ],
+        "Description":  "Invoke-DbcCheck: The databases that should be skipped by default."
+    },
+    {
+        "Name":  "domain.domaincontroller",
+        "Value":  "DC1",
+        "Description":  "The domain controller to process your requests"
+    },
+    {
+        "Name":  "domain.name",
+        "Value":  "TheBeard.Local",
+        "Description":  "The Active Directory domain that your server is a part of"
+    },
+    {
+        "Name":  "domain.organizationalunit",
+        "Value":  "Computers",
+        "Description":  "The OU that your server should be a part of"
+    },
+    {
+        "Name":  "mail.failurethreshhold",
+        "Value":  0,
+        "Description":  "Number of errors that must be present to generate an email report"
+    },
+    {
+        "Name":  "mail.from",
+        "Value":  null,
+        "Description":  "Email address the email reports should come from"
+    },
+    {
+        "Name":  "mail.smtpserver",
+        "Value":  null,
+        "Description":  "Store the name of the smtp server to send email reports"
+    },
+    {
+        "Name":  "mail.subject",
+        "Value":  "dbachecks results",
+        "Description":  "Subject line of the email report"
+    },
+    {
+        "Name":  "mail.to",
+        "Value":  null,
+        "Description":  "Email address to send the report to"
+    },
+    {
+        "Name":  "policy.adlogingroup.excludecheck",
+        "Value":  "",
+        "Description":  "Active Directory Groups logins to exclude from test."
+    },
+    {
+        "Name":  "policy.adloginuser.excludecheck",
+        "Value":  "",
+        "Description":  "Active Directory User logins to exclude from test."
+    },
+    {
+        "Name":  "policy.backup.datadir",
+        "Value":  null,
+        "Description":  "Destination server data directory"
+    },
+    {
+        "Name":  "policy.backup.defaultbackupcompression",
+        "Value":  true,
+        "Description":  "Default Backup Compression check should be enabled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.backup.diffmaxhours",
+        "Value":  25,
+        "Description":  "Maximum number of hours before Diff Backups are considered outdated"
+    },
+    {
+        "Name":  "policy.backup.fullmaxdays",
+        "Value":  1,
+        "Description":  "Maximum number of days before Full Backups are considered outdated"
+    },
+    {
+        "Name":  "policy.backup.logdir",
+        "Value":  null,
+        "Description":  "Destination server log directory"
+    },
+    {
+        "Name":  "policy.backup.logmaxminutes",
+        "Value":  15,
+        "Description":  "Maximum number of minutes before Log Backups are considered outdated"
+    },
+    {
+        "Name":  "policy.backup.newdbgraceperiod",
+        "Value":  0,
+        "Description":  "The number of hours a newly created database is allowed to not have backups"
+    },
+    {
+        "Name":  "policy.backup.testserver",
+        "Value":  null,
+        "Description":  "Destination server for backuptests"
+    },
+    {
+        "Name":  "policy.build.warningwindow",
+        "Value":  6,
+        "Description":  "The number of months prior to a build being unsupported that you want warning about"
+    },
+    {
+        "Name":  "policy.certificateexpiration.excludedb",
+        "Value":  "{master, msdb, model, tempdb}",
+        "Description":  "Databases to exclude from expired certificate checks"
+    },
+    {
+        "Name":  "policy.certificateexpiration.warningwindow",
+        "Value":  1,
+        "Description":  "The number of months prior to a certificate being expired that you want warning about"
+    },
+    {
+        "Name":  "policy.connection.authscheme",
+        "Value":  "Kerberos",
+        "Description":  "Auth requirement (Kerberos, NTLM, etc)"
+    },
+    {
+        "Name":  "policy.connection.pingcount",
+        "Value":  3,
+        "Description":  "Number of times to ping a server to establish average response time"
+    },
+    {
+        "Name":  "policy.connection.pingmaxms",
+        "Value":  10,
+        "Description":  "Maximum response time in ms"
+    },
+    {
+        "Name":  "policy.dacallowed",
+        "Value":  true,
+        "Description":  "DAC should be allowed $true or disallowed $false"
+    },
+    {
+        "Name":  "policy.database.autoclose",
+        "Value":  false,
+        "Description":  "Auto Close should be allowed $true or disallowed $false"
+    },
+    {
+        "Name":  "policy.database.autocreatestatistics",
+        "Value":  true,
+        "Description":  "Auto Create Statistics should be enabled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.database.autoshrink",
+        "Value":  false,
+        "Description":  "Auto Shrink should be allowed $true or disallowed $false"
+    },
+    {
+        "Name":  "policy.database.autoupdatestatistics",
+        "Value":  true,
+        "Description":  "Auto Update Statistics should be enabled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.database.autoupdatestatisticsasynchronously",
+        "Value":  false,
+        "Description":  "Auto Update Statistics Asynchronously should be enabled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.database.filebalancetolerance",
+        "Value":  5,
+        "Description":  "Percentage for Tolerance for checking for balanced files in a filegroups"
+    },
+    {
+        "Name":  "policy.database.filegrowthexcludedb",
+        "Value":  [
+                      "msdb",
+                      "master"
+                  ],
+        "Description":  "Databases to exclude from the file growth check"
+    },
+    {
+        "Name":  "policy.database.filegrowthfreespacethreshold",
+        "Value":  20,
+        "Description":  "Integer representing percentage of free space within a database file before warning"
+    },
+    {
+        "Name":  "policy.database.filegrowthtype",
+        "Value":  "kb",
+        "Description":  "Growth Type should be \u0027kb\u0027 or \u0027percent\u0027"
+    },
+    {
+        "Name":  "policy.database.filegrowthvalue",
+        "Value":  65535,
+        "Description":  "The auto growth value (in kb) should be equal or higher than this value. Example: A value of 65535 means at least 64MB. "
+    },
+    {
+        "Name":  "policy.database.logfilecount",
+        "Value":  1,
+        "Description":  "The number of Log files expected on a database"
+    },
+    {
+        "Name":  "policy.database.logfilesizecomparison",
+        "Value":  "average",
+        "Description":  "How to compare data and log file size, options are maximum or average"
+    },
+    {
+        "Name":  "policy.database.logfilesizepercentage",
+        "Value":  100,
+        "Description":  "Maximum percentage of Data file Size that logfile is allowed to be."
+    },
+    {
+        "Name":  "policy.database.maxvlf",
+        "Value":  512,
+        "Description":  "Max virtual log files"
+    },
+    {
+        "Name":  "policy.database.wrongcollation",
+        "Value":  [
+
+                  ],
+        "Description":  "Databases that doesnt match server collation check"
+    },
+    {
+        "Name":  "policy.dbcc.maxdays",
+        "Value":  7,
+        "Description":  "Maximum number of days before DBCC CHECKDB is considered outdated"
+    },
+    {
+        "Name":  "policy.diskspace.percentfree",
+        "Value":  20,
+        "Description":  "Percent disk free"
+    },
+    {
+        "Name":  "policy.dump.maxcount",
+        "Value":  1,
+        "Description":  "Maximum number of expected dumps"
+    },
+    {
+        "Name":  "policy.errorlog.warningwindow",
+        "Value":  2,
+        "Description":  "The number of days prior to check for error log issues"
+    },
+    {
+        "Name":  "policy.hadr.tcpport",
+        "Value":  "1433",
+        "Description":  "The TCPPort for the HADR check"
+    },
+    {
+        "Name":  "policy.identity.usagepercent",
+        "Value":  90,
+        "Description":  "Maximum percentage of max of identity column"
+    },
+    {
+        "Name":  "policy.invaliddbowner.excludedb",
+        "Value":  [
+                      "master",
+                      "msdb",
+                      "model",
+                      "tempdb"
+                  ],
+        "Description":  "Databases to exclude from invalid dbowner checks"
+    },
+    {
+        "Name":  "policy.invaliddbowner.name",
+        "Value":  "sa",
+        "Description":  "The database owner account should not be this user"
+    },
+    {
+        "Name":  "policy.network.latencymaxms",
+        "Value":  80,
+        "Description":  "Max network latency average"
+    },
+    {
+        "Name":  "policy.ola.commandlogenabled",
+        "Value":  true,
+        "Description":  "Ola\u0027s CommandLog Cleanup should be enabled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.commandlogscheduled",
+        "Value":  true,
+        "Description":  "Ola\u0027s CommandLog Cleanup should be scheduled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.database",
+        "Value":  "master",
+        "Description":  "The database where Ola\u0027s maintenance solution is installed"
+    },
+    {
+        "Name":  "policy.ola.deletebackuphistoryenabled",
+        "Value":  true,
+        "Description":  "Ola\u0027s Delete Backup History should be enabled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.deletebackuphistoryscheduled",
+        "Value":  true,
+        "Description":  "Ola\u0027s Delete Backup History should be scheduled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.installed",
+        "Value":  true,
+        "Description":  "Checks to see if Ola Hallengren solution is installed"
+    },
+    {
+        "Name":  "policy.ola.outputfilecleanupenabled",
+        "Value":  true,
+        "Description":  "Ola\u0027s Output File Cleanup should be enabled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.outputfilecleanupscheduled",
+        "Value":  true,
+        "Description":  "Ola\u0027s Output File Cleanup should be scheduled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.purgejobhistoryenabled",
+        "Value":  true,
+        "Description":  "Ola\u0027s Purge Job History should be enabled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.purgejobhistoryscheduled",
+        "Value":  true,
+        "Description":  "Ola\u0027s Purge Job History should be scheduled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.systemfullenabled",
+        "Value":  true,
+        "Description":  "Ola\u0027s Full System Database Backup should be enabled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.systemfullretention",
+        "Value":  192,
+        "Description":  "Ola\u0027s Full System Database Backup retention number of hours"
+    },
+    {
+        "Name":  "policy.ola.systemfullscheduled",
+        "Value":  true,
+        "Description":  "Ola\u0027s Full System Database Backup should be scheduled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.systemintegritycheckenabled",
+        "Value":  true,
+        "Description":  "Ola\u0027s System Database Integrity should be enabled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.systemintegritycheckscheduled",
+        "Value":  true,
+        "Description":  "Ola\u0027s System Database Integrity should be scheduled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.userdiffenabled",
+        "Value":  true,
+        "Description":  "Ola\u0027s Diff User Database Backup should be enabled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.userdiffretention",
+        "Value":  192,
+        "Description":  "Ola\u0027s Diff User Database Backup retention number of hours"
+    },
+    {
+        "Name":  "policy.ola.userdiffscheduled",
+        "Value":  true,
+        "Description":  "Ola\u0027s Diff User Database Backup should be scheduled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.userfullenabled",
+        "Value":  true,
+        "Description":  "Ola\u0027s Full User Database Backup should be enabled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.userfullretention",
+        "Value":  192,
+        "Description":  "Ola\u0027s Full User Database Backup retention number of hours"
+    },
+    {
+        "Name":  "policy.ola.userfullscheduled",
+        "Value":  true,
+        "Description":  "Ola\u0027s Full User Database Backup should be scheduled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.userindexoptimizeenabled",
+        "Value":  true,
+        "Description":  "Ola\u0027s User Index Optimization should be enabled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.userindexoptimizescheduled",
+        "Value":  true,
+        "Description":  "Ola\u0027s User Index Optimization should be scheduled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.userintegritycheckenabled",
+        "Value":  true,
+        "Description":  "Ola\u0027s User Database Integrity should be enabled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.userintegritycheckscheduled",
+        "Value":  true,
+        "Description":  "Ola\u0027s User Database Integrity should be scheduled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.userlogenabled",
+        "Value":  true,
+        "Description":  "Ola\u0027s Log User Database Backup should be enabled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.ola.userlogretention",
+        "Value":  192,
+        "Description":  "Ola\u0027s Log User Database Backup retention number of hours"
+    },
+    {
+        "Name":  "policy.ola.userlogscheduled",
+        "Value":  true,
+        "Description":  "Ola\u0027s Log User Database Backup should be scheduled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.oleautomation",
+        "Value":  false,
+        "Description":  "OLE Automation should be enabled $true or disabled $false"
+    },
+    {
+        "Name":  "policy.pageverify",
+        "Value":  "Checksum",
+        "Description":  "Page verify option should be set to this value"
+    },
+    {
+        "Name":  "policy.recoverymodel.excludedb",
+        "Value":  [
+                      "master",
+                      "tempdb",
+                      "msdb"
+                  ],
+        "Description":  "Databases to exclude from standard recovery model check"
+    },
+    {
+        "Name":  "policy.recoverymodel.type",
+        "Value":  "Full",
+        "Description":  "Standard recovery model"
+    },
+    {
+        "Name":  "policy.storage.backuppath",
+        "Value":  null,
+        "Description":  "Enables tests to check if servers have access to centralized backup location"
+    },
+    {
+        "Name":  "policy.validdbowner.excludedb",
+        "Value":  [
+                      "master",
+                      "msdb",
+                      "model",
+                      "tempdb"
+                  ],
+        "Description":  "Databases to exclude from valid dbowner checks"
+    },
+    {
+        "Name":  "policy.validdbowner.name",
+        "Value":  [
+                      "sa",
+                      "TheBeard\\EnterpriseAdmin"
+                  ],
+        "Description":  "The database owner account should be this user"
+    },
+    {
+        "Name":  "policy.whoisactive.database",
+        "Value":  "master",
+        "Description":  "Which database should contain the sp_WhoIsActive stored procedure"
+    },
+    {
+        "Name":  "policy.xevent.requiredrunningsession",
+        "Value":  "AlwaysOn_health",
+        "Description":  "List of XE Sessions that should be running."
+    },
+    {
+        "Name":  "policy.xevent.requiredstoppedsession",
+        "Value":  "stopped",
+        "Description":  "List of XE Sessions that should not be running."
+    },
+    {
+        "Name":  "policy.xevent.validrunningsession",
+        "Value":  [
+                      "AlwaysOn_health",
+                      "system_health",
+                      "telemetry_xevents"
+                  ],
+        "Description":  "List of XE Sessions that can be be running."
+    },
+    {
+        "Name":  "skip.backup.testing",
+        "Value":  true,
+        "Description":  "Don\u0027t run Test-DbaLastBackup by default (it\u0027s not read-only)"
+    },
+    {
+        "Name":  "skip.connection.ping",
+        "Value":  false,
+        "Description":  "Skip the ping check for connectivity"
+    },
+    {
+        "Name":  "skip.connection.remoting",
+        "Value":  false,
+        "Description":  "Skip PowerShell remoting check for connectivity"
+    },
+    {
+        "Name":  "skip.database.filegrowthdisabled",
+        "Value":  true,
+        "Description":  "Skip validation of datafiles which have growth value equal to zero."
+    },
+    {
+        "Name":  "skip.database.logfilecounttest",
+        "Value":  false,
+        "Description":  "Skip the logfilecount test"
+    },
+    {
+        "Name":  "skip.datafilegrowthdisabled",
+        "Value":  true,
+        "Description":  "Skip validation of datafiles which have growth value equal to zero."
+    },
+    {
+        "Name":  "skip.dbcc.datapuritycheck",
+        "Value":  false,
+        "Description":  "Skip data purity check in last good dbcc command"
+    },
+    {
+        "Name":  "skip.diffbackuptest",
+        "Value":  false,
+        "Description":  "Skip the Differential backup test"
+    },
+    {
+        "Name":  "skip.hadr.listener.pingcheck",
+        "Value":  true,
+        "Description":  ""
+    },
+    {
+        "Name":  "skip.instance.modeldbgrowth",
+        "Value":  false,
+        "Description":  "Skip the model database growth settings test"
+    },
+    {
+        "Name":  "skip.logfilecounttest",
+        "Value":  false,
+        "Description":  "Skip the logfilecount test"
+    },
+    {
+        "Name":  "skip.logshiptesting",
+        "Value":  false,
+        "Description":  "Skip the logshipping test"
+    },
+    {
+        "Name":  "skip.tempdb1118",
+        "Value":  false,
+        "Description":  "Don\u0027t run test for Trace Flag 1118"
+    },
+    {
+        "Name":  "skip.tempdbfilecount",
+        "Value":  true,
+        "Description":  "Don\u0027t run test for Temp Database File Count"
+    },
+    {
+        "Name":  "skip.tempdbfilegrowthpercent",
+        "Value":  false,
+        "Description":  "Don\u0027t run test for Temp Database File Growth in Percent"
+    },
+    {
+        "Name":  "skip.tempdbfilesizemax",
+        "Value":  false,
+        "Description":  "Don\u0027t run test for Temp Database Files Max Size"
+    },
+    {
+        "Name":  "skip.tempdbfilesonc",
+        "Value":  false,
+        "Description":  "Don\u0027t run test for Temp Database Files on C"
+    },
+    {
+        "Name":  "testing.integration.instance",
+        "Value":  [
+                      "localhost"
+                  ],
+        "Description":  "Default SQL Server instances to be used by integration tests"
+    }
+]
