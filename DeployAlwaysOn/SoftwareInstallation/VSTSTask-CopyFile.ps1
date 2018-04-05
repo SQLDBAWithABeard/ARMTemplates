@@ -27,24 +27,27 @@ $ICOuput = Invoke-Command -Session $session -ScriptBlock {
 Write-Verbose "File Output is - $ICOutput"
 
 Write-Verbose "Running Software Install Script"
-Invoke-Command -Session $session -ScriptBlock{C:\Windows\Temp\SoftwareInstall.ps1} *>&1
+Invoke-Command -Session $session -ScriptBlock {C:\Windows\Temp\SoftwareInstall.ps1} *>&1
 Write-Verbose "Software Install Output is -$ICOutput"
 
 Write-Verbose "Running Pester"
-Invoke-Command -Session $session -ScriptBlock{Invoke-Pester C:\Windows\Temp\ -OutputFile C:\Windows\Temp\PesterTestResults.xml -OutputFormat NUnitXml} *>&1
+Invoke-Command -Session $session -ScriptBlock {Invoke-Pester C:\Windows\Temp\ -OutputFile C:\Windows\Temp\PesterTestResults.xml -OutputFormat NUnitXml} *>&1
 Copy-Item -FromSession $session C:\windows\Temp\PesterTestResults.xml -Destination $ENV:SYSTEM_DEFAULTWORKINGDIRECTORY
 
 
 Write-Verbose "Running SQL Install Script"
-$ICOuput = Invoke-Command -Session $session -ScriptBlock{C:\Windows\Temp\SQLInstall.ps1 -DomainAdminPassword $Using:DomainAdminPassword } *>&1
+$ICOuput = Invoke-Command -Session $session -ScriptBlock {C:\Windows\Temp\SQLInstall.ps1 -DomainAdminPassword $Using:DomainAdminPassword } *>&1
 Write-Verbose "SQL Install Output is -$ICOutput"
 
 Install-Module Invoke-CommandAs -Scope CurrentUser -Force
 
 $scriptBlock = {
-Import-Dbcconfig -Path C:\Windows\Temp\FirstBuild.json
-Invoke-DbcCheck -AllChecks -Show Fails -PassThru | Update-DbcPowerBiDataSource -Path C:\windows\temp\dbachecksPesterTestResults.xml
+    Install-Module Invoke-CommandAs -Scope CurrentUser -Force
+    Invoke-CommandAs -ScriptBlock {
+        Import-Dbcconfig -Path C:\Windows\Temp\FirstBuild.json
+        Invoke-DbcCheck -AllChecks -Show Fails -PassThru | Update-DbcPowerBiDataSource -Path C:\windows\temp\PesterTestResultsdbachecks.xml
+    }
 }
 Invoke-CommandAs -Session $session -As $cred -ScriptBlock $scriptBlock
-Copy-Item -FromSession $session C:\windows\temp\dbachecksPesterTestResults.xml -Destination $ENV:SYSTEM_DEFAULTWORKINGDIRECTORY
+Copy-Item -FromSession $session C:\windows\temp\PesterTestResultsdbachecks.xml -Destination $ENV:SYSTEM_DEFAULTWORKINGDIRECTORY
 

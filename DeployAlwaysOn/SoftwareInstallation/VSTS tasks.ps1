@@ -47,7 +47,7 @@ Write-Host "##vso[task.setvariable variable=JumpBoxSoftwareInstallscript]$JumpBo
 Write-Host "##vso[task.setvariable variable=VSTSAzureTasks]$VSTSAzureTasks"
 Write-Host "##vso[task.setvariable variable=PesterProgramme]$PesterProgramme"
 Write-Host "##vso[task.setvariable variable=SQLInstallFile]$SQLInstallFile"
-Write-Host "##vso[task.setvariable variable=dbachecksconfig ]$dbachecksconfig "
+Write-Host "##vso[task.setvariable variable=dbachecksconfig]$dbachecksconfig"
 
 ## Check we have the variables ready for another process
 
