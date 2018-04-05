@@ -15,9 +15,11 @@ $SQLInstallUrl = $ENV:SQLInstallFile
 Write-Verbose "Downloading the files"
 $ICOuput = Invoke-Command -Session $session -ScriptBlock {
     $VerbosePreference = 'Continue'
+    $AlertsScript = 'https://raw.githubusercontent.com/SQLDBAWithABeard/SQLScripts/master/PowerShell/SetUpSQLAlerts.ps1'
     (New-Object System.Net.WebClient).DownloadFile($Using:Url, 'C:\Windows\Temp\SoftwareInstall.ps1')
     (New-Object System.Net.WebClient).DownloadFile($Using:PesterUrl, 'C:\Windows\Temp\Programmes.Tests.ps1')
     (New-Object System.Net.WebClient).DownloadFile($Using:SQLInstallUrl, 'C:\Windows\Temp\SQLInstall.ps1')
+    (New-Object System.Net.WebClient).DownloadFile($AlertsScript, 'C:\Windows\Temp\AlertsInstall.ps1')
 
 } *>&1
 Write-Verbose "File Output is - $ICOutput"
