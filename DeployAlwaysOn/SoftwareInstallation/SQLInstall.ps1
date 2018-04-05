@@ -140,6 +140,7 @@ if (-not($CheckAGDb)) {
         $srv = Connect-DbaInstance -SqlInstance $Using:SQLvm0
         Set-DbaSpConfigure -SqlInstance $Using:SQLvm0 -ConfigName DefaultBackupCompression -Value $True        
         Set-DbaSpConfigure -SqlInstance $Using:SQLvm0 -ConfigName RemoteDacConnectionsEnabled -Value $True   
+        Set-DbaSpConfigure -SqlInstance $Using:SQLvm0 -ConfigName AdHocDistributedQueriesEnabled -Value $true  
 
         Set-DbaMaxMemory -SqlInstance $Using:SQLvm0 -MaxMB (Test-DbaMaxMemory -SqlInstance $Using:SQLvm0).RecommendedMb
         if (($srv.Databases.Name -notcontains 'WideWorldImporters')) {
@@ -170,6 +171,7 @@ if (-not($CheckAGDb)) {
         Set-DbaMaxMemory -SqlInstance $Using:SQLvm1 -MaxMB (Test-DbaMaxMemory -SqlInstance $Using:SQLvm1).RecommendedMb
         Set-DbaSpConfigure -SqlInstance $Using:SQLvm1 -ConfigName DefaultBackupCompression -Value $True
         Set-DbaSpConfigure -SqlInstance $Using:SQLvm1 -ConfigName RemoteDacConnectionsEnabled -Value $True
+        Set-DbaSpConfigure -SqlInstance $Using:SQLvm1 -ConfigName AdHocDistributedQueriesEnabled -Value $true
 
         Restore-DbaDatabase -SqlInstance $Using:sqlvm1 -Path "\\$Using:SQlVm0\SQlBackups\WWI-Full-AGseed.bak", "\\$Using:SQlVm0\SQlBackups\WWI-Diff-AGseed.trn" , "\\$Using:SQlVm0\SQlBackups\WWI-Log-AGseed.trn" -WithReplace -NoRecovery 
     }
@@ -244,7 +246,7 @@ Invoke-Command -ComputerName $SqlVM1 -Credential $cred -ScriptBlock {
     Set-Service -Name SQLSERVERAGENT -StartupType Automatic
     Install-DbaMaintenanceSolution -SqlInstance $instance -Database master -BackupLocation F:\Backups -CleanupTime 700 -OutputFileDirectory F:\Backups -LogToTable -InstallJobs 
     Install-DbaWhoIsActive -SqlInstance $instance -Database master
-    
+
     New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - SYSTEM_DATABASES - FULL'  -Schedule daily -FrequencyType Daily -FrequencyInterval Everyday -StartTime 010000 -Force
     New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - USER_DATABASES - DIFF'  -Schedule Weekdays -FrequencyType Weekly -FrequencyInterval Weekdays -StartTime 020000 -Force
     New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - USER_DATABASES - FULL'  -Schedule Sunday -FrequencyType Weekly -FrequencyInterval Sunday -StartTime 020000 -Force
