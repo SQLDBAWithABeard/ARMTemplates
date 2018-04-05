@@ -60,6 +60,7 @@ $Command = {
 }
 
 Invoke-Command -Session $sess -ScriptBlock $Command *>&1
+Invoke-Command -Session $sess1 -ScriptBlock $Command *>&1
 #endregion
 
 #region Copy BackupFile
@@ -182,7 +183,7 @@ else {
 
 Invoke-Command -ComputerName $sqlvm0 -Credential $cred -ScriptBlock {
     $VerbosePreference = 'Continue'    
-    Write-Verbose "Setting Always On Extended Event to auto start and starting on $sqlvm0"
+    Write-Verbose "Setting Always On Extended Event to auto start and starting on $Using:SQLvm0"
     $xe = (Get-DbaXEStore -SqlInstance $Using:SqlVM0).Sessions['Alwayson_Health']
     $xe.AutoStart = $true
     $xe.Alter()
@@ -193,7 +194,7 @@ Invoke-Command -ComputerName $sqlvm0 -Credential $cred -ScriptBlock {
 
 Invoke-Command -ComputerName $SqlVM1 -Credential $cred -ScriptBlock {
     $VerbosePreference = 'Continue'
-    Write-Verbose "Setting Always On Extended Event to auto start and starting on $sqlvm1"    
+    Write-Verbose "Setting Always On Extended Event to auto start and starting on $Using:SQLvm1"   
     $xe = (Get-DbaXEStore -SqlInstance $Using:SqlVM1).Sessions['Alwayson_Health']
     $xe.AutoStart = $true
     $xe.Alter()
@@ -205,7 +206,7 @@ Invoke-Command -ComputerName $SqlVM1 -Credential $cred -ScriptBlock {
 # Install-Ola and schedule
 Invoke-Command -ComputerName $SqlVM0 -Credential $cred -ScriptBlock {
     $VerbosePreference = 'Continue'
-    Write-Verbose "Installing Ola Hallengren maintenance solution on $sqlvm0"
+    Write-Verbose "Installing Ola Hallengren maintenance solution on $Using:SQLvm0"
     $instance = $Using:SqlVM0 
     Install-DbaMaintenanceSolution -SqlInstance $instance -Database master -BackupLocation F:\Backups -CleanupTime 700 -OutputFileDirectory F:\Backups -LogToTable -InstallJobs 
     New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - SYSTEM_DATABASES - FULL'  -Schedule daily -FrequencyType Daily -FrequencyInterval Everyday -StartTime 010000 -Force
@@ -225,7 +226,7 @@ Invoke-Command -ComputerName $SqlVM0 -Credential $cred -ScriptBlock {
 }
 Invoke-Command -ComputerName $SqlVM1 -Credential $cred -ScriptBlock {
     $VerbosePreference = 'Continue'
-    Write-Verbose "Installing Ola Hallengren maintenance solution on $sqlvm0"    
+    Write-Verbose "Installing Ola Hallengren maintenance solution on $Using:SQLvm1"   
     $instance = $Using:SqlVM1
     Install-DbaMaintenanceSolution -SqlInstance $instance -Database master -BackupLocation F:\Backups -CleanupTime 700 -OutputFileDirectory F:\Backups -LogToTable -InstallJobs 
 
@@ -244,4 +245,22 @@ Invoke-Command -ComputerName $SqlVM1 -Credential $cred -ScriptBlock {
     New-DbaAgentSchedule -SqlInstance $Instance -Job 'sp_purge_jobhistory'  -Schedule Monthly -FrequencyType Monthly -FrequencyInterval 1 -StartTime 060000 -Force
     (Get-DbaAgentJob -SqlInstance $instance).Start()
 }
+
+## Install Alerts
+$SQL =  C:\Windows\Temp\AlertsInstall.ps1 -Instance $SQLvm0 -accountname DBATeam -EmailAddress DBAAlerts@thebeard.local -displayname DBATeam -replytoaddress TheDBATeam@TheBeard.Local -mailserver mail.TheBeard.Local -profilename DBATeam -Operatorname 'The DBA Team' -OperatorEmail TheDBATeam@TheBeard.Local -ScriptOnly
+Invoke-Command -ComputerName $SqlVM0 -Credential $cred -ScriptBlock {
+    $VerbosePreference = 'Continue'
+    Write-Verbose "Installing SQL ALerts on  $Using:SQLvm0" 
+Invoke-Sqlcmd -ServerInstance $Using:SQLvm0 -Database msdb -Query $Using:SQL
+}
+
+$SQL =  C:\Windows\Temp\AlertsInstall.ps1 -Instance $SQLvm1 -accountname DBATeam -EmailAddress DBAAlerts@thebeard.local -displayname DBATeam -replytoaddress TheDBATeam@TheBeard.Local -mailserver mail.TheBeard.Local -profilename DBATeam -Operatorname 'The DBA Team' -OperatorEmail TheDBATeam@TheBeard.Local -ScriptOnly
+Invoke-Command -ComputerName $SQLvm1 -Credential $cred -ScriptBlock {
+    $VerbosePreference = 'Continue'
+    Write-Verbose "Installing SQL ALerts on  $Using:SQLvm1" 
+    Invoke-Sqlcmd -ServerInstance $Using:SQLvm1 -Database msdb -Query $Using:SQL
+}
+
+
+
 Write-Verbose "FiINISHED THE THING"
