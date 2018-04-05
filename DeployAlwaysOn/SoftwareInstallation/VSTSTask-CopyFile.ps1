@@ -43,8 +43,8 @@ Install-Module Invoke-CommandAs -Scope CurrentUser -Force
 
 $scriptBlock = {
 Import-Dbcconfig -Path C:\Windows\Temp\FirstBuild.json
-Invoke-DbcCheck -AllChecks -Show Fails -PassThru | Update-DbcPowerBiDataSource -Path C:\windows\temp\dbacheckstestresults.xml
+Invoke-DbcCheck -AllChecks -Show Fails -PassThru | Update-DbcPowerBiDataSource -Path C:\windows\temp\dbachecksPesterTestResults.xml
 }
 Invoke-CommandAs -ScriptBlock $scriptBlock
-Copy-Item -FromSession $session C:\windows\temp\dbacheckstestresults.xml -Destination $ENV:SYSTEM_DEFAULTWORKINGDIRECTORY
+Copy-Item -FromSession $session C:\windows\temp\dbachecksPesterTestResults.xml -Destination $ENV:SYSTEM_DEFAULTWORKINGDIRECTORY
 
