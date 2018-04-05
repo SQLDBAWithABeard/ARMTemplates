@@ -92,8 +92,8 @@ catch {
 
 try {
     Write-Verbose "Copying dbatools moduel to $SQLVM0 and $SQLVM1"
-    Copy-Item -Path $ENV:USERPROFILE\Documents\WindowsPowerShell\Modules\dbatools\* -Recurse -Destination 'C:\Program Files\WindowsPowerShell\Modules\dbatools' -Container -ToSession $sess -Force
-    Copy-Item -Path $ENV:USERPROFILE\Documents\WindowsPowerShell\Modules\dbatools\* -Recurse -Destination 'C:\Program Files\WindowsPowerShell\Modules\dbatools' -Container -ToSession $sess1 -Force
+   # Copy-Item -Path $ENV:USERPROFILE\Documents\WindowsPowerShell\Modules\dbatools\* -Recurse -Destination 'C:\Program Files\WindowsPowerShell\Modules\dbatools' -Container -ToSession $sess -Force
+   # Copy-Item -Path $ENV:USERPROFILE\Documents\WindowsPowerShell\Modules\dbatools\* -Recurse -Destination 'C:\Program Files\WindowsPowerShell\Modules\dbatools' -Container -ToSession $sess1 -Force
 }
 catch {
     $_
