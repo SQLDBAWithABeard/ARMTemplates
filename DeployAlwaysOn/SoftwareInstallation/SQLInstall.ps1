@@ -181,7 +181,8 @@ else {
 }
 
 Invoke-Command -ComputerName $sqlvm0 -Credential $cred -ScriptBlock {
-    $VerbosePreference = 'Continue'
+    $VerbosePreference = 'Continue'    
+    Write-Verbose "Setting Always On Extended Event to auto start and starting on $sqlvm0"
     $xe = (Get-DbaXEStore -SqlInstance $Using:SqlVM0).Sessions['Alwayson_Health']
     $xe.AutoStart = $true
     $xe.Alter()
@@ -192,6 +193,7 @@ Invoke-Command -ComputerName $sqlvm0 -Credential $cred -ScriptBlock {
 
 Invoke-Command -ComputerName $SqlVM1 -Credential $cred -ScriptBlock {
     $VerbosePreference = 'Continue'
+    Write-Verbose "Setting Always On Extended Event to auto start and starting on $sqlvm1"    
     $xe = (Get-DbaXEStore -SqlInstance $Using:SqlVM1).Sessions['Alwayson_Health']
     $xe.AutoStart = $true
     $xe.Alter()
@@ -200,4 +202,46 @@ Invoke-Command -ComputerName $SqlVM1 -Credential $cred -ScriptBlock {
     }
 }
 
+# Install-Ola and schedule
+Invoke-Command -ComputerName $SqlVM0 -Credential $cred -ScriptBlock {
+    $VerbosePreference = 'Continue'
+    Write-Verbose "Installing Ola Hallengren maintenance solution on $sqlvm0"
+    $instance = $Using:SqlVM0 
+    Install-DbaMaintenanceSolution -SqlInstance $instance -Database master -BackupLocation F:\Backups -CleanupTime 700 -OutputFileDirectory F:\Backups -LogToTable -InstallJobs 
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - SYSTEM_DATABASES - FULL'  -Schedule daily -FrequencyType Daily -FrequencyInterval Everyday -StartTime 010000 -Force
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - USER_DATABASES - DIFF'  -Schedule Weekdays -FrequencyType Weekly -FrequencyInterval Weekdays -StartTime 020000 -Force
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - USER_DATABASES - FULL'  -Schedule Sunday -FrequencyType Weekly -FrequencyInterval Sunday -StartTime 020000 -Force
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - USER_DATABASES - LOG'  -Schedule '15 Minutes' -FrequencyType Daily -FrequencyInterval EveryDay -FrequencySubdayType Minutes -FrequencySubdayInterval 15 -StartTime 000000 -Force
+
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseIntegrityCheck - SYSTEM_DATABASES'  -Schedule Saturday -FrequencyType Weekly -FrequencyInterval Saturday -StartTime 210000 -Force
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseIntegrityCheck - USER_DATABASES'  -Schedule Saturday -FrequencyType Weekly -FrequencyInterval Saturday -StartTime 220000 -Force
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'IndexOptimize - USER_DATABASES'  -Schedule Saturday -FrequencyType Weekly -FrequencyInterval Saturday -StartTime 230000 -Force
+
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'CommandLog Cleanup'  -Schedule Monthly -FrequencyType Monthly -FrequencyInterval 1 -StartTime 060000 -Force
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'Output File Cleanup'  -Schedule Monthly -FrequencyType Monthly -FrequencyInterval 1 -StartTime 060000 -Force
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'sp_delete_backuphistory'  -Schedule Monthly -FrequencyType Monthly -FrequencyInterval 1 -StartTime 060000 -Force
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'sp_purge_jobhistory'  -Schedule Monthly -FrequencyType Monthly -FrequencyInterval 1 -StartTime 060000 -Force
+    (Get-DbaAgentJob -SqlInstance $instance).Start()
+}
+Invoke-Command -ComputerName $SqlVM1 -Credential $cred -ScriptBlock {
+    $VerbosePreference = 'Continue'
+    Write-Verbose "Installing Ola Hallengren maintenance solution on $sqlvm0"    
+    $instance = $Using:SqlVM1
+    Install-DbaMaintenanceSolution -SqlInstance $instance -Database master -BackupLocation F:\Backups -CleanupTime 700 -OutputFileDirectory F:\Backups -LogToTable -InstallJobs 
+
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - SYSTEM_DATABASES - FULL'  -Schedule daily -FrequencyType Daily -FrequencyInterval Everyday -StartTime 010000 -Force
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - USER_DATABASES - DIFF'  -Schedule Weekdays -FrequencyType Weekly -FrequencyInterval Weekdays -StartTime 020000 -Force
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - USER_DATABASES - FULL'  -Schedule Sunday -FrequencyType Weekly -FrequencyInterval Sunday -StartTime 020000 -Force
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseBackup - USER_DATABASES - LOG'  -Schedule '15 Minutes' -FrequencyType Daily -FrequencyInterval EveryDay -FrequencySubdayType Minutes -FrequencySubdayInterval 15 -StartTime 000000 -Force
+
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseIntegrityCheck - SYSTEM_DATABASES'  -Schedule Saturday -FrequencyType Weekly -FrequencyInterval Saturday -StartTime 210000 -Force
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'DatabaseIntegrityCheck - USER_DATABASES'  -Schedule Saturday -FrequencyType Weekly -FrequencyInterval Saturday -StartTime 220000 -Force
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'IndexOptimize - USER_DATABASES'  -Schedule Saturday -FrequencyType Weekly -FrequencyInterval Saturday -StartTime 230000 -Force
+
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'CommandLog Cleanup'  -Schedule Monthly -FrequencyType Monthly -FrequencyInterval 1 -StartTime 060000 -Force
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'Output File Cleanup'  -Schedule Monthly -FrequencyType Monthly -FrequencyInterval 1 -StartTime 060000 -Force
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'sp_delete_backuphistory'  -Schedule Monthly -FrequencyType Monthly -FrequencyInterval 1 -StartTime 060000 -Force
+    New-DbaAgentSchedule -SqlInstance $Instance -Job 'sp_purge_jobhistory'  -Schedule Monthly -FrequencyType Monthly -FrequencyInterval 1 -StartTime 060000 -Force
+    (Get-DbaAgentJob -SqlInstance $instance).Start()
+}
 Write-Verbose "FiINISHED THE THING"
