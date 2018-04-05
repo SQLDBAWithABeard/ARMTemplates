@@ -157,8 +157,6 @@ if (-not($CheckAGDb)) {
         else {
             Write-Verbose "Database set to FULL Already"
         }
-        $srv.Databases['WideWorldImporters'].AutoUpdateStatisticsAsync = $false
-        $srv.Databases['WideWorldImporters'].Alter()
 
         Write-Verbose "Backup Database on $Using:SQLvm0"
         Backup-DbaDatabase -SqlInstance $Using:SqlVM0 -Database WideWorldImporters -BackupDirectory F:\Backups -BackupFileName WWI-Full-AGseed.bak -Type Full 
