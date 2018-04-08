@@ -43,9 +43,8 @@ Install-Module Invoke-CommandAs -Scope CurrentUser -Force
 
 $scriptBlock = {
         Import-Dbcconfig -Path C:\Windows\Temp\FirstBuild.json
-        Invoke-DbcCheck -AllChecks -OutputFile PesterTestResultsdbachecks.xml -OutputFormat NUnitXml
+        Invoke-DbcCheck -AllChecks -OutputFile C:\windows\temp\PesterTestResultsdbachecks.xml -OutputFormat NUnitXml
 }
-$ICOuput = Invoke-CommandAs -Session $session -As $cred -ScriptBlock $scriptBlock
-Write-Verbose "Pester Check Output is -$ICOutput"
+Invoke-CommandAs -Session $session -As $cred -ScriptBlock $scriptBlock -Verbose
 Copy-Item -FromSession $session C:\windows\temp\PesterTestResultsdbachecks.xml -Destination $ENV:SYSTEM_DEFAULTWORKINGDIRECTORY -Verbose
 
