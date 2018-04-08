@@ -18,9 +18,15 @@ if (-not (Get-module sqlserver -ListAvailable)) {
 else {
     Write-Verbose "SQLServer module exists"
 }
+if (-not(Get-Module Invoke-CommandAs -ListAvailable)){
+    Write-Verbose "Installing INvke-CommandAs"
+    Install-Module Invoke-CommandAs -Scope CurrentUser -Force
+}
+
 $VerbosePreference = 'SilentlyContinue'
 Import-Module SqlServer 
 Import-Module SmbShare
+Import-Module Invoke-CommandAs
 
 #endregion
 $VerbosePreference = 'Continue'
