@@ -46,5 +46,11 @@ $scriptBlock = {
         Invoke-DbcCheck -AllChecks -OutputFile C:\windows\temp\PesterTestResultsdbachecks.xml -OutputFormat NUnitXml
 }
 Invoke-CommandAs -Session $session -As $cred -ScriptBlock $scriptBlock -Verbose
+Get-PSSession | Remove-PSSession
+
+Write-Verbose "Creating PSSession"
+$so = New-PsSessionOption -SkipCACheck -SkipCNCheck 
+$session = New-PSSession -ComputerName beardjumpbox.westeurope.cloudapp.azure.com -Credential $cred -UseSSL -SessionOption $so
+
 Copy-Item -FromSession $session C:\windows\temp\PesterTestResultsdbachecks.xml -Destination $ENV:SYSTEM_DEFAULTWORKINGDIRECTORY -Verbose
 
