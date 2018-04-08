@@ -74,6 +74,8 @@ try {
             Write-Verbose "Module $psitem already exists"
         }
     }
+Write-Verbose "Installing Failover clustering feature"
+Install-WindowsFeature -name rsat-clustering-powershell
 }
 catch {
     Write-Warning "An error Occured"
