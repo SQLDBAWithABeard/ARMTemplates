@@ -45,6 +45,7 @@ $scriptBlock = {
         Import-Dbcconfig -Path C:\Windows\Temp\FirstBuild.json
         Invoke-DbcCheck -AllChecks -OutputFile PesterTestResultsdbachecks.xml -OutputFormat NUnitXml
 }
-Invoke-CommandAs -Session $session -As $cred -ScriptBlock $scriptBlock
-Copy-Item -FromSession $session C:\windows\temp\PesterTestResultsdbachecks.xml -Destination $ENV:SYSTEM_DEFAULTWORKINGDIRECTORY
+$ICOuput = Invoke-CommandAs -Session $session -As $cred -ScriptBlock $scriptBlock
+Write-Verbose "Pester Check Output is -$ICOutput"
+Copy-Item -FromSession $session C:\windows\temp\PesterTestResultsdbachecks.xml -Destination $ENV:SYSTEM_DEFAULTWORKINGDIRECTORY -Verbose
 
