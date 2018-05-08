@@ -1,0 +1,60 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "westeurope"
+        },
+        "virtualMachineName": {
+            "value": "bearddockerhost"
+        },
+        "virtualMachineSize": {
+            "value": "Standard_DS13_v2_Promo"
+        },
+        "adminUsername": {
+            "value": "enterpriseAdmin"
+        },
+        "virtualNetworkName": {
+            "value": "corevnet"
+        },
+        "networkInterfaceName": {
+            "value": "bearddockerhost687"
+        },
+        "networkSecurityGroupName": {
+            "value": "bearddockerhost-nsg"
+        },
+        "adminPassword": {
+            "value": null
+        },
+        "diagnosticsStorageAccountName": {
+            "value": "vkhivrc2j3uxysqlvmdiag"
+        },
+        "diagnosticsStorageAccountId": {
+            "value": "/subscriptions/6d8f994c-9051-4cef-ba61-528bab27d213/resourceGroups/TheBeardAlwaysOn/providers/Microsoft.Storage/storageAccounts/vkhivrc2j3uxysqlvmdiag"
+        },
+        "subnetName": {
+            "value": "Subnet-2"
+        },
+        "publicIpAddressName": {
+            "value": "bearddockerhost-ip"
+        },
+        "publicIpAddressType": {
+            "value": "Dynamic"
+        },
+        "publicIpAddressSku": {
+            "value": "Basic"
+        },
+        "autoShutdownStatus": {
+            "value": "Enabled"
+        },
+        "autoShutdownTime": {
+            "value": "19:00"
+        },
+        "autoShutdownTimeZone": {
+            "value": "UTC"
+        },
+        "autoShutdownNotificationStatus": {
+            "value": "Disabled"
+        }
+    }
+}
