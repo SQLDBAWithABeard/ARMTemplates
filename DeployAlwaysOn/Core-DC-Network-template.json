@@ -13,6 +13,10 @@
       "type": "string",
       "defaultValue": "TheBeard.Local"
     },
+      "JumpBoxDNS": {
+      "type": "string",
+      "defaultValue": "beardjumpbox"
+    },
     "jumpBoxVmSize": {
       "type": "string",
       "allowedValues": [
@@ -67,7 +71,7 @@
     }
   },
   "variables": {
-    "JumpBoxDNS": "beardjumpbox",
+    "JumpBoxDNS": "[parameters('JumpBoxDNS')]",
     "diagStorageAccountName": "[concat(uniquestring(resourceGroup().id), 'vmdiag')]",
     "coreVnetName": "corevnet",
     "corevnetPrefix": "10.0.0.0/16",
