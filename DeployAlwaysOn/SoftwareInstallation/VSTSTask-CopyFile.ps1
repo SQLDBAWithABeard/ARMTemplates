@@ -7,7 +7,8 @@ $cred = New-Object System.Management.Automation.PSCredential $Username, $Passwor
 
 Write-Verbose "Creating PSSession"
 $so = New-PsSessionOption -SkipCACheck -SkipCNCheck 
-$session = New-PSSession -ComputerName beardjumpbox.westeurope.cloudapp.azure.com -Credential $cred -UseSSL -SessionOption $so
+$ComputerName = $ENV:JumpBoxDNS + "westeurope.cloudapp.azure.com"
+$session = New-PSSession -ComputerName $ComputerName -Credential $cred -UseSSL -SessionOption $so
 $Url = $ENV:JumpBoxSoftwareInstallscript
 $PesterUrl = $ENV:PesterProgramme
 $SQLInstallUrl = $ENV:SQLInstallFile
