@@ -26,12 +26,6 @@
         "adminPassword": {
             "value": null
         },
-        "diagnosticsStorageAccountName": {
-            "value": "vkhivrc2j3uxysqlvmdiag"
-        },
-        "diagnosticsStorageAccountId": {
-            "value": "/subscriptions/6d8f994c-9051-4cef-ba61-528bab27d213/resourceGroups/TheBeardAlwaysOn/providers/Microsoft.Storage/storageAccounts/vkhivrc2j3uxysqlvmdiag"
-        },
         "subnetName": {
             "value": "Subnet-2"
         },
