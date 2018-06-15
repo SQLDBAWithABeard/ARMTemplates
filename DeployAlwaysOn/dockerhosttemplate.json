@@ -26,12 +26,6 @@
         "adminPassword": {
             "type": "securestring"
         },
-        "diagnosticsStorageAccountName": {
-            "type": "string"
-        },
-        "diagnosticsStorageAccountId": {
-            "type": "string"
-        },
         "subnetName": {
             "type": "string"
         },
@@ -90,7 +84,7 @@
                         "version": "latest"
                     },
                     "osDisk": {
-                        "createOption": "fromImage",
+                        "createOption": "FromImage",
                         "managedDisk": {
                             "storageAccountType": "Premium_LRS"
                         }
@@ -103,12 +97,6 @@
                             "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName'))]"
                         }
                     ]
-                },
-                "diagnosticsProfile": {
-                    "bootDiagnostics": {
-                        "enabled": true,
-                        "storageUri": "[reference(resourceId('TheBeardAlwaysOn', 'Microsoft.Storage/storageAccounts', parameters('diagnosticsStorageAccountName')), '2015-06-15').primaryEndpoints['blob']]"
-                    }
                 }
             }
         },
@@ -186,7 +174,7 @@
                         "name": "SSH",
                         "properties": {
                             "priority": 300,
-                            "protocol": "TCP",
+                            "protocol": "Tcp",
                             "access": "Allow",
                             "direction": "Inbound",
                             "sourceAddressPrefix": "*",
@@ -199,7 +187,7 @@
                         "name": "RDP",
                         "properties": {
                             "priority": 320,
-                            "protocol": "TCP",
+                            "protocol": "Tcp",
                             "access": "Allow",
                             "direction": "Inbound",
                             "sourceAddressPrefix": "*",
@@ -212,7 +200,7 @@
                         "name": "MS_SQL",
                         "properties": {
                             "priority": 340,
-                            "protocol": "TCP",
+                            "protocol": "Tcp",
                             "access": "Allow",
                             "direction": "Inbound",
                             "sourceAddressPrefix": "*",
