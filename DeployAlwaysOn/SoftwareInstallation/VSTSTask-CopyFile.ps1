@@ -7,7 +7,7 @@ $cred = New-Object System.Management.Automation.PSCredential $Username, $Passwor
 
 Write-Verbose "Creating PSSession"
 $so = New-PsSessionOption -SkipCACheck -SkipCNCheck 
-$ComputerName = $ENV:JumpBoxDNS + "westeurope.cloudapp.azure.com"
+$ComputerName = $ENV:JumpBoxDNS # + "westeurope.cloudapp.azure.com"
 $session = New-PSSession -ComputerName $ComputerName -Credential $cred -UseSSL -SessionOption $so
 $Url = $ENV:JumpBoxSoftwareInstallscript
 $PesterUrl = $ENV:PesterProgramme
@@ -51,7 +51,7 @@ Get-PSSession | Remove-PSSession
 
 Write-Verbose "Creating PSSession"
 $so = New-PsSessionOption -SkipCACheck -SkipCNCheck 
-$session = New-PSSession -ComputerName beardjumpbox.westeurope.cloudapp.azure.com -Credential $cred -UseSSL -SessionOption $so
+$session = New-PSSession -ComputerName $ComputerName -Credential $cred -UseSSL -SessionOption $so
 
 Copy-Item -FromSession $session C:\windows\temp\PesterTestResultsdbachecks.xml -Destination $ENV:SYSTEM_DEFAULTWORKINGDIRECTORY -Verbose
 
