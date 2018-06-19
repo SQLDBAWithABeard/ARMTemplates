@@ -44,7 +44,7 @@ try {
 
     # Install vscodeextensions module and extensions
 
-    if ([version](Get-PackageProvider -Name nuGet).Version -le [version]2.8.5.201) {
+    if ([version](Get-PackageProvider -Name nuGet -ErrorAction SilentlyContinue).Version -le [version]2.8.5.201) {
         Write-Verbose "Installing Nuget"
         Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
     }
